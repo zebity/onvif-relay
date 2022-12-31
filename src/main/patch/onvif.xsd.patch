@@ -1,0 +1,10 @@
+13,14c13,14
+< 	<xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="http://www.w3.org/2005/05/xmlmime"/>
+< 	<xs:import namespace="http://www.w3.org/2003/05/soap-envelope" schemaLocation="http://www.w3.org/2003/05/soap-envelope"/>
+---
+> 	<xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="../../../www.w3.org/2005/05/xmlmime"/>
+> 	<xs:import namespace="http://www.w3.org/2003/05/soap-envelope" schemaLocation="../../../www.w3.org/2003/05/soap-envelope"/>
+16c16
+< 	<xs:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="http://www.w3.org/2004/08/xop/include"/>
+---
+> 	<xs:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="../../../www.w3.org/2004/08/xop/include"/>

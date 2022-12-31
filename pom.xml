@@ -5,6 +5,13 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>onvif-relay</name>
   <description>onvif-relay</description>
+  <properties>
+   <project.download.dir>${project.basedir}/target/generated-sources/wget/</project.download.dir>
+   <project.wsdl.resource.dir>${project.basedir}/src/main/resources/META-INF/wsdl/</project.wsdl.resource.dir>
+   <project.wsdl.resource.dir>${project.basedir}/src/main/resources/META-INF/wsdl/</project.wsdl.resource.dir>
+   <project.patch.dir>${project.basedir}/src/main/patch/</project.patch.dir>
+   <project.sh.dir>${project.basedir}/src/main/sh/</project.sh.dir>
+  </properties>
   <dependencies>
     <dependency>
      <groupId>jakarta.xml.ws</groupId>
@@ -66,11 +73,32 @@
   <build>
    <plugins>
     <plugin>
-  	<groupId>org.apache.maven.plugins</groupId>
-  	<artifactId>maven-compiler-plugin</artifactId>
-  	<version>3.10.0</version>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-compiler-plugin</artifactId>
+     <version>3.10.0</version>
     </plugin>
-  		
+
+    <plugin>
+     <artifactId>maven-antrun-plugin</artifactId>
+     <version>1.7</version>
+     <executions>
+      <execution>
+       <phase>generate-sources</phase>
+       <configuration>
+        <tasks>
+         <exec dir="${project.basedir}"
+               executable="${project.sh.dir}wget-and-patch.sh"
+               failonerror="true">"
+          <arg line="${project.sh.dir}file.txt ${project.download.dir} ${project.wsdl.dir} ${project.patch.dir}" /> 
+         </exec>
+        </tasks>
+       </configuration>
+       <goals>
+        <goal>initialize</goal>
+       </goals>
+      </execution>
+     </executions>
+    </plugin>  		
     <plugin>
      <groupId>com.sun.xml.ws</groupId>
      <artifactId>jaxws-maven-plugin</artifactId>
