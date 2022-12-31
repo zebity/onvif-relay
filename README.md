@@ -19,8 +19,8 @@ Maven Targets:
 NOTE: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
 
 Rrun manually via:
-- src/main/sh/get-and-patch.sh src/main/sh/files.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 - $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir>
+- src/main/sh/get-and-patch.sh src/main/sh/files.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 
 
 # Author:
