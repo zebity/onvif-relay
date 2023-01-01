@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">  
   <modelVersion>4.0.0</modelVersion>
   <groupId>onvif-relay</groupId>
   <artifactId>onvif-relay</artifactId>
@@ -11,9 +11,11 @@
    <project.patch.dir>${project.basedir}/src/main/patch/</project.patch.dir>
    <project.sh.dir>${project.basedir}/src/main/sh/</project.sh.dir>
 
-   <!-- project.javax.annotations>2.3.1</project.javax.annotations -->
-   <!-- project.javax.jaxws-rt>2.3.5</project.javax.jaxws-rt -->
-   <project.javax.jaxws-rt>3.0.2</project.javax.jaxws-rt>
+   <project.javax.annotations>2.3.1</project.javax.annotations>
+   <project.javax.ver>2.3.1</project.javax.ver>
+   <project.javax.jaxws-rt>2.3.5</project.javax.jaxws-rt>
+   <project.jaxb.ver>3.0.2</project.jaxb.ver>
+   <!-- project.javax.jaxws-rt>3.0.2</project.javax.jaxws-rt -->
    <project.jakarta.annotations>3.0.1</project.jakarta.annotations>
    <project.jakarta.ver>3.0.0</project.jakarta.ver>
    <!-- project.jetty.ver>11.0.12</project.jetty.ver -->
@@ -22,17 +24,19 @@
    <project.jaxws-plugin.ver>${project.javax.jaxws-rt}</project.jaxws-plugin.ver>
 
   </properties>
+
+  <!-- WSIMPORT DEPENDENCIES -->
   <dependencies>
-    <!-- dependency>
+    <dependency>
      <groupId>javax.xml.ws</groupId>
      <artifactId>jaxws-api</artifactId>
      <version>${project.javax.annotations}</version>
-    </dependency -->
-    <dependency>
+    </dependency>
+    <!-- dependency>
      <groupId>jakarta.xml.ws</groupId>
      <artifactId>jakarta.xml.ws-api</artifactId>
      <version>${project.jakarta.annotations}</version>
-    </dependency>
+    </dependency -->
     <dependency>
      <groupId>com.sun.xml.ws</groupId>
      <artifactId>jaxws-rt</artifactId>
@@ -40,6 +44,28 @@
      <scope>runtime</scope>
     </dependency>
 
+    <!-- JAVAX BUILD DEPENDENCIES -->
+    <dependency>
+    	<groupId>com.sun.xml.bind</groupId>
+    	<artifactId>jaxb-core</artifactId>
+    	<version>${project.jaxb.ver}</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.sun.xml.bind</groupId>
+    	<artifactId>jaxb-impl</artifactId>
+    	<version>${project.jaxb.ver}</version>
+    </dependency>
+    <dependency>
+     <groupId>javax.xml.bind</groupId>
+     <artifactId>jaxb-api</artifactId>
+     <version>${project.javax.ver}</version>
+    </dependency>
+    <dependency>
+	 <groupId>javax.jws</groupId>
+	 <artifactId>javax.jws-api</artifactId>
+	 <version>1.1</version>
+	</dependency>
+    <!-- JAKARTS BUILD DEPENDENCIES -->
     <!-- dependency>
      <groupId>com.sun.xml.messaging.saaj</groupId>
      <artifactId>saaj-impl</artifactId>
@@ -68,6 +94,12 @@
     </dependency -->
 
     <dependency>
+     <groupId>org.apache.commons</groupId>
+     <artifactId>commons-configuration2</artifactId>
+     <version>2.8.0</version>
+    </dependency>
+  	
+    <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-webapp</artifactId>
     	<version>${project.jetty.ver}</version>
@@ -94,7 +126,7 @@
      <version>3.10.0</version>
     </plugin>
 
-    <plugin>
+    <!-- plugin>
      <artifactId>maven-antrun-plugin</artifactId>
      <version>1.7</version>
      <executions>
@@ -110,11 +142,11 @@
         </tasks>
        </configuration>
        <goals>
-        <goal>initialize</goal>
+        <goal>generate-sources</goal>
        </goals>
       </execution>
      </executions>
-    </plugin>
+    </plugin -->
 
     <plugin>
      <groupId>com.sun.xml.ws</groupId>
