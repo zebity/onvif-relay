@@ -37,4 +37,8 @@ None
 This repository is just to for purpose of documenting and getting feedback from others working to test/interface with ONVIF devices, 
 
 If you are looking to solve using Jakarta EE/wsimport to automatically generate interfaces to ONVIF device, then please fork and submit pull requests
+
+# Status:
+
+- Jan 2023 - Added Embedded Jetty based onvif test device, but not tested
  
