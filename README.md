@@ -23,8 +23,8 @@ Run manually via:
 - $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir>
 - src/main/sh/get-and-patch.sh src/main/sh/files.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 
-NOTE 2:
-- To Generate Java EE or Jakarta EE require exiting of Maven pom.xml properties
+NOTE 2: You can generate code with javax or jakarta inclusions
+- To change between Java EE (javax.*) or Jakarta EE (jakara.*) requires editing of Maven pom.xml properties
 
 # Author:
 
