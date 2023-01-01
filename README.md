@@ -8,6 +8,7 @@ See: https://tips.graphica.com.au/onvif-ws-client-consumption/
 
 This project uses Apaxche Maven to generate client/server stubs using:
 - Java (Open SDK 11)
+- Java EE JAVAX-WS/JAX-WS to parse WSDL and generate Java code or
 - Jakarta EE/JAX-WS to parse WSDL and generate Java code
 - Apache Maven build system
 - Developed and tested on Ubuntu 22.04
@@ -16,12 +17,14 @@ Maven Targets:
 - mvn -X jaxws:wsimport : to generate java stubs and client
 - mvn -X initialize : to download and patch ONVIF wsdl for jaxws:wsimport (runs get-and-patch.sh)
 
-NOTE: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
+NOTE 1: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
 
 Run manually via:
 - $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir>
 - src/main/sh/get-and-patch.sh src/main/sh/files.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 
+NOTE 2:
+- To Generate Java EE or Jakarta EE require exiting of Maven pom.xml properties
 
 # Author:
 

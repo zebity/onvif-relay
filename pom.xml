@@ -8,29 +8,44 @@
   <properties>
    <project.download.dir>${project.basedir}/target/generated-sources/wget/</project.download.dir>
    <project.wsdl.resource.dir>${project.basedir}/src/main/resources/META-INF/wsdl/</project.wsdl.resource.dir>
-   <project.wsdl.resource.dir>${project.basedir}/src/main/resources/META-INF/wsdl/</project.wsdl.resource.dir>
    <project.patch.dir>${project.basedir}/src/main/patch/</project.patch.dir>
    <project.sh.dir>${project.basedir}/src/main/sh/</project.sh.dir>
+
+   <!-- project.javax.annotations>2.3.1</project.javax.annotations -->
+   <!-- project.javax.jaxws-rt>2.3.5</project.javax.jaxws-rt -->
+   <project.javax.jaxws-rt>3.0.2</project.javax.jaxws-rt>
+   <project.jakarta.annotations>3.0.1</project.jakarta.annotations>
+   <project.jakarta.ver>3.0.0</project.jakarta.ver>
+   <!-- project.jetty.ver>11.0.12</project.jetty.ver -->
+   <project.jetty.ver>10.0.12</project.jetty.ver>
+   
+   <project.jaxws-plugin.ver>${project.javax.jaxws-rt}</project.jaxws-plugin.ver>
+
   </properties>
   <dependencies>
+    <!-- dependency>
+     <groupId>javax.xml.ws</groupId>
+     <artifactId>jaxws-api</artifactId>
+     <version>${project.javax.annotations}</version>
+    </dependency -->
     <dependency>
      <groupId>jakarta.xml.ws</groupId>
      <artifactId>jakarta.xml.ws-api</artifactId>
-     <version>3.0.1</version>
+     <version>${project.jakarta.annotations}</version>
     </dependency>
     <dependency>
      <groupId>com.sun.xml.ws</groupId>
      <artifactId>jaxws-rt</artifactId>
-     <version>3.0.2</version>
+     <version>${project.javax.jaxws-rt}</version>
      <scope>runtime</scope>
     </dependency>
-    <dependency>
+
+    <!-- dependency>
      <groupId>com.sun.xml.messaging.saaj</groupId>
      <artifactId>saaj-impl</artifactId>
      <version>3.0.0</version>
      <scope>runtime</scope>
     </dependency>
-
     <dependency>
     	<groupId>jakarta.xml.bind</groupId>
     	<artifactId>jakarta.xml.bind-api</artifactId>
@@ -47,31 +62,32 @@
     	<version>3.0.0</version>
     </dependency>
     <dependency>
+    	<groupId>jakarta.servlet</groupId>
+    	<artifactId>jakarta.servlet-api</artifactId>
+    	<version>4.0.4</version>
+    </dependency -->
+
+    <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-webapp</artifactId>
-    	<!-- version>10.0.12</version -->
-    	<version>11.0.12</version>
+    	<version>${project.jetty.ver}</version>
     </dependency>
         <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-server</artifactId>
-    	<!-- version>10.0.12</version -->
-    	<version>11.0.12</version>
+    	<version>${project.jetty.ver}</version>
     </dependency>
     <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-http-spi</artifactId>
-    	<!-- version>10.0.12</version -->
-    	<version>11.0.12</version>
+    	<version>${project.jetty.ver}</version>
     </dependency>
-    <dependency>
-    	<groupId>jakarta.servlet</groupId>
-    	<artifactId>jakarta.servlet-api</artifactId>
-    	<version>4.0.4</version>
-    </dependency>
+
   </dependencies>
+
   <build>
    <plugins>
+
     <plugin>
      <groupId>org.apache.maven.plugins</groupId>
      <artifactId>maven-compiler-plugin</artifactId>
@@ -98,11 +114,12 @@
        </goals>
       </execution>
      </executions>
-    </plugin>  		
+    </plugin>
+
     <plugin>
      <groupId>com.sun.xml.ws</groupId>
      <artifactId>jaxws-maven-plugin</artifactId>
-     <version>3.0.2</version>
+     <version>${project.jaxws-plugin.ver}</version>
      <executions>
       <execution>
        <goals>
@@ -140,11 +157,13 @@
       </execution>
      </executions>
     </plugin>
+
     <plugin>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-maven-plugin</artifactId>
-      <version>11.0.12</version>
+      <version>${project.jetty.ver}</version>
     </plugin>
+
    </plugins>
   </build>
 </project>
