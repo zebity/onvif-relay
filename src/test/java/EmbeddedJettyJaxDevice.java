@@ -34,9 +34,10 @@ public class EmbeddedJettyJaxDevice {
       
       JaxDeviceImpl device = new JaxDeviceImpl();
       
-      System.setProperty("com.sun.net.httpserver.HttpServerProvider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
+      // System.setProperty("com.sun.net.httpserver.HttpServerProvider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
       // System.setProperty("jakarta.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
-      
+      // System.setProperty("javax.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
+     
       String uri = "http://127.0.0.1:" + port + request;
       // Endpoint ep = Endpoint.create(uri, device);
       Endpoint ep = Endpoint.publish(uri, device);
