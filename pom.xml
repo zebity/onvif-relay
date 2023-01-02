@@ -16,7 +16,7 @@
    <project.jaxws-plugin.ver>2.3.5</project.jaxws-plugin.ver>
 
    <!-- wsimport jakarta.* annotatons -->  
-   <project.jaxws-plugin.ver>3.0.2</project.jaxws-plugin.ver>
+   <!-- project.jaxws-plugin.ver>3.0.2</project.jaxws-plugin.ver -->
 
    <!-- use jetty 10 for javax and 11 for Jakarta -->
    <!-- project.jetty.ver>11.0.12</project.jetty.ver -->
