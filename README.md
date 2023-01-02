@@ -41,4 +41,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 # Status:
 
 - Jan 2023 - Added Embedded Jetty based onvif test device, but not tested
+- Jan 2023 - Tested Embedded Jetty based onvif test device, exposing SOAP 1.1 not SOAP 1.2
  
