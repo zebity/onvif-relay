@@ -6,8 +6,8 @@ See: https://tips.graphica.com.au/onvif-ws-client-consumption/
 
 ## Tools:
 
-This project uses Apaxche Maven to generate client/server stubs using:
-- Java (Open SDK 11)
+This project uses Apache Maven to generate client/server stubs using:
+- Java (Open JDK 11)
 - Java EE JAVAX-WS/JAX-WS to parse WSDL and generate Java code or
 - Jakarta EE/JAX-WS to parse WSDL and generate Java code
 - Embedded Jetty (version 10 for javax.*)
