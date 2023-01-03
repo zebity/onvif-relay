@@ -10,6 +10,8 @@ This project uses Apaxche Maven to generate client/server stubs using:
 - Java (Open SDK 11)
 - Java EE JAVAX-WS/JAX-WS to parse WSDL and generate Java code or
 - Jakarta EE/JAX-WS to parse WSDL and generate Java code
+- Embedded Jetty (version 10 for javax.*)
+- Embedded Jetty (version 11 for jakarta.*)
 - Apache Maven build system
 - Developed and tested on Ubuntu 22.04
 
