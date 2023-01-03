@@ -1,8 +1,9 @@
-package onvif_relay.client;
 /*
  @what Test onvif device client
  
 */
+
+package onvif_relay.client;
 
 import java.net.URL;
 import java.util.ArrayList;

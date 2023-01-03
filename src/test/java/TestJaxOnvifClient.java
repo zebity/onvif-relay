@@ -41,7 +41,7 @@ public class TestJaxOnvifClient {
       
       String got = onv.getInfo(conf, ipv4, "test#1", "Device", "GetDeviceInformation", null);
       
-      System.out.println("got: \"" + got + "\".");
+      System.out.println("TestJaxOnvifClient::main - got: \"" + got + "\".");
       
       // ser.toJson(devs, new FileWriter(dumpFile));
       // ser.toJson(UIDGen, new FileWriter(dumpFile));
