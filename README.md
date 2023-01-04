@@ -28,6 +28,9 @@ Run manually via:
 NOTE 2: You can generate code with javax or jakarta inclusions
 - To change between Java EE (import javax.PKG) or Jakarta EE (import jakarta.PKG) requires editing of Maven pom.xml properties
 
+NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
+
+
 # Author:
 
 John Hartley
