@@ -37,9 +37,9 @@ John Hartley
 
 # License
 
-None
+None - at present
 
-This repository is just for purpose of documenting and getting feedback from others working to test/interface with ONVIF devices
+This repository is for purpose of documenting and getting feedback from others working to test/interface with ONVIF devices
 
 If you are looking to solve using Jakarta EE/wsimport to automatically generate interfaces to ONVIF devices, then please fork and submit pull requests
 
