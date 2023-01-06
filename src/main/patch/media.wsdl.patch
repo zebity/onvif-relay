@@ -1,0 +1,8 @@
+13c13,17
+< 		<xs:schema targetNamespace="http://www.onvif.org/ver10/media/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="21.06">
+---
+> 		<xs:schema targetNamespace="http://www.onvif.org/ver10/media/wsdl" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" jaxb:version="2.0" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="21.06">
+>                          <xs:annotation><xs:appinfo><jaxb:globalBinddings
+>                            enableJavaNamingConventions = "false"
+>                            underscoreBinding = "asCharInWord"/>
+>                          </xs:appinfo></xs:annotation>

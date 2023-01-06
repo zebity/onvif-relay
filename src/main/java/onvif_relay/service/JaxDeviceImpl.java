@@ -5,7 +5,6 @@
 
 package onvif_relay.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.datatype.Duration;
@@ -467,8 +466,8 @@ public class JaxDeviceImpl implements Device {
 
 	@Override
 	public List<Certificate> getCertificates() {
-	  List<Certificate> res = new ArrayList<>(); 
-      return res;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -511,6 +510,30 @@ public class JaxDeviceImpl implements Device {
 	public void setClientCertificateMode(boolean enabled) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<RelayOutput> getRelayOutputs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setRelayOutputSettings(String relayOutputToken, RelayOutputSettings properties) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setRelayOutputState(String relayOutputToken, RelayLogicalState logicalState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String sendAuxiliaryCommand(String auxiliaryCommand) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -657,30 +680,6 @@ public class JaxDeviceImpl implements Device {
 	public void setHashingAlgorithm(List<String> algorithm) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public List<RelayOutput> getRelayOutputs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setRelayOutputSettings(String relayOutputToken, RelayOutputSettings properties) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setRelayOutputState(String relayOutputToken, RelayLogicalState logicalState) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String sendAuxiliaryCommand(String auxiliaryCommand) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

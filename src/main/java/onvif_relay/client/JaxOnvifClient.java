@@ -21,13 +21,15 @@ import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fence.util.ConfigurationData;
 import javax.xml.ws.Holder;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPBinding;
+
+import fence.util.ConfigurationData;
+import onvif_relay.client.OnvifAuthHandler;
 
 public class JaxOnvifClient {
   public org.onvif.ver10.device.wsdl.ObjectFactory onvDevFact = new org.onvif.ver10.device.wsdl.ObjectFactory();
@@ -118,7 +120,7 @@ public class JaxOnvifClient {
 	  //                        break;
 	  // case "GetSystemDateAndTime": res = getSystemDateAndTime(args, dev);
 	  //	                           break;
-	  case "GetDeviceInformation": res = getDeviceInformation(args, dev);
+	  case "GetDeviceInformation": res = GetDeviceInformation(args, dev);
 	                               break;
 	  // case "GetNetworkInterfaces": res = getNetworkInterfaces(args, dev);
 	  //                                 break;
@@ -133,7 +135,7 @@ public class JaxOnvifClient {
     return res;
   }
   
-  public String getDeviceInformation(List<String> args, Device dev) {
+  public String GetDeviceInformation(List<String> args, Device dev) {
     String res = null;    
 	    
 	try {
