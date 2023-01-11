@@ -6,10 +6,7 @@
 package onvif_relay.client;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.onvif.ver10.Device;
@@ -23,7 +20,6 @@ import com.google.gson.GsonBuilder;
 
 import javax.xml.ws.Holder;
 import javax.xml.ws.handler.Handler;
-import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPBinding;
@@ -56,9 +52,9 @@ public class JaxOnvifClient {
 		Media media = null;
 		URL devURL = new URL(reqURL);
 		    
-		Map<String, List<String>> Headers = new HashMap<String, List<String>>();
-		List<String> HdrVals = new ArrayList<>(); HdrVals.add("text/xml");
-		Headers.put("Content-Type", HdrVals);
+		// Map<String, List<String>> Headers = new HashMap<String, List<String>>();
+		// List<String> HdrVals = new ArrayList<>(); HdrVals.add("text/xml");
+		// Headers.put("Content-Type", HdrVals);
 
 		if (reqType.equals("Media")) {
 		  mediaSrv = new MediaService();
@@ -90,7 +86,7 @@ public class JaxOnvifClient {
 		      System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 		    }
 		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, devURL.toString());
-		    bp.getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, Headers);
+		    // bp.getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, Headers);
 		    // bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, reqURL[1]);
 		    // bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, reqURL[2]);
 		    List<Handler> handList = binding.getHandlerChain();

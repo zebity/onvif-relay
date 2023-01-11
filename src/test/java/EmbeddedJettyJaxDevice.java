@@ -12,19 +12,29 @@ import java.io.InputStreamReader;
 
 import org.eclipse.jetty.server.Server;
 
+import fence.util.ConfigurationData;
+
 import javax.xml.ws.Endpoint;
+import javax.xml.ws.soap.SOAPBinding;
 
 import onvif_relay.service.JaxDeviceImpl;
-import fence.util.ConfigurationData;
 
 public class EmbeddedJettyJaxDevice {
 	
   public static void main(String[] args) throws Exception {
+	System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
     ConfigurationData confData = new ConfigurationData(args);
 
     String srvPort = confData.getItem("onvif-device", "port");
 	String port = confData.getItem("onvif-device", "device-port");
 	String request = confData.getItem("onvif-device", "request");
+	String ver = confData.getItem("onvif-device", "soap-ver");
+	String level = confData.getItem("onvif-device", "log-level");
+	
+	String loglevel = "warning";
+	if (level != null)
+	  loglevel = level; 
+	System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
 	
     try {
         
@@ -38,9 +48,13 @@ public class EmbeddedJettyJaxDevice {
       // System.setProperty("jakarta.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
       // System.setProperty("javax.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
      
+      String soapver = SOAPBinding.SOAP11HTTP_BINDING;
+      if (ver.equals("12"))
+    	soapver = SOAPBinding.SOAP12HTTP_BINDING;
+      
       String uri = "http://127.0.0.1:" + port + request;
-      // Endpoint ep = Endpoint.create(uri, device);
-      Endpoint ep = Endpoint.publish(uri, device);
+      Endpoint ep = Endpoint.create(soapver, device);
+      ep.publish(uri);
       
       server.start();
       
