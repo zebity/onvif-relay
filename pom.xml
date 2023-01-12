@@ -14,6 +14,7 @@
 
    <!-- wsimport javax.* annotatons -->  
    <project.jaxws-plugin.ver>2.3.5</project.jaxws-plugin.ver>
+   <cxf.version>3.5.5</cxf.version>
 
    <!-- wsimport jakarta.* annotatons -->  
    <!-- project.jaxws-plugin.ver>3.0.2</project.jaxws-plugin.ver -->
@@ -174,8 +175,52 @@
        <!-- The extension property tells JAX-WS to support soap v1.2 bindings. -->
        <extension>true</extension>
      </configuration>
+     <dependencies>
+      <dependency>
+       <groupId>com.sun.xml.ws</groupId>
+       <artifactId>jaxws-tools</artifactId>
+       <version>${project.jaxws-plugin.ver}</version>
+      </dependency>
+     </dependencies>
     </plugin>
-  
+ 
+    <plugin>
+     <groupId>org.apache.cxf</groupId>
+     <artifactId>cxf-codegen-plugin</artifactId>
+     <version>${cxf.version}</version>
+     <executions>
+      <execution>
+       <id>generate-sources</id>
+       <phase>generate-sources</phase>
+       <configuration>
+        <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
+        <wsdlOptions>
+         <wsdlOption>
+          <wsdl>${basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdl>
+          <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdlLocation>
+         </wsdlOption>
+        </wsdlOptions>
+        <extraargs>
+          <extraarg>-verbose</extraarg>
+          <extraarg>-all</extraarg>
+          <!-- extraarg>-impl</extraarg>
+          <extraarg>-b JAXWS</extraarg -->
+        </extraargs>
+       </configuration>
+       <goals>
+        <goal>wsdl2java</goal>
+       </goals>
+      </execution>
+     </executions>
+     <dependencies>
+      <!-- dependency>
+       <groupId>org.apache.cxf.xjcplugins</groupId>
+       <artifactId>cxf-xjc-ts</artifactId>
+       <version>${cxf-xjc.version}</version>
+      </dependency -->
+     </dependencies>
+    </plugin>
+
     <plugin>
      <groupId>org.codehaus.mojo</groupId>
      <artifactId>build-helper-maven-plugin</artifactId>

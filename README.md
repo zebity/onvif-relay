@@ -18,6 +18,7 @@ This project uses Apache Maven to generate client/server stubs using:
 Maven Targets:
 - mvn -X jaxws:wsimport : to generate java stubs and client
 - mvn -X initialize : to download and patch ONVIF wsdl for jaxws:wsimport (runs get-and-patch.sh)
+- mvn -X generate-sources : to run the CXF WSDL2Java Generator as alternate to wsimport (for testing)
 
 NOTE 1: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
 
@@ -47,4 +48,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 
 - Jan 2023 - Added Embedded Jetty based onvif test device, but not tested
 - Jan 2023 - Tested Embedded Jetty based onvif test device, exposing SOAP 1.1 not SOAP 1.2
+- Jan 2023 - Resolved Embedded Jetty and SOAP 1.2 issue
  
