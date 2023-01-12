@@ -184,7 +184,7 @@
      </dependencies>
     </plugin>
  
-    <plugin>
+    <!-- plugin>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-codegen-plugin</artifactId>
      <version>${cxf.version}</version>
@@ -203,8 +203,8 @@
         <extraargs>
           <extraarg>-verbose</extraarg>
           <extraarg>-all</extraarg>
-          <!-- extraarg>-impl</extraarg>
-          <extraarg>-b JAXWS</extraarg -->
+          <!- extraarg>-impl</extraarg>
+          <extraarg>-b JAXWS</extraarg ->
         </extraargs>
        </configuration>
        <goals>
@@ -213,13 +213,13 @@
       </execution>
      </executions>
      <dependencies>
-      <!-- dependency>
+      <!- dependency>
        <groupId>org.apache.cxf.xjcplugins</groupId>
        <artifactId>cxf-xjc-ts</artifactId>
        <version>${cxf-xjc.version}</version>
-      </dependency -->
+      </dependency ->
      </dependencies>
-    </plugin>
+    </plugin -->
 
     <plugin>
      <groupId>org.codehaus.mojo</groupId>
