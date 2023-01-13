@@ -18,16 +18,16 @@ import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import javax.xml.ws.Holder;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.soap.SOAPBinding;
+import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.handler.Handler;
+import jakarta.xml.ws.Binding;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.soap.SOAPBinding;
 
 import fence.util.ConfigurationData;
-import onvif_relay.client.JaxOnvifAuthHandler;
+import onvif_relay.client.JakOnvifAuthHandler;
 
-public class JaxOnvifClient {
+public class JakOnvifClient {
   public org.onvif.ver10.device.wsdl.ObjectFactory onvDevFact = new org.onvif.ver10.device.wsdl.ObjectFactory();
   public org.onvif.ver10.schema.ObjectFactory onvSchemaFact = new org.onvif.ver10.schema.ObjectFactory();
 
@@ -69,7 +69,7 @@ public class JaxOnvifClient {
 			  System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 			}
 		    List<Handler> handList = binding.getHandlerChain();
-		    handList.add(new JaxOnvifAuthHandler());
+		    handList.add(new OnvifAuthHandler());
 		    binding.setHandlerChain(handList);
 		    result = SOAPWSMediaReqest(getthis, args, media);
 		  }
@@ -90,7 +90,7 @@ public class JaxOnvifClient {
 		    // bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, reqURL[1]);
 		    // bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, reqURL[2]);
 		    List<Handler> handList = binding.getHandlerChain();
-		    handList.add(new JaxOnvifAuthHandler());
+		    handList.add(new JakOnvifAuthHandler());
 		    binding.setHandlerChain(handList);
 		        
 			result = SOAPWSDeviceReqest(getthis, args, dev);

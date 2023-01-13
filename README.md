@@ -23,11 +23,13 @@ Maven Targets:
 NOTE 1: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
 
 Run manually via:
-- $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir>
-- src/main/sh/get-and-patch.sh src/main/sh/files.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
+- $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir> [jak|jax]
+- src/main/sh/get-and-patch.sh src/main/sh/files.jak.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 
 NOTE 2: You can generate code with javax or jakarta inclusions
 - To change between Java EE (import javax.PKG) or Jakarta EE (import jakarta.PKG) requires editing of Maven pom.xml properties
+- As WSDL patching is slightly differnt for jax / jak specify patch variant as input into get-patch (as above): files.jax.txt | file.jak.txt
+ 
 
 NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
 

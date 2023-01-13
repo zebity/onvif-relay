@@ -2,15 +2,15 @@ package onvif_relay.client;
 
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.xml.namespace.QName;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.xml.namespace.QName;
 
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPHandler;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
+import jakarta.xml.ws.handler.MessageContext;
+import jakarta.xml.ws.handler.soap.SOAPHandler;
+import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 
-public class OnvifAuthHandler implements SOAPHandler<SOAPMessageContext> {
+public class JakOnvifAuthHandler implements SOAPHandler<SOAPMessageContext> {
   
   @Override
   public boolean handleMessage(SOAPMessageContext cxt) {
