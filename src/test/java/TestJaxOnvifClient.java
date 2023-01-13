@@ -3,21 +3,8 @@
  
 */
 
-import org.onvif.ver10.Device;
-import org.onvif.ver10.DeviceService;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fence.util.ConfigurationData;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.soap.SOAPBinding;
-
 import onvif_relay.client.JaxOnvifClient;
-import onvif_relay.client.OnvifAuthHandler;
 
 public class TestJaxOnvifClient {
 	
