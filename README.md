@@ -23,7 +23,7 @@ Maven Targets:
 NOTE 1: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
 
 Run manually via:
-- $ get-and-patch.sh <filelist.txt> <download.dir> <destination.dir> <patch.dir> [jak|jax]
+- $ get-and-patch.sh <filelist.[jax|jax].txt> <download.dir> <destination.dir> <patch.dir>
 - src/main/sh/get-and-patch.sh src/main/sh/files.jak.txt target/generated-sources/wget/ src/main/resources/META-INF/wsdl/ src/main/patch/
 
 NOTE 2: You can generate code with javax or jakarta inclusions
