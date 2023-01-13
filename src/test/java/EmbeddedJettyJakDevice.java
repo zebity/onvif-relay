@@ -1,5 +1,5 @@
 /**
-@what Embedded Jetty JAVAX JAX-WS Device Simulator 
+@what Embedded Jetty Jakarta JAX-WS Device Simulator 
 
 @note: See Eclipse Jetty: Programming Guide
 
@@ -17,7 +17,6 @@ import fence.util.ConfigurationData;
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.soap.SOAPBinding;
 import onvif_relay.service.JakDeviceImpl;
-import onvif_relay.service.JaxDeviceImpl;
 
 public class EmbeddedJettyJakDevice {
 	
