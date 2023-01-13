@@ -2,9 +2,10 @@ package onvif_relay.client;
 
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.xml.namespace.QName;
 
 import jakarta.xml.ws.handler.MessageContext;
 import jakarta.xml.ws.handler.soap.SOAPHandler;

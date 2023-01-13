@@ -18,13 +18,12 @@ import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import jakarta.xml.ws.Holder;
-import jakarta.xml.ws.handler.Handler;
+import fence.util.ConfigurationData;
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.SOAPBinding;
-
-import fence.util.ConfigurationData;
 import onvif_relay.client.JakOnvifAuthHandler;
 
 public class JakOnvifClient {
@@ -69,7 +68,7 @@ public class JakOnvifClient {
 			  System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 			}
 		    List<Handler> handList = binding.getHandlerChain();
-		    handList.add(new OnvifAuthHandler());
+		    handList.add(new JakOnvifAuthHandler());
 		    binding.setHandlerChain(handList);
 		    result = SOAPWSMediaReqest(getthis, args, media);
 		  }

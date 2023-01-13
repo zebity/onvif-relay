@@ -7,8 +7,8 @@ package onvif_relay.service;
 
 import java.util.List;
 
-import jakarta.xml.datatype.Duration;
-import jakaarta.xml.datatype.XMLGregorianCalendar;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.onvif.ver10.Device;
 import org.onvif.ver10.device.wsdl.DeviceServiceCapabilities;
@@ -72,7 +72,7 @@ import jakarta.xml.ws.Holder;
   serviceName = "DeviceService",
   portName = "DevicePort",
   targetNamespace = "http://www.onvif.org/ver10")
-public class JaxDeviceImpl implements Device {
+public class JakDeviceImpl implements Device {
 
 	@Override
 	public List<Service> getServices(boolean includeCapability) {

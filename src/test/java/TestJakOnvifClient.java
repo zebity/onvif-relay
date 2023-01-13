@@ -3,29 +3,8 @@
  
 */
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.onvif.ver10.Device;
-import org.onvif.ver10.DeviceService;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fence.util.ConfigurationData;
-import jakarta.xml.ws.Binding;
-import jakarta.xml.ws.BindingProvider;
-import jakarta.xml.ws.handler.Handler;
-import jakarta.xml.ws.handler.MessageContext;
-import jakarta.xml.ws.soap.SOAPBinding;
-
 import onvif_relay.client.JakOnvifClient;
-import onvif_relay.client.JakOnvifAuthHandler;
 
 public class TestJakOnvifClient {
 	

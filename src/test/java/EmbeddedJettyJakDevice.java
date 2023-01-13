@@ -16,7 +16,7 @@ import fence.util.ConfigurationData;
 
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.soap.SOAPBinding;
-
+import onvif_relay.service.JakDeviceImpl;
 import onvif_relay.service.JaxDeviceImpl;
 
 public class EmbeddedJettyJakDevice {

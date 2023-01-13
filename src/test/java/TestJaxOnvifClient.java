@@ -3,14 +3,6 @@
  
 */
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.onvif.ver10.Device;
 import org.onvif.ver10.DeviceService;
 

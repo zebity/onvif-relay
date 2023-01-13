@@ -21,7 +21,7 @@ do
 		cp $srcdir${sbits[2]}${sbits[3]} $destdir${sbits[2]} 
 		echo "downloading ${sbits[2]}${sbits[3]} to $srcdir & copying to $destdir"
 	else
-		patch -o - $srcdir${sbits[2]}${sbits[3]} $patchdir${sbits[3]}.patch > $destdir${sbits[2]}${sbits[3]}
+		patch -o - $srcdir${sbits[2]}${sbits[3]} $patchdir${sbits[4]} > $destdir${sbits[2]}${sbits[3]}
 		echo "downloading ${sbits[2]}${sbits[3]} to $srcdir & patching to $destdir"
 	fi 
 done < $1 
