@@ -87,7 +87,7 @@ public class JakDeviceImpl implements Device {
 	}
 
 	@Override
-	public void getDeviceInformation(Holder<String> manufacturer, Holder<String> model, Holder<String> firmwareVersion,
+	public void GetDeviceInformation(Holder<String> manufacturer, Holder<String> model, Holder<String> firmwareVersion,
 			Holder<String> serialNumber, Holder<String> hardwareId) {
 	  manufacturer.value = new String("john");
 	  model.value = new String("beta");

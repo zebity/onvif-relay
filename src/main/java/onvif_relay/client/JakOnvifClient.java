@@ -143,7 +143,7 @@ public class JakOnvifClient {
 	  Holder<String> model = new Holder<>();
 	  Holder<String> serial = new Holder<>();
 	      
-	  dev.getDeviceInformation(manu, model, firm, serial, hid);
+	  dev.GetDeviceInformation(manu, model, firm, serial, hid);
 	      
 	  resp.setFirmwareVersion(firm.value);
 	  resp.setHardwareId(hid.value);
