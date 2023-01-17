@@ -1,0 +1,22 @@
+Thread [main] (Suspended)	
+	NameConverter$Standard(NameUtil).toMixedCaseName(List<String>, boolean) line: 209	
+	NameConverter$Standard.toVariableName(String) line: 95	
+	BindingHelper.mangleNameToVariableName(String) line: 47	
+	Operation.getJavaMethodName() line: 215	
+	WSDLModeler.getJavaNameForOperation(Operation) line: 2777	
+	WSDLModeler.createJavaMethodForOperation(Port, Operation, JavaInterface) line: 2413	
+	WSDLModeler.createJavaInterfaceForPort(Port, boolean) line: 2302	
+	WSDLModeler.processPort(Port, Service, WSDLDocument) line: 462	
+	WSDLModeler.processService(Service, Model, WSDLDocument) line: 226	
+	WSDLModeler.internalBuildModel(WSDLDocument) line: 197	
+	WSDLModeler.buildModel() line: 111	
+	WsimportTool.buildWsdlModel(WsimportTool$Listener, WsimportTool$Receiver) line: 413	
+	WsimportTool.run(String[], WsimportTool$Listener, WsimportTool$Receiver) line: 180	
+	WsimportTool.run(String[]) line: 158	
+	NativeMethodAccessorImpl.invoke0(Method, Object, Object[]) line: not available [native method]	
+	NativeMethodAccessorImpl.invoke(Object, Object[]) line: 62	
+	DelegatingMethodAccessorImpl.invoke(Object, Object[]) line: 43	
+	Method.invoke(Object, Object...) line: 566	
+	Invoker.invoke(String, String[]) line: 132	
+	WsImport.main(String[]) line: 29	
+

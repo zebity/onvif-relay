@@ -1,0 +1,20 @@
+To build and run WsImport in debugger.
+
+1. Clone the git repository: https://github.com/eclipse-ee4j/metro-jax-ws
+2. Checkout the desired branch (ie git checkout 4.0.0-RELEASE
+3. Build the all of metro: mvn package
+4  Create a new mvn project for just the wscompile tools:
+    mvn archetype:generate -DgroupId=com.sun.wscompile -DartifactId=wscompile -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+5. copy over the required source files... including generated files:
+    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/java wscompile/src/main/java
+    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/resources wscompile/src/main 
+    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/target/generated-sources/rsrc-gen wscompile/target/generated-sources
+    NOTE: or you can try to get the generator working via pom.xml pluging (see pom.xml)
+6. Replace the pom.xml with the one here (pom.xml), or copy the dependencies so build completes successfully
+7. Now import maven project into Eclipse/vscode to run in debugger
+8. Set the jave build path to include the src/main/java & target/generated-sources/rsrc-gen
+9. Create new run/debug configuation, here is example command line:
+    -keep -s /home/USR/Documents/dev/wscompile/run -extension -Xnocompile /home/USR/Documents/dev/onvif-relay/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl
+
+NOTE: see stack-naming-01.txt for call stack showing here code getts the WSDL operation names
+
