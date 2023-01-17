@@ -15,6 +15,8 @@ To build and run WsImport in debugger.
 8. Set the jave build path to include the src/main/java & target/generated-sources/rsrc-gen
 9. Create new run/debug configuation, here is example command line:
     -keep -s /home/USR/Documents/dev/wscompile/run -extension -Xnocompile /home/USR/Documents/dev/onvif-relay/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl
-
+    -keep -s /home/jbh/Documents/dev/wscompile/run -b /home/jbh/Documents/dev/onvif-relay/src/main/xml/verbatim-operation-names-01.xml -extension -Xnocompile /home/jbh/Documents/dev/onvif-relay/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl
+    
+    
 NOTE: see stack-naming-01.txt for call stack showing here code getts the WSDL operation names
 
