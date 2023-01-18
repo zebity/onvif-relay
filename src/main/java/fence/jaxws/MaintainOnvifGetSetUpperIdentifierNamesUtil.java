@@ -27,6 +27,8 @@ public class MaintainOnvifGetSetUpperIdentifierNamesUtil implements NameConverte
 	    modifier.setAccessible(true);
 	    modifier.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 	    field.set(null, (Object)substitute);
+
+        System.out.println("INFO>> MaintainOnvifGetSetUpperIdentifierNamesUtil Enabled!!");            
 	  } catch (Exception secEx) {
 		System.out.println(secEx.getMessage());
 	  }
@@ -70,12 +72,12 @@ public class MaintainOnvifGetSetUpperIdentifierNamesUtil implements NameConverte
 	String res = token;
     if (token != null) {
       if (token.length() > 3 && (token.startsWith("Get") || token.startsWith("Set"))) {
-    	System.out.println("MaintainOnvifGetSetUpperNamesUtil: " + token);
+    	System.out.println("INFO>> MaintainOnvifGetSetUpperNamesUtil::toVariable: " + token);
       } else {
         res = standard.toVariableName(token);
       }
     }
-    return(token);
+    return(res);
   }
 
   @Override
