@@ -34,6 +34,9 @@ NOTE 2: You can generate code with javax or jakarta inclusions
 NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
 
 
+NOTE 4: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
+
+
 # Author:
 
 John Hartley
@@ -51,4 +54,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Jan 2023 - Added Embedded Jetty based onvif test device, but not tested
 - Jan 2023 - Tested Embedded Jetty based onvif test device, exposing SOAP 1.1 not SOAP 1.2
 - Jan 2023 - Resolved Embedded Jetty and SOAP 1.2 issue
+- Jan 2023 - See metro-jaxb-ri hack for WsImport that maintains ONVIF upper case
  
