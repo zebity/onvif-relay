@@ -18,6 +18,13 @@
 
    <!-- wsimport jakarta.* annotatons -->  
    <project.jaxws-plugin.ver>3.0.2</project.jaxws-plugin.ver>
+   <project.onvif-wsimport.ver>3.0.2</project.onvif-wsimport.ver>
+   <project.plugin-rt.group>onvif-relay</project.plugin-rt.group>
+   <project.plugin-rt.art>onvif-naming-jaxb-tools</project.plugin-rt.art>
+   <project.plugin-rt.ver>${project.onvif-wsimport.ver}</project.plugin-rt.ver>
+   <!-- project.plugin-rt.group>com.sun.xml.ws</project.plugin-rt.group>
+   <project.plugin-rt.art>jaxws-tools</project.plugin-rt.group>
+   <project.plugin-rt.ver>${project.jaxws-plugin.ver}</project.plugin-rt.ver -->
 
    <!-- use jetty 10 for javax and 11 for Jakarta -->
    <project.jetty.ver>11.0.12</project.jetty.ver>
@@ -100,6 +107,12 @@
      <groupId>jakarta.annotation</groupId>
      <artifactId>jakarta.annotation-api</artifactId>
      <version>2.1.1</version>	
+    </dependency>
+
+    <dependency>
+     <groupId>onvif-relay</groupId>
+     <artifactId>onvif-naming</artifactId>
+     <version>0.0.1</version>
     </dependency>
 
     <dependency>
@@ -194,9 +207,9 @@
      </configuration>
      <dependencies>
       <dependency>
-       <groupId>com.sun.xml.ws</groupId>
-       <artifactId>jaxws-tools</artifactId>
-       <version>${project.jaxws-plugin.ver}</version>
+       <groupId>${project.plugin-rt.group}</groupId>
+       <artifactId>${project.plugin-rt.art}</artifactId>
+       <version>${project.plugin-rt.ver}</version>
       </dependency>
      </dependencies>
     </plugin>
