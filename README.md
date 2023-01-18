@@ -35,6 +35,8 @@ NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Ra
 
 
 NOTE 4: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
+- See here for wsimpport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
+
 
 
 # Author:
