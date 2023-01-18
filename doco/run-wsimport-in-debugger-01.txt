@@ -6,8 +6,9 @@ To build and run WsImport in debugger.
 4  Create a new mvn project for just the wscompile tools:
     mvn archetype:generate -DgroupId=com.sun.wscompile -DartifactId=wscompile -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 5. copy over the required source files... including generated files:
-    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/java wscompile/src/main/java
-    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/resources wscompile/src/main 
+    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/java wscompile/src/main
+    cp -R metro-jax-ws/jaxws-ri/tools/wscompile/src/main/resources wscompile/src/main
+    mkdir -p wscompile/target/generated-sources 
     cp -R metro-jax-ws/jaxws-ri/tools/wscompile/target/generated-sources/rsrc-gen wscompile/target/generated-sources
     NOTE: or you can try to get the generator working via pom.xml pluging (see pom.xml)
 6. Replace the pom.xml with the one here (pom.xml), or copy the dependencies so build completes successfully

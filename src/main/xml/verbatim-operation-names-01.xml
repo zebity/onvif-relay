@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+                xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                wsdlLocation="../ver10/device/wsdl/devicemgmt.wsdl">
+
+  <jaxws:bindings node="wsdl:definitions/wsdl:portType[@name='Device']/wsdl:operation[@*]">
+    <jaxws:method name="@name"/>
+  </jaxws:bindings>
+</jaxws:bindings>

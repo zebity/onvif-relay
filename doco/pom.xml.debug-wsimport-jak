@@ -18,7 +18,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.sun.xml>com.sun.xml.ws</project.sun.xml>
     <project.sun.xml.ver>4.0.0</project.sun.xml.ver>
-    <istack.plugin.version>4.0.0</istack.plugin.version>
+    <istack.plugin.version>3.0.12</istack.plugin.version>
   </properties>
 
   <dependencies>
