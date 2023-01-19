@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-<!-- xsl:variable name="wsdlLoc" select="document-uri()" / -->
+<xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxws="http://java.sun.com/xml/ns/jaxws">
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 <xsl:template match="/">
-<jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+<!-- xsl:variable name="wsdlLoc" select="document-uri()" / -->
+<xsl:variable name="wsdlLoc" select="&quot;/home/jbh/Documents/dev/onvif-relay/src/main/resources/META-INF/wsd/org/onvif/vers10/device/wsdl/devicemgmt.wsdl&quot;" />
+<jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+ <xsl:attribute name="wsdlLocation">
+  <xsl:value-of select="$wsdlLoc" />
+ </xsl:attribute> 
+<!-- jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
                 xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                wsdlLocation="../ver10/device/wsdl/devicemgmt.wsdl">
- <!-- xsl:copy-of select="$wsdlLoc" / -->
+                wsdlLocation="$wdsdlLoc" -->
   <xsl:for-each select="wsdl:definitions/wsdl:portType[@*]">
    <xsl:variable name="portType" select="@name" />
    <xsl:for-each select="wsdl:operation[@*]">
