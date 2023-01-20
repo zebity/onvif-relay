@@ -17,6 +17,7 @@ import fence.util.ConfigurationData;
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.soap.SOAPBinding;
 import onvif_relay.service.JakDeviceImpl;
+import onvif_relay.service.JakMediaImpl;
 
 public class EmbeddedJettyJakDevice {
 	
@@ -25,8 +26,10 @@ public class EmbeddedJettyJakDevice {
     ConfigurationData confData = new ConfigurationData(args);
 
     String srvPort = confData.getItem("onvif-device", "port");
-	String port = confData.getItem("onvif-device", "device-port");
-	String request = confData.getItem("onvif-device", "request");
+	String dport = confData.getItem("onvif-device", "device-port");
+	String mport = confData.getItem("onvif-device", "media-port");
+	String devrequest = confData.getItem("onvif-device", "device-service");
+	String medrequest = confData.getItem("onvif-device", "media-service");
 	String ver = confData.getItem("onvif-device", "soap-ver");
 	String level = confData.getItem("onvif-device", "log-level");
 	
@@ -37,11 +40,12 @@ public class EmbeddedJettyJakDevice {
 	
     try {
         
-      System.out.println("Starting the Jetty server on port: " + srvPort + " onvif mgt on: " + port);
+      System.out.println("Starting the Jetty server on port: " + srvPort + " onvif[" + dport + "," + mport + "].");
         
       Server server = new Server(Integer.parseInt(srvPort));
       
       JakDeviceImpl device = new JakDeviceImpl();
+      JakMediaImpl media = new JakMediaImpl();
       
       // System.setProperty("com.sun.net.httpserver.HttpServerProvider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
       // System.setProperty("jakarta.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
@@ -51,9 +55,13 @@ public class EmbeddedJettyJakDevice {
       if (ver.equals("12"))
     	soapver = SOAPBinding.SOAP12HTTP_BINDING;
       
-      String uri = "http://127.0.0.1:" + port + request;
-      Endpoint ep = Endpoint.create(soapver, device);
-      ep.publish(uri);
+      String devuri = "http://127.0.0.1:" + dport + devrequest;
+      Endpoint devep = Endpoint.create(soapver, device);
+      devep.publish(devuri);
+      
+      String mediauri = "http://127.0.0.1:" + mport + medrequest;
+      Endpoint mediaep = Endpoint.create(soapver, media);
+      devep.publish(mediauri);
       
       server.start();
       

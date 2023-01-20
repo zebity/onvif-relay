@@ -13,17 +13,15 @@
 
  <wsdl:service name="DeviceService">
   <wsdl:documentation>ONVIF - Device</wsdl:documentation>
-   <!-- wsdl:port name="Device" binding="tns:DeviceBinding" -->
-   <wsdl:port name="DevicePort" binding="tds:DeviceBinding">
-    <soap:address location="http://127.0.0.1/onvif/device_service"/>
-   </wsdl:port>
+  <wsdl:port name="DevicePort" binding="tds:DeviceBinding">
+   <soap:address location="http://127.0.0.1/onvif/device_service"/>
+  </wsdl:port>
  </wsdl:service>
 
  <wsdl:service name="MediaService">
-     <wsdl:documentation>ONVIF - Media</wsdl:documentation>
-   <!-- wsdl:port name="Device" binding="tns:MediaBinding" -->
-   <wsdl:port name="MediaPort" binding="trt:MediaBinding">
-    <soap:address location="http://127.0.0.1/onvif/device_service"/>
-   </wsdl:port>
+  <wsdl:documentation>ONVIF - Media</wsdl:documentation>
+  <wsdl:port name="MediaPort" binding="trt:MediaBinding">
+   <soap:address location="http://127.0.0.1/onvif/media_service"/>
+  </wsdl:port>
  </wsdl:service>
 </wsdl:definitions>

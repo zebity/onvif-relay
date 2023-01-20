@@ -24,6 +24,7 @@ import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.Holder;
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.SOAPBinding;
+
 import onvif_relay.client.JakOnvifAuthHandler;
 
 public class JakOnvifClient {
@@ -32,15 +33,18 @@ public class JakOnvifClient {
 
   public String getInfo(ConfigurationData confData, String ip, String hw_id, String reqType, String getthis, List<String> args) {
 	String res = null;
-	String urit = confData.getItem(hw_id, "device-service");
+	String durit = confData.getItem(hw_id, "device-service");
+	String murit = confData.getItem(hw_id, "media-service");
 	String auth = confData.getItem(hw_id, "auth");
 
-	String[] parts = urit.split(":");
+	String[] dparts = durit.split(":");
+	String[] mparts = murit.split(":");
 	String [] cred = auth.split(":");
 	
-    String reqURL = new String(parts[0] + "://" + ip + ":" + parts[1]);
+    String dreqURL = new String(dparts[0] + "://" + ip + ":" + dparts[1]);	
+    String mreqURL = new String(mparts[0] + "://" + ip + ":" + mparts[1]);
 	      
-	if (reqURL != null) {
+	if (dreqURL != null && mreqURL != null) {
 	    	  
 	  try {
 		
@@ -49,7 +53,8 @@ public class JakOnvifClient {
 		Device dev = null;
 		MediaService mediaSrv = null;
 		Media media = null;
-		URL devURL = new URL(reqURL);
+		URL devURL = new URL(dreqURL);
+		URL medURL = new URL(mreqURL);
 		    
 		// Map<String, List<String>> Headers = new HashMap<String, List<String>>();
 		// List<String> HdrVals = new ArrayList<>(); HdrVals.add("text/xml");
@@ -67,6 +72,7 @@ public class JakOnvifClient {
 			  Set<String> roles = soapBinding.getRoles();
 			  System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 			}
+		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, medURL.toString());
 		    List<Handler> handList = binding.getHandlerChain();
 		    handList.add(new JakOnvifAuthHandler());
 		    binding.setHandlerChain(handList);
@@ -96,7 +102,7 @@ public class JakOnvifClient {
 		  }
 		}
 	  	if (result != null) {
-	  	  res = new String("{\"" + reqURL + ": " + result + "}");
+	  	  res = new String("{\"" + dreqURL + ": " + result + "}");
 	  	  System.out.println(res);
 	  	}
       } catch (Exception e) {

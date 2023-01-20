@@ -8,7 +8,7 @@
   <properties>
 
    <project.download.dir>${project.basedir}/target/generated-sources/wget/</project.download.dir>
-   <project.wsdl.resource.dir>${project.basedir}/src/main/resources/META-INF/wsdl/</project.wsdl.resource.dir>
+   <project.wsdl.resource.dir>/META-INF/wsdl/</project.wsdl.resource.dir>
    <project.patch.dir>${project.basedir}/src/main/patch/</project.patch.dir>
    <project.sh.dir>${project.basedir}/src/main/sh/</project.sh.dir>
 
@@ -208,7 +208,7 @@
      </executions>
      <configuration>
        <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdlLocation>
-       <wsdlDirectory>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10</wsdlDirectory>
+       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10</wsdlDirectory>
        <wsdlFiles>
         <wsdlFile>onvif_device.wsdl</wsdlFile>
        </wsdlFiles>
@@ -236,7 +236,7 @@
         <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
         <wsdlOptions>
          <wsdlOption>
-          <wsdl>${basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdl>
+          <wsdl>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdl>
           <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdlLocation>
          </wsdlOption>
         </wsdlOptions>
