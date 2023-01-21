@@ -54,9 +54,9 @@ To Build:
 3. Run get and patch script to download & patch required WSDLs
 4. [Optionally: Generate XML Binding Customisation scripts]
 5. Either:
-   A. Run custom wsimport script to to create Upper case Java Method names
-   or
-   B. Run wsimmport usng -b custimsation.xml from [4.]
+   - A. Run custom wsimport script to to create Upper case Java Method names
+   - or
+   - B. Run wsimmport usng -b custimsation.xml from [4.]
 
 
 # Author:
