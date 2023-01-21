@@ -41,6 +41,23 @@ NOTE 4: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for vers
 NOTE 5: As an alternate to using "hacked" wsimport, added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport and should avoid need for hacked wsimport. Tested with xlstproc:
 - xsltproc -o - src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > binding.xml
 
+# Build Process
+
+After much testing I found the following was reqired to get running service:
+1. Wrap each ONVIF wsdl with its own service wrapper wsdl
+2. Always have wrapping and wrapped WSDL in the same directory
+
+To Build:
+
+1. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project)
+2. Do maven clean
+3. Run get and patch script to download & patch required WSDLs
+4. [Optionally: Generate XML Binding Customisation scripts]
+5. Either:
+   A. Run custom wsimport script to to create Upper case Java Method names
+   or
+   B. Run wsimmport usng -b custimsation.xml from [4.]
+
 
 # Author:
 
