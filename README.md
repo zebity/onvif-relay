@@ -56,7 +56,7 @@ To Build:
 5. Either:
    - A. Run custom wsimport script to to create Upper case Java Method names
    - or
-   - B. Run wsimmport usng -b customsation.xml from [4.]
+   - B. Run wsimmport usng -b customsiation.xml from [4.]
 
 
 # Author:
