@@ -61,7 +61,7 @@ public class EmbeddedJettyJakDevice {
       
       String mediauri = "http://127.0.0.1:" + mport + medrequest;
       Endpoint mediaep = Endpoint.create(soapver, media);
-      devep.publish(mediauri);
+      mediaep.publish(mediauri);
       
       server.start();
       

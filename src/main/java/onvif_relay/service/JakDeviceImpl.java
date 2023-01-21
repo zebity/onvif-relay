@@ -10,7 +10,7 @@ import java.util.List;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.onvif.ver10.Device;
+import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceServiceCapabilities;
 import org.onvif.ver10.device.wsdl.GetDot11Capabilities;
 import org.onvif.ver10.device.wsdl.GetDot11CapabilitiesResponse;
@@ -71,7 +71,7 @@ import jakarta.xml.ws.Holder;
   name = "Device",
   serviceName = "DeviceService",
   portName = "DevicePort",
-  targetNamespace = "http://www.onvif.org/ver10")
+  targetNamespace = "http://www.onvif.org/ver10/device/wsdl")
 public class JakDeviceImpl implements Device {
 
 	@Override

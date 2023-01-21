@@ -7,17 +7,12 @@ package onvif_relay.service;
 
 import java.util.List;
 
-import org.onvif.ver10.Media;
+import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.Capabilities;
-import org.onvif.ver10.media.wsdl.CreateOSD;
 import org.onvif.ver10.media.wsdl.CreateOSDResponse;
-import org.onvif.ver10.media.wsdl.DeleteOSD;
 import org.onvif.ver10.media.wsdl.DeleteOSDResponse;
-import org.onvif.ver10.media.wsdl.GetOSD;
-import org.onvif.ver10.media.wsdl.GetOSDOptions;
 import org.onvif.ver10.media.wsdl.GetOSDOptionsResponse;
 import org.onvif.ver10.media.wsdl.GetOSDResponse;
-import org.onvif.ver10.media.wsdl.SetOSD;
 import org.onvif.ver10.media.wsdl.SetOSDResponse;
 import org.onvif.ver10.media.wsdl.VideoSourceMode;
 import org.onvif.ver10.schema.AudioDecoderConfiguration;
@@ -50,7 +45,7 @@ import jakarta.xml.ws.Holder;
   name = "Media",
   serviceName = "MediaService",
   portName = "MediaPort",
-  targetNamespace = "http://www.onvif.org/ver10")
+  targetNamespace = "http://www.onvif.org/ver10/media/wsdl")
 public class JakMediaImpl implements Media {
 
 	@Override

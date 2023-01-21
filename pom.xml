@@ -206,15 +206,24 @@
        </goals>
       </execution>
      </executions>
-     <configuration>
-       <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdlLocation>
-       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10</wsdlDirectory>
+      <configuration>
+       <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
+       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl</wsdlDirectory>
        <wsdlFiles>
         <wsdlFile>onvif_device.wsdl</wsdlFile>
        </wsdlFiles>
        <!-- The extension property tells JAX-WS to support soap v1.2 bindings. -->
        <extension>true</extension>
-     </configuration>
+      </configuration>
+      <!-- configuration>
+       <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
+       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl</wsdlDirectory>
+       <wsdlFiles>
+        <wsdlFile>onvif_media.wsdl</wsdlFile>
+       </wsdlFiles>
+       <!- The extension property tells JAX-WS to support soap v1.2 bindings. ->
+       <extension>true</extension>
+      </configuration -->
      <dependencies>
       <dependency>
        <groupId>${project.plugin-rt.group}</groupId>

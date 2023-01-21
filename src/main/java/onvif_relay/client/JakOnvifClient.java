@@ -9,10 +9,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
-import org.onvif.ver10.Device;
-import org.onvif.ver10.DeviceService;
-import org.onvif.ver10.Media;
-import org.onvif.ver10.MediaService;
+import org.onvif.ver10.device.wsdl.Device;
+import org.onvif.ver10.device.wsdl.DeviceService;
+import org.onvif.ver10.media.wsdl.Media;
+import org.onvif.ver10.media.wsdl.MediaService;
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 
 import com.google.gson.Gson;
