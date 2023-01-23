@@ -11,13 +11,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import fence.util.ConfigurationData;
-
+import jakarta.servlet.http.HttpServlet;
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.soap.SOAPBinding;
 import onvif_relay.service.JakDeviceImpl;
 import onvif_relay.service.JakMediaImpl;
+import onvif_relay.servlet.OnvifFacadeServlet;
 
 public class EmbeddedJettyJakDevice {
 	
@@ -45,7 +48,7 @@ public class EmbeddedJettyJakDevice {
       Server server = new Server(Integer.parseInt(srvPort));
       
       JakDeviceImpl device = new JakDeviceImpl();
-      JakMediaImpl media = new JakMediaImpl();
+      JakMediaImpl media = new JakMediaImpl();     
       
       // System.setProperty("com.sun.net.httpserver.HttpServerProvider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
       // System.setProperty("jakarta.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
@@ -62,6 +65,12 @@ public class EmbeddedJettyJakDevice {
       String mediauri = "http://127.0.0.1:" + mport + medrequest;
       Endpoint mediaep = Endpoint.create(soapver, media);
       mediaep.publish(mediauri);
+      
+      HttpServlet srvlet = new OnvifFacadeServlet(confData);
+      ServletHandler srvHandler = new ServletHandler();
+      ServletHolder holder = new ServletHolder(srvlet);
+      srvHandler.addServletWithMapping(holder, "/onvif/device_service");
+      server.setHandler(srvHandler);
       
       server.start();
       
