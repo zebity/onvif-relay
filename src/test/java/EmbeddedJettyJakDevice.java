@@ -11,10 +11,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.eclipse.jetty.proxy.ConnectHandler;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.UserStore;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.util.security.Credential;
 
 import fence.util.ConfigurationData;
 import jakarta.servlet.http.HttpServlet;
@@ -37,6 +44,12 @@ public class EmbeddedJettyJakDevice {
 	String medrequest = confData.getItem("onvif-device", "media-service");
 	String ver = confData.getItem("onvif-device", "soap-ver");
 	String level = confData.getItem("onvif-device", "log-level");
+	String security = confData.getItem("onvif-device", "security");
+	String realm = confData.getItem("onvif-device", "realm");
+	String auth = confData.getItem("onvif-device", "auth");
+	String[] cred = auth.split(":");
+	// ONVIF Roles: [ Administrator | Operator | User | Anonymous ]
+	String[] roles = {"Administrator"};
 	
 	String loglevel = "warning";
 	if (level != null)
@@ -71,9 +84,33 @@ public class EmbeddedJettyJakDevice {
       ConnectHandler proxy = new ConnectHandler();
       server.setHandler(proxy);
       
-      HttpServlet srvlet = new OnvifFacadeServlet(confData);
+      HashLoginService loginSrv = new HashLoginService();
+      loginSrv.setName(realm);
+      UserStore creds = new UserStore();
+      creds.addUser(cred[0], Credential.getCredential(cred[1]), roles);
+      loginSrv.setUserStore(creds);
+      Constraint secConstraint = new Constraint();
+      secConstraint.setName(Constraint.__DIGEST_AUTH);
+      secConstraint.setRoles(roles);
+      secConstraint.setAuthenticate(true);
+      
+      ConstraintMapping cm = new ConstraintMapping();
+      cm.setConstraint(secConstraint);
+      cm.setPathSpec("/*");
+      
+      ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
+      csh.setAuthenticator(new DigestAuthenticator());
+      csh.addConstraintMapping(cm);
+      csh.setLoginService(loginSrv);
       // ServletHandler srvHandler = new ServletHandler();
+      
       ServletContextHandler cxtHandler = new ServletContextHandler(proxy, "/", ServletContextHandler.SESSIONS);
+
+      if (security.equals("digest")) {
+        cxtHandler.setSecurityHandler(csh);
+      }
+      
+      HttpServlet srvlet = new OnvifFacadeServlet(confData);
       ServletHolder holder = new ServletHolder(srvlet);
       // srvHandler.addServletWithMapping(holder, "/onvif/device_service");
       cxtHandler.addServlet(holder, "/onvif/device_service");
