@@ -10,7 +10,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.eclipse.jetty.proxy.ConnectHandler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -66,11 +68,16 @@ public class EmbeddedJettyJakDevice {
       Endpoint mediaep = Endpoint.create(soapver, media);
       mediaep.publish(mediauri);
       
+      ConnectHandler proxy = new ConnectHandler();
+      server.setHandler(proxy);
+      
       HttpServlet srvlet = new OnvifFacadeServlet(confData);
-      ServletHandler srvHandler = new ServletHandler();
+      // ServletHandler srvHandler = new ServletHandler();
+      ServletContextHandler cxtHandler = new ServletContextHandler(proxy, "/", ServletContextHandler.SESSIONS);
       ServletHolder holder = new ServletHolder(srvlet);
-      srvHandler.addServletWithMapping(holder, "/onvif/device_service");
-      server.setHandler(srvHandler);
+      // srvHandler.addServletWithMapping(holder, "/onvif/device_service");
+      cxtHandler.addServlet(holder, "/onvif/device_service");
+      // server.setHandler(srvHandler);
       
       server.start();
       

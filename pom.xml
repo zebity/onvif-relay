@@ -171,6 +171,11 @@
     	<artifactId>jetty-http-spi</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency>
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-proxy</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency>
 
   </dependencies>
 
