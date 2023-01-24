@@ -255,12 +255,8 @@ public class OnvifFacadeServlet extends ProxyServlet {
 	  
 	  if (DeviceOperation.contains(soapMethod)  || (! MediaOperation.contains(soapMethod))) {
 		reqURL = "http://127.0.0.1:" + dport + devrequest;
-		// RequestDispatcher dispatcher = request.getRequestDispatcher(devrequest);
-		// dispatcher.forward(request, response);
 	  } else {
 		reqURL = "http://127/0.0.1:" + mport + medrequest;
-		// RequestDispatcher dispatcher = request.getRequestDispatcher(medrequest);
-		// dispatcher.forward(request, response);
 	  }
 		  
 	} catch (Exception ex) {
