@@ -251,14 +251,15 @@ public class OnvifFacadeServlet extends ProxyServlet {
 	  SOAPMessage soapReq = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL).createMessage(null, is);
 
 	  String soapMethod = soapReq.getSOAPBody().getChildNodes().item(1).getLocalName();
-
+	  System.out.println("DBG>> OnvifFacadeServlet:rewriteTarget - for: " + soapMethod);
 	  
 	  if (DeviceOperation.contains(soapMethod)  || (! MediaOperation.contains(soapMethod))) {
 		reqURL = "http://127.0.0.1:" + dport + devrequest;
 	  } else {
 		reqURL = "http://127/0.0.1:" + mport + medrequest;
 	  }
-		  
+	  System.out.println("INFO>> OnvifFacadeServlet:rewriteTarget: " + reqURL);
+	  
 	} catch (Exception ex) {
 	  ex.printStackTrace();
 	}
