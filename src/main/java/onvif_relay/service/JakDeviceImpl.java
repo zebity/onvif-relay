@@ -12,9 +12,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceServiceCapabilities;
-import org.onvif.ver10.device.wsdl.GetDot11Capabilities;
 import org.onvif.ver10.device.wsdl.GetDot11CapabilitiesResponse;
-import org.onvif.ver10.device.wsdl.GetEndpointReference;
 import org.onvif.ver10.device.wsdl.GetEndpointReferenceResponse;
 import org.onvif.ver10.device.wsdl.GetSystemUrisResponse.Extension;
 import org.onvif.ver10.device.wsdl.Service;
@@ -90,10 +88,10 @@ public class JakDeviceImpl implements Device {
 	public void GetDeviceInformation(Holder<String> manufacturer, Holder<String> model, Holder<String> firmwareVersion,
 			Holder<String> serialNumber, Holder<String> hardwareId) {
 	  manufacturer.value = new String("john");
-	  model.value = new String("beta");
+	  model.value = new String("onvif-test");
 	  firmwareVersion.value = new String("0.0.1");
-	  serialNumber.value = new String("1");
-	  hardwareId.value = new String("hw1");	
+	  serialNumber.value = new String("001");
+	  hardwareId.value = new String("test#1");	
 	}
 
 	@Override
