@@ -36,6 +36,7 @@ public class JakOnvifClient {
 	String durit = confData.getItem(hw_id, "device-service");
 	String murit = confData.getItem(hw_id, "media-service");
 	String auth = confData.getItem(hw_id, "auth");
+	String security = confData.getItem(hw_id, "security");
 
 	String[] dparts = durit.split(":");
 	String[] mparts = murit.split(":");
@@ -56,10 +57,6 @@ public class JakOnvifClient {
 		URL devURL = new URL(dreqURL);
 		URL medURL = new URL(mreqURL);
 		    
-		// Map<String, List<String>> Headers = new HashMap<String, List<String>>();
-		// List<String> HdrVals = new ArrayList<>(); HdrVals.add("text/xml");
-		// Headers.put("Content-Type", HdrVals);
-
 		if (reqType.equals("Media")) {
 		  mediaSrv = new MediaService();
 		  media = mediaSrv.getMediaPort();
@@ -73,6 +70,12 @@ public class JakOnvifClient {
 			  System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 			}
 		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, medURL.toString());
+		    
+            if (security != null & security.equals("basic")) {
+		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
+		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
+            }
+            
 		    List<Handler> handList = binding.getHandlerChain();
 		    handList.add(new JakOnvifAuthHandler());
 		    binding.setHandlerChain(handList);
@@ -91,9 +94,12 @@ public class JakOnvifClient {
 		      System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
 		    }
 		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, devURL.toString());
-		    // bp.getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, Headers);
-		    // bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, reqURL[1]);
-		    // bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, reqURL[2]);
+		    
+            if (security != null & security.equals("basic")) {
+		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
+		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
+            }
+            
 		    List<Handler> handList = binding.getHandlerChain();
 		    handList.add(new JakOnvifAuthHandler());
 		    binding.setHandlerChain(handList);
