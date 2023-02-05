@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -18,7 +17,6 @@ import org.w3c.dom.Document;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.handler.MessageContext;
 import jakarta.xml.ws.handler.soap.SOAPHandler;

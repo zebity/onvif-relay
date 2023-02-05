@@ -25,8 +25,6 @@ import jakarta.xml.ws.Holder;
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.SOAPBinding;
 
-import onvif_relay.client.JakOnvifAuthHandler;
-
 public class JakOnvifClient {
   public org.onvif.ver10.device.wsdl.ObjectFactory onvDevFact = new org.onvif.ver10.device.wsdl.ObjectFactory();
   public org.onvif.ver10.schema.ObjectFactory onvSchemaFact = new org.onvif.ver10.schema.ObjectFactory();
