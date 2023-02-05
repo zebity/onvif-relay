@@ -69,7 +69,7 @@ public class JakOnvifClient {
 			}
 		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, medURL.toString());
 		    
-            if (security != null & security.equals("basic")) {
+            if (security != null && security.equals("basic")) {
 		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
 		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
             }
@@ -93,7 +93,7 @@ public class JakOnvifClient {
 		    }
 		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, devURL.toString());
 		    
-            if (security != null & security.equals("basic")) {
+            if (security != null && security.equals("basic")) {
 		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
 		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
             }
