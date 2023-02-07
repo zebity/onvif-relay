@@ -37,7 +37,7 @@ public class JakOnvifClient {
 	String security = confData.getItem(hw_id, "security");
 	String dump = confData.getItem(hw_id, "dump");
 	
-	if (dump != null && dump.equals("yes")) {
+	if (dump != null && dump.equals("true")) {
 	  System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
 	}
 
