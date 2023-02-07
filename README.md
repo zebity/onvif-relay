@@ -36,7 +36,7 @@ NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Ra
 
 
 NOTE 4: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
-- See here for wsimpport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
+- See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
 
 NOTE 5: As an alternate to using "hacked" wsimport, added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport and should avoid need for hacked wsimport. Tested with xlstproc:
 - xsltproc -o - src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > binding.xml
