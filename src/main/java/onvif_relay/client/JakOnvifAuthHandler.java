@@ -23,7 +23,7 @@ import jakarta.xml.ws.handler.soap.SOAPHandler;
 import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 
 public class JakOnvifAuthHandler implements SOAPHandler<SOAPMessageContext> {
-  boolean dumpSOAP = true;
+  boolean dumpSOAP = false;
   
   boolean setDumpSOAP(boolean to) {
     boolean res = dumpSOAP;

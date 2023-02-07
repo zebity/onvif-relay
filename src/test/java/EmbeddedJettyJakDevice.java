@@ -43,6 +43,7 @@ public class EmbeddedJettyJakDevice {
 	String medrequest = confData.getItem("onvif-device", "media-service");
 	String ver = confData.getItem("onvif-device", "soap-ver");
 	String level = confData.getItem("onvif-device", "log-level");
+	String dump = confData.getItem("onvif-device", "dump");
 	String security = confData.getItem("onvif-device", "security");
 	String realm = confData.getItem("onvif-device", "realm");
 	String auth = confData.getItem("onvif-device", "auth");
@@ -50,10 +51,14 @@ public class EmbeddedJettyJakDevice {
 	// ONVIF Roles: [ Administrator | Operator | User | Anonymous ]
 	String[] roles = {"Administrator"};
 	
-	String loglevel = "warning";
+	String loglevel = "warn";
 	if (level != null)
 	  loglevel = level; 
 	System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loglevel);
+	
+	if (dump != null && (dump.equals("true") || dump.equals("yes"))) {
+	  System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
+	}
 	
     try {
         

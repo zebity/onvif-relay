@@ -35,6 +35,11 @@ public class JakOnvifClient {
 	String murit = confData.getItem(hw_id, "media-service");
 	String auth = confData.getItem(hw_id, "auth");
 	String security = confData.getItem(hw_id, "security");
+	String dump = confData.getItem(hw_id, "dump");
+	
+	if (dump != null && dump.equals("yes")) {
+	  System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+	}
 
 	String[] dparts = durit.split(":");
 	String[] mparts = murit.split(":");

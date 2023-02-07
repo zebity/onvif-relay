@@ -10,7 +10,7 @@
  * {@link com.facebook.thrift.server.TSimpleServer}.
  * {@link https://gist.github.com/pieceable/430784/8c38b0cb47e9667d2168e75e61540d03f0c11e9d}.
  * 
- * @author John Hartley - for Ericsson Mana Lab Discovery POC
+ * @author John Hartley
  * 
  */
 
@@ -238,7 +238,7 @@ public class OnvifFacadeServlet extends ProxyServlet {
   @Override
   public void init() throws ServletException {
 	super.init();
-    System.out.println("DBG>> DeviceDiscoveryServlet:init");  
+    System.out.println("DBG>> OnvifFacadeServlet:init");  
   }
   
   @Override
