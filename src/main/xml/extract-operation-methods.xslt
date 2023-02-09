@@ -4,12 +4,13 @@
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 <xsl:template match="/">
 <!-- xsl:variable name="wsdlLoc" select="document-uri()" / -->
-<xsl:variable name="wsdlLoc" select="&quot;/META-INF/wsd/org/onvif/vers10/device/wsdl/devicemgmt.wsdl&quot;" />
-<jaxws:bindings xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<xsl:variable name="wsdlLoc" select="&quot;/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl&quot;" />
+<jaxws:bindings xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" >
 <!-- JAX jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" -->
  <xsl:attribute name="wsdlLocation">
   <xsl:value-of select="$wsdlLoc" />
  </xsl:attribute> 
+<jaxb:globalBindings enableJavaNamingConventions = "false" underscoreBinding = "asCharInWord"/>
   <xsl:for-each select="wsdl:definitions/wsdl:portType[@*]">
    <xsl:variable name="portType" select="@name" />
    <xsl:for-each select="wsdl:operation[@*]">
