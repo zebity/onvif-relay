@@ -35,11 +35,14 @@ NOTE 2: You can generate code with javax or jakarta inclusions
 NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
 
 
-NOTE 4: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
-- See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
+NOTE 4: The better way to customise wsimport result (ie avoid NOTE 5 using "hacked" wsimport), added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport. Tested with xlstproc, which does not seem to allow use of the "document" method to get the name of input WSDL, so this is passed in explicity via -stringparam::
+- xsltproc -o - -stringparam p1 /META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > target/generated-sources/xsltproc/device/device-binding-01.xml
 
-NOTE 5: As an alternate to using "hacked" wsimport, added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport and should avoid need for hacked wsimport. Tested with xlstproc:
-- xsltproc -o - src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > binding.xml
+
+NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
+- See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
+- See NOTE 4 as this uses wsimport binding file to provide custom naming (the official way) and it easier (once you know) than hacking wsimport
+
 
 ## Build Process
 
@@ -54,9 +57,9 @@ To Build:
 3. Run get and patch script to download & patch required WSDLs
 4. [Optionally: Generate XML Binding Customisation scripts]
 5. Either:
-   - A. Run custom wsimport script to to create Upper case Java Method names
+   - A. Run wsimport using -b customsiation.xml from [4.]
    - or
-   - B. Run wsimmport usng -b customsiation.xml from [4.]
+   - B. Run custom wsimport script to to create Upper case Java Method names
 
 
 # Author:
@@ -77,4 +80,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Jan 2023 - Tested Embedded Jetty based onvif test device, exposing SOAP 1.1 not SOAP 1.2
 - Jan 2023 - Resolved Embedded Jetty and SOAP 1.2 issue
 - Jan 2023 - See metro-jaxb-ri hack for WsImport that maintains ONVIF upper case
+- Feb 2023 - Get -b binding customisation working to avoid hacking wsimport (see blog for usage guide)
  
