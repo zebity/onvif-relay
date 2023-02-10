@@ -20,7 +20,7 @@ Maven Targets:
 - mvn -X initialize : to download and patch ONVIF wsdl for jaxws:wsimport (runs get-and-patch.sh)
 - mvn -X generate-sources : to run the CXF WSDL2Java Generator as alternate to wsimport (for testing)
 
-NOTE 1: Currently automtic download and patch of ONVIF wsdls does not work via Maven.
+NOTE 1: Currently automatic download and patch of ONVIF wsdls does not work via Maven.
 
 Run manually via:
 - $ get-and-patch.sh <filelist.[jax|jak].txt> <download.dir> <destination.dir> <patch.dir>
