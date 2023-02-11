@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.media.wsdl.Media;
@@ -36,6 +38,8 @@ public class JakOnvifClient {
 	String auth = confData.getItem(hw_id, "auth");
 	String security = confData.getItem(hw_id, "security");
 	String dump = confData.getItem(hw_id, "dump");
+	String soapver = confData.getItem(hw_id, "soap-ver");
+	String soapbinding = null;
 	
 	if (dump != null && dump.equals("true")) {
 	  System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
@@ -49,6 +53,16 @@ public class JakOnvifClient {
     String mreqURL = new String(mparts[0] + "://" + ip + ":" + mparts[1]);
 	      
 	if (dreqURL != null && mreqURL != null) {
+		
+	  if (soapver != null) {
+		switch (soapver) {
+		  case "12": soapbinding = SOAPBinding.SOAP12HTTP_BINDING;
+		        	 break;
+		  case "11": soapbinding = SOAPBinding.SOAP11HTTP_BINDING;
+		             break;
+		  default:
+		}
+	  }
 	    	  
 	  try {
 		
@@ -61,9 +75,17 @@ public class JakOnvifClient {
 		URL medURL = new URL(mreqURL);
 		    
 		if (reqType.equals("Media")) {
-		  mediaSrv = new MediaService();
-		  media = mediaSrv.getMediaPort();
-      
+
+		  if (soapbinding != null) {
+			QName medPort = new QName("http://www.onvif.org/ver10/media/wsdl", "MediaPort");
+			mediaSrv = new MediaService();
+			mediaSrv.addPort(medPort, soapbinding, mreqURL);
+	        media = mediaSrv.getPort(medPort, Media.class);
+		  } else {
+			mediaSrv = new MediaService();
+			media = mediaSrv.getMediaPort();
+		  }
+		  
 		  if (media instanceof BindingProvider) {
 		    BindingProvider bp = (BindingProvider)media;
 		    Binding binding = bp.getBinding();
@@ -85,8 +107,16 @@ public class JakOnvifClient {
 		    result = SOAPWSMediaReqest(getthis, args, media);
 		  }
 		} else if (reqType.equals("Device") || reqType.equals("PreAuth")) {
-		  devSrv = new DeviceService();
-		  dev = devSrv.getDevicePort();
+			
+		  if (soapbinding != null) {
+			QName devPort = new QName("http://www.onvif.org/ver10/device/wsdl", "DevicePort");
+			devSrv = new DeviceService();
+			devSrv.addPort(devPort, soapbinding, dreqURL);
+		    dev = devSrv.getPort(devPort, Device.class);
+		  } else {
+			devSrv = new DeviceService();
+			dev = devSrv.getDevicePort();
+		  }
 		      
 		  if (dev instanceof BindingProvider) {
 			BindingProvider bp = (BindingProvider)dev;
