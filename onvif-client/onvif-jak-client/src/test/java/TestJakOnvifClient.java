@@ -1,10 +1,10 @@
-/*
+/**
  @what Test onvif device client
  
 */
 
 import fence.util.ConfigurationData;
-import onvif_relay.client.JakOnvifClient;
+import onvif_relay.client.jak.JakOnvifClient;
 
 public class TestJakOnvifClient {
 	

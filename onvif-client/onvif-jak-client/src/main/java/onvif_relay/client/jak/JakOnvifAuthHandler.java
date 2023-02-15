@@ -1,4 +1,4 @@
-package onvif_relay.client;
+package onvif_relay.client.jak;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

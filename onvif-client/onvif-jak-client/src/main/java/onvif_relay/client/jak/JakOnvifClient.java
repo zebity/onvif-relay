@@ -3,7 +3,7 @@
  
 */
 
-package onvif_relay.client;
+package onvif_relay.client.jak;
 
 import java.net.URL;
 import java.util.List;
@@ -13,9 +13,9 @@ import javax.xml.namespace.QName;
 
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
+import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.MediaService;
-import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -113,7 +113,7 @@ public class JakOnvifClient {
 		  }
 		} else if (reqType.equals("Device") || reqType.equals("PreAuth")) {
 			
-		  if (soapbinding != null && cxf.equalls("true")) {
+		  if (soapbinding != null && cxf.equals("true")) {
 			QName devPort = new QName("http://www.onvif.org/ver10/device/wsdl", "DevicePort");
 			devSrv = new DeviceService();
 			devSrv.addPort(devPort, soapbinding, dreqURL);

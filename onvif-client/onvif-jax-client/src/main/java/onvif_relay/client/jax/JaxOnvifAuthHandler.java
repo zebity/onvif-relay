@@ -1,4 +1,4 @@
-package onvif_relay.client;
+package onvif_relay.client.jax;
 
 import java.util.Set;
 

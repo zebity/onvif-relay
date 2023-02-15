@@ -3,7 +3,7 @@
  
 */
 
-package onvif_relay.client;
+package onvif_relay.client.jax;
 
 import java.net.URL;
 import java.util.List;
@@ -25,7 +25,7 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPBinding;
 
 import fence.util.ConfigurationData;
-import onvif_relay.client.JaxOnvifAuthHandler;
+import onvif_relay.client.jax.JaxOnvifAuthHandler;
 
 public class JaxOnvifClient {
   public org.onvif.ver10.device.wsdl.ObjectFactory onvDevFact = new org.onvif.ver10.device.wsdl.ObjectFactory();
