@@ -43,7 +43,10 @@ NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for vers
 - See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
 - See NOTE 4 as this uses wsimport binding file to provide custom naming (the official way) and it easier (once you know) than hacking wsimport
 
+
 NOTE 6: see src/main/sh/run-wsimport.sh for shell script that runs the binding customisation generator and then wsimport (for both device & media WSDLs)
+
+NOTE 7: Now refacted to use Maven Module, as this lets to build and test server/client independencty. If yoou want to bulid with jax or cxf instead of metro then change chance onvif-api/pom.xml (whci is shared across server and client) and then then rebuild part you want.
 
 
 ## Build Process
