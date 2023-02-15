@@ -20,8 +20,13 @@ MEDIA_WSDL=${WSDL_MEDIA_DIR}/onvif_media.wsdl
 MEDIA_BINDING_WSDL=${WSDL_MEDIA_DIR}/media.wsdl
 MEDIA_BINDING=${PROJDIR}/${BINDING_MEDIA_DIR}/media-binding-01.xml
 
-mkdir -p ${PROJDIR}/{BINDING_DEVICE_DIR}
-mkdir -p ${PROJDIR}/{BINDING_MEDIA_DIR}
+JAVA_GENERATED_DIR=${PROJDIR}/target/generated-sources/wsimport
+CLASSES_GENERATED_DIR=${PROJDIR}/target/classes
+
+mkdir -p ${PROJDIR}/${BINDING_DEVICE_DIR}
+mkdir -p ${PROJDIR}/${BINDING_MEDIA_DIR}
+mkdir -p ${JAVA_GENERATED_DIR}
+mkdir -p ${CLASSES_GENERATED_DIR}
 
 xsltproc -o - -stringparam p1 ${DEVICE_BINDING_WSDL} src/main/xml/extract-operation-methods.xslt ${DEVICE_BINDING_WSDL} > ${DEVICE_BINDING}
 xsltproc -o - -stringparam p1 ${MEDIA_BINDING_WSDL} src/main/xml/extract-operation-methods.xslt ${MEDIA_BINDING_WSDL} > ${MEDIA_BINDING}

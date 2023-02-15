@@ -1,0 +1,318 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>onvif-relay</groupId>
+  <artifactId>onvif-relay</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>onvif-relay</name>
+  <description>onvif-relay</description>
+  <properties>
+
+   <project.download.dir>${project.basedir}/target/generated-sources/wget/</project.download.dir>
+   <project.wsdl.resource.dir>/META-INF/wsdl/</project.wsdl.resource.dir>
+   <project.patch.dir>${project.basedir}/src/main/patch/</project.patch.dir>
+   <project.sh.dir>${project.basedir}/src/main/sh/</project.sh.dir>
+
+   <!-- wsimport javax.* annotatons -->  
+   <!-- project.jaxws-plugin.ver>2.3.5</project.jaxws-plugin.ver -->
+   <cxf.version>4.0.0</cxf.version>
+
+   <!-- wsimport jakarta.* annotatons -->  
+   <project.jaxws-plugin.ver>3.0.2</project.jaxws-plugin.ver>
+   <project.onvif-wsimport.ver>3.0.2</project.onvif-wsimport.ver>
+   <!-- project.plugin-rt.group>onvif-relay</project.plugin-rt.group>
+   <project.plugin-rt.art>onvif-naming-jaxb-tools</project.plugin-rt.art>
+   <project.plugin-rt.ver>${project.onvif-wsimport.ver}</project.plugin-rt.ver -->
+   <project.plugin-rt.group>com.sun.xml.ws</project.plugin-rt.group>
+   <project.plugin-rt.art>jaxws-tools</project.plugin-rt.art>
+   <project.plugin-rt.ver>${project.jaxws-plugin.ver}</project.plugin-rt.ver>
+
+   <!-- use jetty 10 for javax and 11 for Jakarta -->
+   <project.jetty.ver>11.0.12</project.jetty.ver>
+   <!-- project.jetty.ver>10.0.12</project.jetty.ver -->
+
+  </properties>
+
+  <dependencies>
+
+    <!-- WSIMPORT DEPENDENCIES -->
+    <!-- JAX/JAK transition -->
+    <!-- dependency>
+     <groupId>jakarta.xml.bind</groupId>
+     <artifactId>jakarta.xml.bind-api</artifactId>
+     <version>2.3.3</version>
+    </dependency -->
+
+    <!-- Jakarta -->
+    <dependency>
+     <groupId>jakarta.xml.bind</groupId>
+     <artifactId>jakarta.xml.bind-api</artifactId>
+     <version>4.0.0</version>
+    </dependency>
+
+    <!-- JAVAX BUILD/RUN TIME DEPENDENCIES -->
+    <!-- JAX/JAK transition -->
+    <!-- dependency>
+     <groupId>com.sun.xml.bind</groupId>
+     <artifactId>jaxb-impl</artifactId>
+     <version>2.3.3</version>
+     <!- scope>runtime</scope ->
+    </dependency>
+    <dependency>
+     <groupId>jakarta.xml.ws</groupId>
+     <artifactId>jakarta.xml.ws-api</artifactId>
+     <version>2.3.3</version>
+    </dependency>
+    <dependency>
+     <groupId>com.sun.xml.ws</groupId>
+     <artifactId>jaxws-rt</artifactId>
+     <version>2.3.3</version>
+    </dependency>
+    <dependency>
+     <groupId>org.glassfish.jaxb</groupId>
+     <artifactId>jaxb-core</artifactId>
+     <version>4.0.0</version>
+    </dependency -->
+
+    <!-- JAKARTA BUILD/RUN TIME DEPENDENCIES -->
+    <dependency>
+     <groupId>com.sun.xml.messaging.saaj</groupId>
+     <artifactId>saaj-impl</artifactId>
+     <version>3.0.0</version>
+     <scope>runtime</scope>
+    </dependency>
+    <dependency>
+    	<groupId>jakarta.jws</groupId>
+    	<artifactId>jakarta.jws-api</artifactId>
+    	<version>3.0.0</version>
+    </dependency>
+    <dependency>
+     <groupId>com.sun.xml.ws</groupId>
+     <artifactId>jaxws-rt</artifactId>
+     <version>4.0.0</version>
+     <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.soap</groupId>
+      <artifactId>jakarta.xml.soap-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
+      <!-- version>4.0.4</version -->
+    </dependency>
+    <dependency>
+     <groupId>jakarta.xml.ws</groupId>
+     <artifactId>jakarta.xml.ws-api</artifactId>
+     <version>4.0.0</version>
+     <!-- scope>runtime</scope -->
+    </dependency>
+    <dependency>
+     <groupId>jakarta.annotation</groupId>
+     <artifactId>jakarta.annotation-api</artifactId>
+     <version>2.1.1</version>	
+    </dependency>
+    <dependency>
+     <groupId>org.glassfish.jaxb</groupId>
+     <artifactId>jaxb-core</artifactId>
+     <version>4.0.0</version>
+    </dependency>
+
+    <!-- dependency>
+     <groupId>onvif-relay</groupId>
+     <artifactId>onvif-naming</artifactId>
+     <version>0.0.1</version>
+    </dependency -->
+
+    <dependency>
+     <groupId>org.apache.commons</groupId>
+     <artifactId>commons-configuration2</artifactId>
+     <version>2.8.0</version>
+    </dependency>
+    <dependency>
+	 <groupId>org.apache.httpcomponents</groupId>
+	 <artifactId>httpclient</artifactId>
+	 <version>4.5.13</version>
+	</dependency>
+	<dependency>
+	 <groupId>commons-io</groupId>
+	 <artifactId>commons-io</artifactId>
+	 <version>2.11.0</version>
+	</dependency>
+    <dependency>
+     <groupId>com.google.code.gson</groupId>
+     <artifactId>gson</artifactId>
+     <version>2.9.1</version>
+    </dependency>
+    <dependency>
+     <groupId>org.slf4j</groupId>
+     <artifactId>slf4j-api</artifactId>
+     <version>1.7.35</version>
+    </dependency>
+    <dependency>
+     <groupId>org.slf4j</groupId>
+     <artifactId>slf4j-simple</artifactId>
+     <version>1.7.35</version>
+    </dependency>
+  	
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-webapp</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency>
+        <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-server</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-http-spi</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-proxy</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+   <plugins>
+
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-compiler-plugin</artifactId>
+     <version>3.10.0</version>
+    </plugin>
+
+    <!-- plugin>
+     <artifactId>maven-antrun-plugin</artifactId>
+     <version>1.7</version>
+     <executions>
+      <execution>
+       <phase>generate-sources</phase>
+       <configuration>
+        <tasks>
+         <exec dir="${project.basedir}"
+               executable="${project.sh.dir}wget-and-patch.sh"
+               failonerror="true">"
+          <arg line="${project.sh.dir}file.txt ${project.download.dir} ${project.wsdl.dir} ${project.patch.dir}" /> 
+         </exec>
+        </tasks>
+       </configuration>
+       <goals>
+        <goal>generate-sources</goal>
+       </goals>
+      </execution>
+     </executions>
+    </plugin -->
+
+    <plugin>
+     <groupId>com.sun.xml.ws</groupId>
+     <artifactId>jaxws-maven-plugin</artifactId>
+     <version>${project.jaxws-plugin.ver}</version>
+     <executions>
+      <execution>
+       <goals>
+        <goal>wsimport</goal>
+       </goals>
+      </execution>
+     </executions>
+      <configuration>
+       <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
+       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl</wsdlDirectory>
+       <wsdlFiles>
+        <wsdlFile>onvif_device.wsdl</wsdlFile>
+       </wsdlFiles>
+       <bindingDirectory>${basedir}/target/generated-sources/xsltproc/device</bindingDirectory>
+       <!-- The extension property tells JAX-WS to support soap v1.2 bindings. -->
+       <extension>true</extension>
+      </configuration>
+      <!-- configuration>
+       <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
+       <wsdlDirectory>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl</wsdlDirectory>
+       <wsdlFiles>
+        <wsdlFile>onvif_media.wsdl</wsdlFile>
+       </wsdlFiles>
+       <bindingDirectory>${basedir}/target/generated-sources/xsltproc/media</bindingDirectory>
+       <!- The extension property tells JAX-WS to support soap v1.2 bindings. ->
+       <extension>true</extension>
+      </configuration -->
+     <dependencies>
+      <dependency>
+       <groupId>${project.plugin-rt.group}</groupId>
+       <artifactId>${project.plugin-rt.art}</artifactId>
+       <version>${project.plugin-rt.ver}</version>
+      </dependency>
+     </dependencies>
+    </plugin>
+ 
+    <!-- plugin>
+     <groupId>org.apache.cxf</groupId>
+     <artifactId>cxf-codegen-plugin</artifactId>
+     <version>${cxf.version}</version>
+     <executions>
+      <execution>
+       <id>generate-sources</id>
+       <phase>generate-sources</phase>
+       <configuration>
+        <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
+        <wsdlOptions>
+         <wsdlOption>
+          <wsdl>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdl>
+          <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/onvif_device.wsdl</wsdlLocation>
+         </wsdlOption>
+        </wsdlOptions>
+        <extraargs>
+          <extraarg>-verbose</extraarg>
+          <extraarg>-all</extraarg>
+          <!- extraarg>-impl</extraarg>
+          <extraarg>-b JAXWS</extraarg ->
+        </extraargs>
+       </configuration>
+       <goals>
+        <goal>wsdl2java</goal>
+       </goals>
+      </execution>
+     </executions>
+     <dependencies>
+      <!- dependency>
+       <groupId>org.apache.cxf.xjcplugins</groupId>
+       <artifactId>cxf-xjc-ts</artifactId>
+       <version>${cxf-xjc.version}</version>
+      </dependency ->
+     </dependencies>
+    </plugin -->
+
+    <plugin>
+     <groupId>org.codehaus.mojo</groupId>
+     <artifactId>build-helper-maven-plugin</artifactId>
+     <version>3.3.0</version>
+     <executions>
+      <execution>
+       <id>add-source</id>
+       <phase>generate-sources</phase>
+       <goals>
+         <goal>add-source</goal>
+       </goals>
+       <configuration>
+        <sources>
+         <source>${basedir}/src/main/java</source>
+        </sources>
+       </configuration>
+      </execution>
+     </executions>
+    </plugin>
+
+    <plugin>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-maven-plugin</artifactId>
+      <version>${project.jetty.ver}</version>
+    </plugin>
+
+   </plugins>
+  </build>
+</project>
