@@ -19,16 +19,16 @@
   <name>onvif-jak-device</name>
 
   <dependencies>
-	  
-	<dependency>
+  
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>onvif-api</artifactId>
-	</dependency>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>fence</artifactId>
-	</dependency>
-	<dependency>
+    </dependency>
+    <dependency>
      <groupId>org.slf4j</groupId>
      <artifactId>slf4j-api</artifactId>
     </dependency>
@@ -78,8 +78,8 @@
      <version>4.0.0</version>
     </dependency>
     
-	<!-- Embedded Jetty -->
-	<dependency>
+    <!-- Embedded Jetty -->
+    <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-webapp</artifactId>
     	<version>${project.jetty.ver}</version>
@@ -112,4 +112,33 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+   <plugins>
+
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-assembly-plugin</artifactId>
+     <executions>
+      <execution>
+       <phase>package</phase>
+       <goals>
+        <goal>single</goal>
+       </goals>
+       <configuration>
+        <archive>
+         <manifest>
+          <mainClass>onvif_relay.server.EmbeddedJettyJakDevice</mainClass>
+         </manifest>
+        </archive>
+         <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+         </descriptorRefs>
+        </configuration>
+       </execution>
+     </executions>
+    </plugin>
+
+   </plugins>
+  </build>
 </project>
