@@ -39,16 +39,16 @@ public class JakOnvifClient {
 	String security = confData.getItem(hw_id, "security");
 	String dump = confData.getItem(hw_id, "dump");
 	String soapver = confData.getItem(hw_id, "soap-ver");
-        String cxf = confData.getItem(hw_id, "cxf");
+    String cxf = confData.getItem(hw_id, "cxf");
 	String soapbinding = null;
 	
 	if (dump != null && dump.equals("true")) {
 	  System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
 	}
 
-        if (cxf == null) {
-          cxf = "false";
-        }
+    if (cxf == null) {
+      cxf = "false";
+    }
 
 	String[] dparts = durit.split(":");
 	String[] mparts = murit.split(":");
@@ -113,7 +113,7 @@ public class JakOnvifClient {
 		  }
 		} else if (reqType.equals("Device") || reqType.equals("PreAuth")) {
 			
-		  if (soapbinding != null && cxf.equals("true")) {
+		  if (soapbinding != null && soapver.equals("default") == false && cxf.equals("true")) {
 			QName devPort = new QName("http://www.onvif.org/ver10/device/wsdl", "DevicePort");
 			devSrv = new DeviceService();
 			devSrv.addPort(devPort, soapbinding, dreqURL);

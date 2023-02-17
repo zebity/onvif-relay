@@ -79,11 +79,21 @@ public class EmbeddedJettyJakDevice {
     	soapver = SOAPBinding.SOAP12HTTP_BINDING;
       
       String devuri = "http://127.0.0.1:" + dport + devrequest;
-      Endpoint devep = Endpoint.create(soapver, device);
+      Endpoint devep = null;
+      if (ver.equals("default")) {
+          devep = Endpoint.create(device); 
+      } else {
+        devep = Endpoint.create(soapver, device);
+      }
       devep.publish(devuri);
       
       String mediauri = "http://127.0.0.1:" + mport + medrequest;
-      Endpoint mediaep = Endpoint.create(soapver, media);
+      Endpoint mediaep = null;
+      if (ver.equals("default")) {
+        mediaep = Endpoint.create(media);
+      } else {
+          mediaep = Endpoint.create(soapver, media);  
+      }
       mediaep.publish(mediauri);
       
       ConnectHandler proxy = new ConnectHandler();
