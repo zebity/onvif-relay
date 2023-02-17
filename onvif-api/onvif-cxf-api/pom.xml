@@ -56,9 +56,9 @@
      <version>4.0.0</version>
    </dependency>
    <dependency>
-    	<groupId>jakarta.jws</groupId>
-    	<artifactId>jakarta.jws-api</artifactId>
-    	<version>3.0.0</version>
+    <groupId>jakarta.jws</groupId>
+    <artifactId>jakarta.jws-api</artifactId>
+    <version>3.0.0</version>
    </dependency>
    <dependency>
      <groupId>jakarta.xml.soap</groupId>
@@ -98,6 +98,10 @@
         <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
         <wsdlOptions>
          <wsdlOption>
+          <extraargs>
+           <!-- extraarg>-soap12</extraarg -->
+           <extraarg>-verbose</extraarg>
+          </extraargs>
           <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
           <bindingFiles>
            <bindingFile>target/generated-sources/xsltproc/device/device-binding-01.xml</bindingFile>
@@ -106,6 +110,10 @@
           <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl -->
          </wsdlOption>
          <wsdlOption>
+          <extraargs>
+           <!-- extraarg>-soap12</extraarg -->
+           <extraarg>-verbose</extraarg>
+          </extraargs>
           <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
           <bindingFiles>
            <bindingFile>target/generated-sources/xsltproc/media/media-binding-01.xml</bindingFile>

@@ -3,6 +3,8 @@
  
 */
 
+package onvif_relay.test.client;
+
 import fence.util.ConfigurationData;
 import onvif_relay.client.jak.JakOnvifClient;
 

@@ -38,7 +38,7 @@
     </dependency>
     
     <!-- jakarta -->
-    <dependency>
+    <!-- dependency>
      <groupId>jakarta.annotation</groupId>
      <artifactId>jakarta.annotation-api</artifactId>
      <version>2.1.1</version>	
@@ -46,17 +46,17 @@
     <dependency>
      <groupId>jakarta.xml.ws</groupId>
      <artifactId>jakarta.xml.ws-api</artifactId>
-     <!-- metro -->
-     <!-- version>4.0.0</version -->
-     <!-- cxf -->
+     <!- metro ->
+     <!- version>4.0.0</version ->
+     <!- cxf ->
      <version>3.0.1</version>
-     <!-- scope>runtime</scope -->
+     <!- scope>runtime</scope ->
     </dependency>
     <dependency>
       <groupId>jakarta.xml.soap</groupId>
       <artifactId>jakarta.xml.soap-api</artifactId>
       <version>3.0.0</version>
-    </dependency>
+    </dependency -->
     
     <!-- cxf --> 
     <dependency>
@@ -104,7 +104,7 @@
        <configuration>
         <archive>
          <manifest>
-          <mainClass>TestJakOnvif</mainClass>
+          <mainClass>onvif_relay.test.client.TestJakOnvifClient</mainClass>
          </manifest>
         </archive>
          <descriptorRefs>

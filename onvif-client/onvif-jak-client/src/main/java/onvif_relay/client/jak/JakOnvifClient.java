@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.cxf.jaxws.JaxWsClientFactoryBean;
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
@@ -113,15 +114,20 @@ public class JakOnvifClient {
 		  }
 		} else if (reqType.equals("Device") || reqType.equals("PreAuth")) {
 			
-		  if (soapbinding != null && soapver.equals("default") == false && cxf.equals("true")) {
-			QName devPort = new QName("http://www.onvif.org/ver10/device/wsdl", "DevicePort");
-			devSrv = new DeviceService();
-			devSrv.addPort(devPort, soapbinding, dreqURL);
-		    dev = devSrv.getPort(devPort, Device.class);
-		  } else {
+		  /* if (cxf.equals("true")) {
+			JaxWsClientFactoryBean factory = new JaxWsClientFactoryBean();
+			factory.setServiceClass(Device.class);
+			factory.setAddress(dreqURL);
+			if (soapver.equals("default")  == false) {
+			  factory.setBindingId(soapbinding);    
+			}
+			Object od = factory.create();
+			dev = (Device)od;
+		  } else { */
+
 			devSrv = new DeviceService();
 			dev = devSrv.getDevicePort();
-		  }
+		  /* } */
 		      
 		  if (dev instanceof BindingProvider) {
 			BindingProvider bp = (BindingProvider)dev;
