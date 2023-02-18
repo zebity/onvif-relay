@@ -58,7 +58,12 @@
       <version>3.0.0</version>
     </dependency -->
     
-    <!-- cxf --> 
+    <!-- cxf -->
+    <dependency>
+     <groupId>org.apache.cxf</groupId>
+     <artifactId>cxf-core</artifactId>
+     <version>4.0.0</version>
+    </dependency> 
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
