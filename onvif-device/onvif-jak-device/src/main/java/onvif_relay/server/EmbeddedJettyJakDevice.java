@@ -72,6 +72,7 @@ public class EmbeddedJettyJakDevice {
       
       // System.setProperty("com.sun.net.httpserver.HttpServerProvider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
       // System.setProperty("jakarta.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
+      System.setProperty("jakarta.xml.ws.spi.Provider", "org.apache.cxf.jaxws.spi.ProviderImpl");
       // System.setProperty("javax.xml.ws.spi.Provider", "org.eclipse.jetty.http.spi.JettyHttpServerProvider");
      
       String soapver = SOAPBinding.SOAP11HTTP_BINDING;
@@ -85,7 +86,11 @@ public class EmbeddedJettyJakDevice {
       } else {
         devep = Endpoint.create(soapver, device);
       }
-      devep.publish(devuri);
+      if (devep != null) {
+        devep.publish(devuri);
+      } else {
+        System.out.println("ERR>> EmbeddedJettyJakDevice::main - Failed to create Device EndPoint."); 
+      }
       
       String mediauri = "http://127.0.0.1:" + mport + medrequest;
       Endpoint mediaep = null;
@@ -94,7 +99,11 @@ public class EmbeddedJettyJakDevice {
       } else {
           mediaep = Endpoint.create(soapver, media);  
       }
-      mediaep.publish(mediauri);
+      if (mediaep != null) {
+        mediaep.publish(mediauri);
+      } else {
+        System.out.println("ERR>> EmbeddedJettyJakDevice::main - Failed to create Media EndPoint."); 
+      }
       
       ConnectHandler proxy = new ConnectHandler();
       server.setHandler(proxy);
