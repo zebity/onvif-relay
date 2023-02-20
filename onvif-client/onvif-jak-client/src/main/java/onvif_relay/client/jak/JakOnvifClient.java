@@ -9,6 +9,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.cxf.configuration.security.AuthorizationPolicy;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
@@ -95,7 +99,16 @@ public class JakOnvifClient {
             if (security != null && security.equals("basic")) {
 		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
 		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
-            }
+            } else if (security.equals("digest")) {
+              // Node this code is cxf specific
+		      Client client = ClientProxy.getClient(dev);
+		      HTTPConduit httpo = (HTTPConduit)client.getConduit();
+		      AuthorizationPolicy authPolicy = new AuthorizationPolicy();
+		      authPolicy.setAuthorizationType("Digest");
+		      authPolicy.setUserName(cred[0]);
+		      authPolicy.setPassword(cred[1]);
+		      httpo.setAuthorization(authPolicy);           
+		    }
             
 		    List<Handler> handList = binding.getHandlerChain();
 		    handList.add(new JakOnvifAuthHandler());
@@ -121,7 +134,16 @@ public class JakOnvifClient {
             if (security != null && security.equals("basic")) {
 		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
 		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
-            }
+            } else if (security.equals("digest")) {
+              // This code is cfx specific
+  		      Client client = ClientProxy.getClient(dev);
+  		      HTTPConduit httpo = (HTTPConduit)client.getConduit();
+  		      AuthorizationPolicy authPolicy = new AuthorizationPolicy();
+  		      authPolicy.setAuthorizationType("Digest");
+  		      authPolicy.setUserName(cred[0]);
+  		      authPolicy.setPassword(cred[1]);
+  		      httpo.setAuthorization(authPolicy);           
+  		    }
             
 		    List<Handler> handList = binding.getHandlerChain();
 		    handList.add(new JakOnvifAuthHandler());
