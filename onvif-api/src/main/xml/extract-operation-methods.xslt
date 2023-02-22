@@ -3,7 +3,7 @@
 <!-- JAX xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxws="http://java.sun.com/xml/ns/jaxws" -->
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 <xsl:template match="/">
-<xsl:param name="file" select="p1" />
+<xsl:param name="file" select="$p1" />
 <!-- xsl:variable name="wsdlLoc" select="document-uri()" / -->
 <!-- xsl:variable name="wsdlLoc" select="concat(&quot;, $file, &quot;)" / -->
 <xsl:variable name="wsdlLoc" select="&quot;/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl&quot;" />
