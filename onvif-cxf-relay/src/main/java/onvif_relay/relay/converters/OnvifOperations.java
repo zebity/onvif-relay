@@ -193,6 +193,8 @@ public class OnvifOperations {
   static org.onvif.ver10.device.wsdl.ObjectFactory dof = new org.onvif.ver10.device.wsdl.ObjectFactory();
   static org.onvif.ver10.media.wsdl.ObjectFactory mof = new org.onvif.ver10.media.wsdl.ObjectFactory();
   static Map<String, Object> factories = null;
+  public static final String DeviceType = "org.onvif.ver10.device.wsdl";
+  public static final String MediaType = "org.onvif.vers10.media.wsdl";
   static boolean doneInit = init();
   
   static boolean init() {

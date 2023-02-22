@@ -26,6 +26,7 @@ import fence.util.ConfigurationData;
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.Service;
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.SOAPBinding;
 
@@ -86,33 +87,7 @@ public class JakOnvifClient {
 		  mediaSrv = new MediaService();
 		  media = mediaSrv.getMediaPort();
 		  
-		  if (media instanceof BindingProvider) {
-		    BindingProvider bp = (BindingProvider)media;
-		    Binding binding = bp.getBinding();
-		    if (binding instanceof SOAPBinding) {
-			  SOAPBinding soapBinding = (SOAPBinding)binding;
-			  Set<String> roles = soapBinding.getRoles();
-			  System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
-			}
-		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, medURL.toString());
-		    
-            if (security != null && security.equals("basic")) {
-		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
-		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
-            } else if (security.equals("digest")) {
-              // Node this code is cxf specific
-		      Client client = ClientProxy.getClient(dev);
-		      HTTPConduit httpo = (HTTPConduit)client.getConduit();
-		      AuthorizationPolicy authPolicy = new AuthorizationPolicy();
-		      authPolicy.setAuthorizationType("Digest");
-		      authPolicy.setUserName(cred[0]);
-		      authPolicy.setPassword(cred[1]);
-		      httpo.setAuthorization(authPolicy);           
-		    }
-            
-		    List<Handler> handList = binding.getHandlerChain();
-		    handList.add(new JakOnvifAuthHandler());
-		    binding.setHandlerChain(handList);
+          if (setupService(media, security, medURL, cred)) {
 		    result = SOAPWSMediaReqest(getthis, args, media);
 		  }
 		} else if (reqType.equals("Device") || reqType.equals("PreAuth")) {
@@ -120,35 +95,8 @@ public class JakOnvifClient {
 
 		  devSrv = new DeviceService();
 		  dev = devSrv.getDevicePort();
-		      
-		  if (dev instanceof BindingProvider) {
-			BindingProvider bp = (BindingProvider)dev;
-		    Binding binding = bp.getBinding();
-		    if (binding instanceof SOAPBinding) {
-		      SOAPBinding soapBinding = (SOAPBinding)binding;
-		      Set<String> roles = soapBinding.getRoles();
-		      System.out.println("DBG>> DeviceOnvifDetails::getOnvifDeviceService - Roles: " + roles.toString());
-		    }
-		    bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, devURL.toString());
-		    
-            if (security != null && security.equals("basic")) {
-		      bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
-		      bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
-            } else if (security.equals("digest")) {
-              // This code is cfx specific
-  		      Client client = ClientProxy.getClient(dev);
-  		      HTTPConduit httpo = (HTTPConduit)client.getConduit();
-  		      AuthorizationPolicy authPolicy = new AuthorizationPolicy();
-  		      authPolicy.setAuthorizationType("Digest");
-  		      authPolicy.setUserName(cred[0]);
-  		      authPolicy.setPassword(cred[1]);
-  		      httpo.setAuthorization(authPolicy);           
-  		    }
-            
-		    List<Handler> handList = binding.getHandlerChain();
-		    handList.add(new JakOnvifAuthHandler());
-		    binding.setHandlerChain(handList);
-		        
+		  
+		  if (setupService(dev, security, devURL, cred)) {		        
 			result = SOAPWSDeviceReqest(getthis, args, dev);
 		  }
 		}
@@ -162,6 +110,42 @@ public class JakOnvifClient {
       }
     }
 	return res;
+  }
+  
+  boolean setupService(Object sei, String security, URL uri, String[] cred) {
+    boolean res = false;
+    
+    if (sei instanceof BindingProvider) {
+	  BindingProvider bp = (BindingProvider)sei;
+	  Binding binding = bp.getBinding();
+	  if (binding instanceof SOAPBinding) {
+		SOAPBinding soapBinding = (SOAPBinding)binding;
+		Set<String> roles = soapBinding.getRoles();
+		System.out.println("DBG>> DeviceOnvifDetails::setupService - Roles: " + roles.toString());
+	  }
+	  bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, uri.toString());
+		    
+      if (security != null && security.equals("basic")) {
+		bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, cred[0]);
+		bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, cred[1]);
+      } else if (security.equals("digest")) {
+        // Note this code is cxf specific
+		Client client = ClientProxy.getClient(sei);
+		HTTPConduit httpo = (HTTPConduit)client.getConduit();
+		AuthorizationPolicy authPolicy = new AuthorizationPolicy();
+		authPolicy.setAuthorizationType("Digest");
+		authPolicy.setUserName(cred[0]);
+		authPolicy.setPassword(cred[1]);
+		httpo.setAuthorization(authPolicy);           
+	  }
+          
+	  List<Handler> handList = binding.getHandlerChain();
+	  handList.add(new JakOnvifAuthHandler());
+	  binding.setHandlerChain(handList);
+	  
+	  res = true;
+    }
+    return res;
   }
   
   public String SOAPWSDeviceReqest(String getthis, List<String> args, Device dev) {

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import onvif_relay.relay.converters.JsonRequestResponse;
+import onvif_relay.relay.invokers.InvokeOperation;
 
 public class TestCxfRelay {
   public static void main(String [] args) {
@@ -16,9 +17,13 @@ public class TestCxfRelay {
                     "\"request\": {}" +
                   "}";
 	
+	InvokeOperation onvifop = new InvokeOperation();
+	
 	Gson ser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	
 	JsonRequestResponse jrr = JsonRequestResponse.create(call);
+	
+	Object got = onvifop.invoke(jrr);
 	
 	Class savreq = null, savresp = null;
 	
