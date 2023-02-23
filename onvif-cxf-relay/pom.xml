@@ -192,11 +192,6 @@
       <artifactId>junit</artifactId>
       <!-- scope>test</scope -->
     </dependency>
-    <dependency>
-    	<groupId>onvif-relay</groupId>
-    	<artifactId>onvif-jak-client</artifactId>
-    	<version>1.0-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 
   <build>

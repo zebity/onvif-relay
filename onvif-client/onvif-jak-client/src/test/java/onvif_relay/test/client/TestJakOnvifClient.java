@@ -20,7 +20,7 @@ public class TestJakOnvifClient {
       
       JakOnvifClient onv = new JakOnvifClient();
       
-      String got = onv.getInfo(conf, ipv4, "test#1", "Device", "GetDeviceInformation", null);
+      String got = onv.getInfo(conf, ipv4, "test#1", "Device", "GetDeviceInformation", "{}");
       
       System.out.println("TestJakOnvifClient::main - got: \"" + got + "\".");
       

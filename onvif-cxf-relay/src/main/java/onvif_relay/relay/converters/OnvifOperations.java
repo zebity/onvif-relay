@@ -195,6 +195,8 @@ public class OnvifOperations {
   static Map<String, Object> factories = null;
   public static final String DeviceType = "org.onvif.ver10.device.wsdl";
   public static final String MediaType = "org.onvif.vers10.media.wsdl";
+  static Class<?>[] emptyArgs = {};
+  static Object[] emptyParams = {};
   static boolean doneInit = init();
   
   static boolean init() {
@@ -228,11 +230,11 @@ public class OnvifOperations {
 	  
 	  try {
 	  
-	    Method reqCreate = fact.getClass().getDeclaredMethod(new String("create" + forReq), null);
-	    Method respCreate = fact.getClass().getDeclaredMethod(new String("create" + forReq + "Response"), null);
+	    Method reqCreate = fact.getClass().getDeclaredMethod(new String("create" + forReq), emptyArgs);
+	    Method respCreate = fact.getClass().getDeclaredMethod(new String("create" + forReq + "Response"), emptyArgs);
 	    
-	    Object reqo = reqCreate.invoke(fact, null);
-	    Object respo = respCreate.invoke(fact, null);
+	    Object reqo = reqCreate.invoke(fact, emptyParams);
+	    Object respo = respCreate.invoke(fact, emptyParams);
 	    
 	    if (reqo != null || respo != null) {
 	      res = new Object[2];

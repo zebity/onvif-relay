@@ -5,7 +5,7 @@
 
 */
 
-package onvif_relay.server;
+package onvif_relay.relay.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,13 +25,9 @@ import org.eclipse.jetty.util.security.Credential;
 
 import fence.util.ConfigurationData;
 import jakarta.servlet.http.HttpServlet;
-import jakarta.xml.ws.Endpoint;
-import jakarta.xml.ws.soap.SOAPBinding;
-import onvif_relay.service.JakDeviceImpl;
-import onvif_relay.service.JakMediaImpl;
-import onvif_relay.servlet.OnvifFacadeServlet;
+import onvif_relay.relay.servlet.OnvifRelayServlet;
 
-public class EmbeddedJettyJakDevice {
+public class EmbeddedJettyJakRelay {
 	
   public static void main(String[] args) throws Exception {
 	System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
@@ -40,7 +36,7 @@ public class EmbeddedJettyJakDevice {
     String srvPort = confData.getItem("onvif-relay", "port");
 	String level = confData.getItem("onvif-relay", "log-level");
 	String dump = confData.getItem("onvif-relay", "dump");
-	String security = confData.getItem("onvif_relay, "security");
+	String security = confData.getItem("onvif_relay", "security");
 	String realm = confData.getItem("onvif-relay", "realm");
 	String auth = confData.getItem("onvif-relay", "auth");
 	String[] cred = auth.split(":");
@@ -65,7 +61,7 @@ public class EmbeddedJettyJakDevice {
       ConnectHandler connect = new ConnectHandler();
       server.setHandler(connect);
       
-      ServletContextHandler cxtHandler = new ServletContextHandler(proxy, "/", ServletContextHandler.SESSIONS);
+      ServletContextHandler cxtHandler = new ServletContextHandler(connect, "/", ServletContextHandler.SESSIONS);
 
       ConstraintSecurityHandler csh = setupAuth(cred, roles, realm, "/*");
       
@@ -73,7 +69,7 @@ public class EmbeddedJettyJakDevice {
         cxtHandler.setSecurityHandler(csh);
       }
       
-      HttpServlet srvlet = new OnvRelayServlet(confData);
+      HttpServlet srvlet = new OnvifRelayServlet(confData);
       ServletHolder holder = new ServletHolder(srvlet);
       cxtHandler.addServlet(holder, "/api/v1");
       

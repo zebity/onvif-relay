@@ -8,12 +8,11 @@
 package onvif_relay.relay.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import fence.util.ConfigurationData;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,9 +21,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class OnvifRelayServlet extends HttpServlet {
     
   private static final long serialVersionUID = 1L;
+  private final Collection<Map.Entry<String, String>> customHeaders;
+  ConfigurationData confData = null;
   
-  public OnvifRelayServlet() {
+  public OnvifRelayServlet(ConfigurationData cfd) {
 	super();
+	this.customHeaders = new ArrayList<Map.Entry<String, String>>();
+	confData = cfd;
   }
    
   @Override
@@ -44,12 +47,8 @@ public class OnvifRelayServlet extends HttpServlet {
 	      response.addHeader(header.getKey(), header.getValue());
 	    }
 	  }
-	  InputStream in = request.getInputStream();
-	  OutputStream out = response.getOutputStream();
 
 
-	  processor.process(inProtocol, outProtocol);
-	  out.flush();
 	} catch (Exception ex) {
 	  throw new ServletException(ex);
 	}

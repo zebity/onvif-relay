@@ -20,15 +20,58 @@ public class JsonRequestResponse {
                 response;
   
   
-  String ser() {
+  public String ser() {
 	String res = null;
+	Class<?> savReq = null, savResp = null;
+	
 	try {
 	  Gson ser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	  
+	  if (request != null) {
+		if (request instanceof Class) {
+		  savReq = (Class<?>)request;
+		  request = null;
+		} else {
+	      reqclass = request.getClass().getSimpleName();
+		}
+	  }
+	  
+	  if (response != null) {
+		if (response instanceof Class) {
+		  savResp = (Class<?>)request;
+		  response = null;
+		} else {
+		  respclass = response.getClass().getSimpleName();
+		}
+	  }
+	  
+	  res = ser.toJson(this);
+	  
+	  if (savReq != null) {
+	    request = savReq;
+	  }
+	  
+	  if (savResp != null) {
+	    response = savResp;
+	  }
 	} catch (Exception ex) {
 	  ex.printStackTrace();
 	}
 	return res;
+  }
+  
+  public static Object[] createRequest(String reqClass, String jsonStr) {
+    Object[] res = null;
+  
+    Object[] protos = OnvifOperations.getOperationPrototypes(reqClass);
+    Class<?> opClass = protos[0].getClass();
+    
+    if (opClass != null) {
+      res = new Object[2];
+      res[0] = new Gson().fromJson(jsonStr, opClass);
+      res[1] = protos[1].getClass();
+    }
+    return res;
   }
   
   public static JsonRequestResponse create(String jsonStr) {

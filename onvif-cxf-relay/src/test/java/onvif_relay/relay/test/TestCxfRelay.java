@@ -1,7 +1,8 @@
 package onvif_relay.relay.test;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,10 @@ public class TestCxfRelay {
 			        "\"reqclass\": \"GetDeviceInformation\"," +
                     "\"request\": {}" +
                   "}";
+	Map<String, String> ctrl = new HashMap<>();
+	ctrl.put("security", "digest");
+	ctrl.put("debug", "false");
+	
 	
 	InvokeOperation onvifop = new InvokeOperation();
 	
@@ -23,7 +28,7 @@ public class TestCxfRelay {
 	
 	JsonRequestResponse jrr = JsonRequestResponse.create(call);
 	
-	Object got = onvifop.invoke(jrr);
+	Object got = onvifop.invoke(jrr, ctrl);
 	
 	Class savreq = null, savresp = null;
 	
