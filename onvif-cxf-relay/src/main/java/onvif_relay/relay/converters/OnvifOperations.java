@@ -217,7 +217,7 @@ public class OnvifOperations {
     return res;
   }
   
-  static Object[] getOperationPrototypes(String forReq) {
+  public static Object[] getOperationPrototypes(String forReq) {
 	Object[] res = null;
 	
 	String[] use = deviceOps.get(forReq);

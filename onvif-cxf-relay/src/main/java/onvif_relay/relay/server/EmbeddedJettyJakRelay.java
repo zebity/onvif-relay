@@ -36,7 +36,7 @@ public class EmbeddedJettyJakRelay {
     String srvPort = confData.getItem("onvif-relay", "port");
 	String level = confData.getItem("onvif-relay", "log-level");
 	String dump = confData.getItem("onvif-relay", "dump");
-	String security = confData.getItem("onvif_relay", "security");
+	String security = confData.getItem("onvif-relay", "security");
 	String realm = confData.getItem("onvif-relay", "realm");
 	String auth = confData.getItem("onvif-relay", "auth");
 	String[] cred = auth.split(":");

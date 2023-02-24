@@ -138,6 +138,8 @@ public class InvokeOperation {
           plist[i] = Holder.class;
          
         }
+      } else if (strategy.equals("empty")) {
+    	  plist = emptyArgs;
       } else {
     	for (int i = 0; i < params.size(); i++) {
           plist[i] = params.get(i);

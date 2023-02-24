@@ -115,8 +115,11 @@ public class JakDeviceImpl implements Device {
 
 	@Override
 	public SystemDateTime GetSystemDateAndTime() {
-		// TODO Auto-generated method stub
-		return null;
+	  SystemDateTime res = new SystemDateTime();
+	  DateTime dt = new DateTime();
+	  
+	  res.setUTCDateTime(dt);
+	  return res;
 	}
 
 	@Override
