@@ -139,7 +139,7 @@ public class InvokeOperation {
          case 0: strategy[0] = "empty";
         	     strategy[3] = 0;
                  break;
-         case 1: strategy[0] = "request";
+         case 1: strategy[0] = "empty-with-return";
                  strategy[3] = 1;
                  break;
          default: strategy[0] = "response";
@@ -157,7 +157,7 @@ public class InvokeOperation {
           plist[i] = Holder.class;
          
         }
-      } else if (strategy.equals("empty")) {
+      } else if (((String)strategy[0]).substring(0,5).equals("empty")) {
     	  plist = emptyArgs;
       } else {
     	for (int i = 0; i < params.size(); i++) {
@@ -204,16 +204,20 @@ public class InvokeOperation {
     if (respo != null) {
   	  
       Field[] outData = respo.getClass().getDeclaredFields();
+      Class<?>[] setArg = new Class<?>[1];
+      String nm = null, setMethod = null;
+      Method setm = null;
       
       switch (outData.length) {
-        case 0: res = respo;
-        	    break;
-        case 1: outData[0].set(respo, got);
-                res = respo;
+        case 0: break;
+        case 1: nm = outData[0].getName();
+        	    setMethod = "set" + nm.substring(0,1).toUpperCase() + nm.substring(1);
+        	    setArg[0] = got.getClass();
+                setm = respo.getClass().getMethod(setMethod, setArg);
+                setm.invoke(respo, got);
                 break;
         default: System.out.println("ERR>> InvokeOperation::wrapResponse - multiple fields: " + respo.getClass().getCanonicalName());
       }
-      
       res = respo;
     }
 	return res;
@@ -301,7 +305,7 @@ public class InvokeOperation {
       Object got = method.invoke(sei, args);
       res = wrapResponse(target, useMethod, got);
       
-    } else if (strategy.equals("empty")) {
+    } else if (((String)strategy[0]).substring(0,5).equals("empty")) {
     	
       Object got = method.invoke(sei, emptyParams);
       res = wrapResponse(target, useMethod, got);
