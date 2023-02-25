@@ -15,7 +15,9 @@ public class JsonRequestResponse {
          user,
          password,
          reqclass,
-         respclass;
+         respclass,
+         operationType,
+         voidOperation;
   public Object request,
                 response;
   
@@ -74,10 +76,16 @@ public class JsonRequestResponse {
     return res;
   }
   
+  public void maskCredentials() {
+	user = null;
+	password = null;
+  }
+  
   public static JsonRequestResponse create(String jsonStr) {
     JsonRequestResponse res = null;
     
-    String target = null, user = null, password = null, reqClass = null, respClass= null;
+    String target = null, user = null, password = null, reqClass = null, respClass= null,
+    	   operationType = null, voidOperation = null;
     JsonObject reqjo = null, respjo = null;
     
     JsonObject jo = JsonParser.parseString(jsonStr).getAsJsonObject();
@@ -102,6 +110,14 @@ public class JsonRequestResponse {
       jp = jo.getAsJsonPrimitive("respclass");
       if (jp != null)
     	respClass = jp.getAsString();
+      
+      jp = jo.getAsJsonPrimitive("operationType");
+      if (jp != null)
+        operationType = jp.getAsString();
+      
+      jp = jo.getAsJsonPrimitive("voidOperation");
+      if (jp != null)
+        voidOperation = jp.getAsString();
     		 			
       reqjo = jo.getAsJsonObject("request");
       respjo = jo.getAsJsonObject("response");
@@ -115,6 +131,8 @@ public class JsonRequestResponse {
         res.user = user;
         res.password = password;
         res.reqclass = reqClass;
+        res.operationType = operationType;
+        res.voidOperation = voidOperation;
 
         if (reqjo == null) {
           res.request = protos[0].getClass(); 

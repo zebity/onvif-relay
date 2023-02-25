@@ -28,7 +28,7 @@ public class TestCxfRelay {
 	
 	JsonRequestResponse jrr = JsonRequestResponse.create(call);
 	
-	Object got = onvifop.invoke(jrr, ctrl);
+	Object got = onvifop.invoke(jrr, true, ctrl);
 	
 	Class savreq = null, savresp = null;
 	

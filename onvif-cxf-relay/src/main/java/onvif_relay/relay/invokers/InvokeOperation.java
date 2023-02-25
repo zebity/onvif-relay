@@ -37,7 +37,7 @@ public class InvokeOperation {
   static Class<?>[] emptyArgs = {};
   static Object[] emptyParams = {};
 	
-  Object invokeDevice(JsonRequestResponse target, Map<String, String> ctrl) {
+  Object invokeDevice(JsonRequestResponse target, boolean doClassify, Map<String, String> ctrl) {
     Object res = null;
     
     DeviceService dserv = new DeviceService();
@@ -50,6 +50,11 @@ public class InvokeOperation {
     	  
     	try {
           res = invokeMethod(sei, useMethod, target);
+          if (doClassify) {
+            String[] cs = classify(target, useMethod);
+            target.operationType = cs[0];
+            target.voidOperation = cs[1];
+          }
     	} catch (Exception ex) {
     	  ex.printStackTrace();
     	}
@@ -59,7 +64,7 @@ public class InvokeOperation {
     return res;
   }
   
-  Object invokeMedia(JsonRequestResponse target, Map<String, String> ctrl) {
+  Object invokeMedia(JsonRequestResponse target, boolean doClassify, Map<String, String> ctrl) {
     Object res = null;
     
     MediaService dserv = new MediaService();
@@ -69,24 +74,32 @@ public class InvokeOperation {
     
     if (useMethod != null) {
       if (setupService(sei, target.target, target.user, target.password, ctrl)) {
-      	  
+    	try {
+      	  res = invokeMethod(sei, useMethod, target);
+          if (doClassify) {
+            String[] cs = classify(target, useMethod);
+            target.operationType = cs[0];
+            target.voidOperation = cs[1];
+          }
+    	} catch (Exception ex) {
+    	  ex.printStackTrace();
+    	}
       }    	
     }
     
     return res;
   }
   
-  public Object invoke(JsonRequestResponse targetRequest, Map<String, String> ctrl) {
+  public Object invoke(JsonRequestResponse targetRequest, boolean doClassify, Map<String, String> ctrl) {
     Object res = null;
 
     String reqType = targetRequest.request.getClass().getPackageName();
     switch (reqType) {
-      case OnvifOperations.DeviceType: res = invokeDevice(targetRequest, ctrl);
+      case OnvifOperations.DeviceType: res = invokeDevice(targetRequest, doClassify, ctrl);
                                        break;
-      case OnvifOperations.MediaType: res = invokeMedia(targetRequest, ctrl);
+      case OnvifOperations.MediaType: res = invokeMedia(targetRequest, doClassify, ctrl);
                                       break;
     }
-    
     
 	return res;
   }
@@ -101,37 +114,43 @@ public class InvokeOperation {
    * 
    */
 	Object[] res = null;
-	String strategy = "none";
+	Object[] strategy = new Object[]{"none", -1, -1, -1};
 	
     List<Class<?>> params = new ArrayList<>();
     Class<?>[] plist = null;
     
-    Field[] reqParams = target.request.getClass().getDeclaredFields();
-    if (reqParams.length > 0) {
-      strategy = "request";
-      for (int i = 0; i < reqParams.length; i++) {
-        params.add(reqParams[i].getType());
+    Field[] opFields = target.request.getClass().getDeclaredFields();
+    if (opFields.length > 0) {
+      strategy[0] = "request";
+      strategy[1] = opFields.length;
+      for (int i = 0; i < opFields.length; i++) {
+        params.add(opFields[i].getType());
       }
     } else {
+      strategy[1] = 0;
       if (target.response instanceof Class) {
     	Class respType = (Class)target.response;
-        reqParams = respType.getDeclaredFields();
-        for (int i = 0; i < reqParams.length; i++) {
-          params.add(reqParams[i].getType());
+        opFields = respType.getDeclaredFields();
+        strategy[2] = opFields.length;
+        for (int i = 0; i < opFields.length; i++) {
+          params.add(opFields[i].getType());
         }
-        if (reqParams.length > 1) {
-          strategy = "response";
-        } else {
-          strategy = "empty";
+        switch (opFields.length) {
+         case 0: strategy[0] = "empty";
+        	     strategy[3] = 0;
+                 break;
+         case 1: strategy[0] = "request";
+                 strategy[3] = 1;
+                 break;
+         default: strategy[0] = "response";
+                  strategy[3] = 0;
         }
-      } else {
-        strategy = "empty";
       }
     }
     
     try {
       plist = new Class<?>[params.size()];
-      if (strategy.equals("response")) {
+      if (strategy[0].equals("response")) {
         for (int i = 0; i < params.size(); i++) {
           // NOTE: template info is not maintained within VM runtime
           //         all objects wrapped via Holder<t> -> Holder<Object>
@@ -154,7 +173,24 @@ public class InvokeOperation {
     return res;
   }
   
-  Object wrapResponse(JsonRequestResponse target, Method method, Object got) throws Exception {
+  String[] classify(JsonRequestResponse target, Object[] method) {
+	String [] cs = new String[] { "action", "false" };
+	Object[] strategy = (Object[])method[2];
+	
+    String prefix = target.reqclass.substring(0, 3).toLowerCase();
+      
+    switch (prefix) {
+     case "get":
+     case "set": cs[0] = prefix;
+                 break;
+    }
+    if ((int)strategy[3] == 0) {
+      cs[1] = "true";
+    }
+    return cs;
+  }
+  
+  Object wrapResponse(JsonRequestResponse target, Object[] useMethod, Object got) throws Exception {
 	Object res = null;
 	
     Class<?> cs = null;
@@ -169,17 +205,21 @@ public class InvokeOperation {
   	  
       Field[] outData = respo.getClass().getDeclaredFields();
       
-      if (outData.length > 1) {
-    	System.out.println("ERR>> InvokeOperation::wrapResponse - multiple fields: " + respo.getClass().getCanonicalName());
-      } else {
-        outData[0].set(respo, got);
-        res = respo;
+      switch (outData.length) {
+        case 0: res = respo;
+        	    break;
+        case 1: outData[0].set(respo, got);
+                res = respo;
+                break;
+        default: System.out.println("ERR>> InvokeOperation::wrapResponse - multiple fields: " + respo.getClass().getCanonicalName());
       }
+      
       res = respo;
     }
 	return res;
   }
-  Object getResponseArgs(JsonRequestResponse target, Method method, Object[] args) throws Exception {
+  
+  Object getResponseArgs(JsonRequestResponse target, Object[] useMethod, Object[] args) throws Exception {
 	Object res = null;
 	
     Class<?> cs = null;
@@ -230,11 +270,11 @@ public class InvokeOperation {
   Object invokeMethod(Object sei, Object[] useMethod, JsonRequestResponse target) throws Exception {
     Object res = null;
     Class<?>[] plist = (Class[])useMethod[1];
-    String strategy = (String)useMethod[2];
+    Object[] strategy = (Object[])useMethod[2];
     Method method = (Method)useMethod[0];
     Object[] args = new Object[plist.length];
     
-    if (strategy.equals("response")) {
+    if (strategy[0].equals("response")) {
     	
       Class<?>[] paramType = method.getParameterTypes();
       for (int i = 0; i < paramType.length; i++) {
@@ -242,10 +282,9 @@ public class InvokeOperation {
       }
       
       method.invoke(sei, args);
+      res = getResponseArgs(target, useMethod, args);
       
-      res = getResponseArgs(target, method, args);
-      
-    } else if (strategy.equals("request")) {
+    } else if (strategy[0].equals("request")) {
     	
       Field[] inputParam = target.request.getClass().getDeclaredFields();
       /* Map<String, Field> reqData = new HashMap<>();
@@ -260,13 +299,12 @@ public class InvokeOperation {
       }
       
       Object got = method.invoke(sei, args);
-      res = wrapResponse(target, method, got);
+      res = wrapResponse(target, useMethod, got);
       
     } else if (strategy.equals("empty")) {
     	
       Object got = method.invoke(sei, emptyParams);
-      res = wrapResponse(target, method, got);
-
+      res = wrapResponse(target, useMethod, got);
     }
     
 	return res;  

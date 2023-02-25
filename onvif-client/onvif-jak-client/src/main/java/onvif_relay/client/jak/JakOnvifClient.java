@@ -68,7 +68,9 @@ public class JakOnvifClient {
 		reqObj.response = reqnclass[1];
 
 		
-		reqObj.response = onvifOps.invoke(reqObj, ctrl);
+		reqObj.response = onvifOps.invoke(reqObj, true, ctrl);
+		
+		reqObj.maskCredentials();
 		
 		res = reqObj.ser();
 

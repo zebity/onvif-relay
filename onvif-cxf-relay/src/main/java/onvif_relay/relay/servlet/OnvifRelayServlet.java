@@ -105,9 +105,10 @@ public class OnvifRelayServlet extends HttpServlet {
           jrro.request = reqo[0];
           jrro.response = reqo[1];
           
-          jrro.response = onvifOp.invoke(jrro, ctrl);
-
-		  res = ser.toJson(jrro);
+          jrro.response = onvifOp.invoke(jrro, true, ctrl);
+          jrro.maskCredentials();
+          
+		  res = jrro.ser();
         }
 	  }
 	  /* if (null != this.customHeaders) {
