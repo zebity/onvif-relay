@@ -86,5 +86,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Jan 2023 - Resolved Embedded Jetty and SOAP 1.2 issue
 - Jan 2023 - See metro-jaxb-ri hack for WsImport that maintains ONVIF upper case
 - Feb 2023 - Get -b binding customisation working to avoid hacking wsimport (see blog for usage guide)
-- Feb 2023 - Change from metro to cxf v4 (Jakarta), which works and not tested against devices and relaying
+- Feb 2023 - Change from metro to cxf v4 (Jakarta), which works and tested against devices and with relay
  
