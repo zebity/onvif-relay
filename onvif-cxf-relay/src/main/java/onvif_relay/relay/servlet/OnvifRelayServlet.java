@@ -13,8 +13,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+
 
 import fence.util.ConfigurationData;
 import jakarta.servlet.ServletException;
@@ -31,7 +33,9 @@ public class OnvifRelayServlet extends HttpServlet {
   // private final Collection<Map.Entry<String, String>> customHeaders;
   ConfigurationData conf = null;
   InvokeOperation onvifOp = new InvokeOperation();
-  Gson ser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+  ObjectMapper ser = new ObjectMapper()
+		              .enable(SerializationFeature.INDENT_OUTPUT)
+		              .registerModule(new JakartaXmlBindAnnotationModule());
   Map<String, String> ctrl = new HashMap<>();
   
   public OnvifRelayServlet(ConfigurationData cd) {
@@ -77,7 +81,7 @@ public class OnvifRelayServlet extends HttpServlet {
 	      jrro.request = op[0];
 	      jrro.response = op[1];
 		  
-		  res = ser.toJson(jrro);
+		  res = jrro.ser();
 	    }
 	  } else {
         URL targetUri = new URL(target);

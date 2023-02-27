@@ -4,11 +4,14 @@
 
 package onvif_relay.relay.converters;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+
 
 public class JsonRequestResponse {
   public String target,
@@ -27,7 +30,8 @@ public class JsonRequestResponse {
 	Class<?> savReq = null, savResp = null;
 	
 	try {
-	  Gson ser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+	  ObjectMapper ser = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).registerModule(new JakartaXmlBindAnnotationModule());
+	  // Gson ser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	  
 	  if (request != null) {
 		if (request instanceof Class) {
@@ -47,7 +51,8 @@ public class JsonRequestResponse {
 		}
 	  }
 	  
-	  res = ser.toJson(this);
+	  // res = ser.toJson(this);
+	  res = ser.writeValueAsString(this);
 	  
 	  if (savReq != null) {
 	    request = savReq;
@@ -62,7 +67,7 @@ public class JsonRequestResponse {
 	return res;
   }
   
-  public static Object[] createRequest(String reqClass, String jsonStr) {
+  public static Object[] createRequest(String reqClass, String jsonStr) throws JsonMappingException, JsonProcessingException {
     Object[] res = null;
   
     Object[] protos = OnvifOperations.getOperationPrototypes(reqClass);
@@ -70,7 +75,7 @@ public class JsonRequestResponse {
     
     if (opClass != null) {
       res = new Object[2];
-      res[0] = new Gson().fromJson(jsonStr, opClass);
+      res[0] = new ObjectMapper().readValue(jsonStr, opClass);
       res[1] = protos[1].getClass();
     }
     return res;
@@ -81,46 +86,46 @@ public class JsonRequestResponse {
 	password = null;
   }
   
-  public static JsonRequestResponse create(String jsonStr) {
+  public static JsonRequestResponse create(String jsonStr) throws JsonMappingException, JsonProcessingException {
     JsonRequestResponse res = null;
     
     String target = null, user = null, password = null, reqClass = null, respClass= null,
     	   operationType = null, voidOperation = null;
-    JsonObject reqjo = null, respjo = null;
+    JsonNode reqjo = null, respjo = null;
     
-    JsonObject jo = JsonParser.parseString(jsonStr).getAsJsonObject();
+    JsonNode jo = new ObjectMapper().readTree(jsonStr);
     if (jo != null) {
     		  			
-      JsonPrimitive jp = jo.getAsJsonPrimitive("target");
+      JsonNode jp = jo.get("target");
       if (jp != null)
-    	target = jp.getAsString();
+    	target = jp.textValue();
     		  			
-      jp = jo.getAsJsonPrimitive("user");
+      jp = jo.get("user");
       if (jp != null)
-    	user = jp.getAsString();
+    	user = jp.textValue();
     		  			
-      jp = jo.getAsJsonPrimitive("password");
+      jp = jo.get("password");
       if (jp != null)
-    	password = jp.getAsString();
+    	password = jp.textValue();
     		  			
-      jp = jo.getAsJsonPrimitive("reqclass");
+      jp = jo.get("reqclass");
       if (jp != null)
-    	reqClass = jp.getAsString();
+    	reqClass = jp.textValue();
     		  			  
-      jp = jo.getAsJsonPrimitive("respclass");
+      jp = jo.get("respclass");
       if (jp != null)
-    	respClass = jp.getAsString();
+    	respClass = jp.textValue();
       
-      jp = jo.getAsJsonPrimitive("operationType");
+      jp = jo.get("operationType");
       if (jp != null)
-        operationType = jp.getAsString();
+        operationType = jp.textValue();
       
-      jp = jo.getAsJsonPrimitive("voidOperation");
+      jp = jo.get("voidOperation");
       if (jp != null)
-        voidOperation = jp.getAsString();
+        voidOperation = jp.textValue();
     		 			
-      reqjo = jo.getAsJsonObject("request");
-      respjo = jo.getAsJsonObject("response");
+      reqjo = jo.get("request");
+      respjo = jo.get("response");
       
       Object[] protos = OnvifOperations.getOperationPrototypes(reqClass);
       
@@ -137,14 +142,14 @@ public class JsonRequestResponse {
         if (reqjo == null) {
           res.request = protos[0].getClass(); 
         } else {
-          Object deserreq = new Gson().fromJson(reqjo, protos[0].getClass());
+          Object deserreq = new ObjectMapper().treeToValue(reqjo, protos[0].getClass());
           res.request = deserreq;
         }
 
         if (respjo == null) {
           res.response = protos[1].getClass();  
         } else {
-          Object deserresp = new Gson().fromJson(respjo, protos[1].getClass());
+          Object deserresp = new ObjectMapper().treeToValue(respjo, protos[1].getClass());
           res.response = deserresp;
           res.respclass = deserresp.getClass().getSimpleName();
         }

@@ -90,10 +90,10 @@
      <version>4.0.0</version>
     </dependency>
     
-    <dependency>
+    <!-- dependency>
      <groupId>com.google.code.gson</groupId>
      <artifactId>gson</artifactId>
-    </dependency>
+    </dependency -->
     
   </dependencies>
 

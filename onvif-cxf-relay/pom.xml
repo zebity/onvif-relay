@@ -37,9 +37,13 @@
      <groupId>org.slf4j</groupId>
      <artifactId>slf4j-simple</artifactId>
     </dependency>
-    <dependency>
+    <!-- dependency>
      <groupId>com.google.code.gson</groupId>
      <artifactId>gson</artifactId>
+    </dependency -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
     </dependency>
 
     <!-- SAX/XML Parser -->
@@ -48,7 +52,14 @@
      <artifactId>saaj-impl</artifactId>
      <version>3.0.0</version>
      <scope>runtime</scope>
-    </dependency>	
+    </dependency>
+    
+    <!-- Angus (Jakarta) Activations -->
+    <dependency>
+	 <groupId>org.eclipse.angus</groupId>
+	 <artifactId>angus-activation</artifactId>
+	 <version>2.0.0</version>
+    </dependency>
 
     <!-- JAKARTA BUILD/RUN TIME DEPENDENCIES -->
     <dependency>
@@ -56,6 +67,16 @@
      <artifactId>jakarta.annotation-api</artifactId>
      <version>2.1.1</version>	
     </dependency>
+    <!-- dependency>
+     <groupId>jakarta.activation</groupId>
+     <artifactId>jakarta.activation-api</artifactId>
+     <version>2.0.1</version>
+    </dependency>
+    <dependency>
+     <groupId>com.sun.activation</groupId>
+     <artifactId>jakarta.activation</artifactId>
+     <version>2.0.1</version>
+    </dependency -->
     <dependency>
      <groupId>jakarta.xml.bind</groupId>
      <artifactId>jakarta.xml.bind-api</artifactId>
@@ -201,6 +222,7 @@
      <groupId>org.apache.maven.plugins</groupId>
      <!-- artifactId>maven-assembly-plugin</artifactId -->
      <artifactId>maven-shade-plugin</artifactId>
+     <version>3.2.4</version>
      <executions>
       <execution>
        <phase>package</phase>
