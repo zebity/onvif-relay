@@ -1,6 +1,13 @@
 # onvif-relay
 An onvif device request relay.
-Accepts ONVIF defined SOAP requests and forwards them to ONVIF compliant devices
+Accepts JSON'ed ONVIF request and forwards them as SOAP request to ONVIF compilient device.
+
+To
+- make request to onvif device: http/s://api/relay/{verXX}/{operation}?uri=http[s]://[user:password@]:ip:port/{onvif/device_service}
+- get schema info (as JSON) (and avoid needing to read WSDL ;-) ): http[s]://api/schema/{verXX}/{operation}
+
+Also includes onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device
+
 
 See: https://tips.graphica.com.au/onvif-ws-client-consumption/
 

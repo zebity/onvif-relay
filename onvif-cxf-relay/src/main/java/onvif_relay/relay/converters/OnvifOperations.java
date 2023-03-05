@@ -3,6 +3,7 @@ package onvif_relay.relay.converters;
 import java.lang.reflect.Method;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class OnvifOperations {
@@ -188,45 +189,60 @@ public class OnvifOperations {
 	    {"CreateOSD", "org.onvif.ver10.media.wsdl"},
 	    {"DeleteOSD", "org.onvif.ver10.media.wsdl"}
 	    };
-  static Map<String, String[]> deviceOps = null;
-  static Map<String, String[]> mediaOps = null;
+  static String[][]  Classifiers = {
+		  {"get", "get"},
+		  {"set", "set"},
+		  {"add", "update"},
+		  {"create", "update"},
+		  {"delete", "update"},
+		  {"remove", "update"},
+		  {"", "action"}
+         };
+
   static org.onvif.ver10.device.wsdl.ObjectFactory dof = new org.onvif.ver10.device.wsdl.ObjectFactory();
   static org.onvif.ver10.media.wsdl.ObjectFactory mof = new org.onvif.ver10.media.wsdl.ObjectFactory();
-  static Map<String, Object> factories = null;
+
   public static final String DeviceType = "org.onvif.ver10.device.wsdl";
-  public static final String MediaType = "org.onvif.vers10.media.wsdl";
+  public static final String MediaType = "org.onvif.ver10.media.wsdl";
+  public static OnvifSchema schema = OnvifSchema.createTop();
   static Class<?>[] emptyArgs = {};
   static Object[] emptyParams = {};
-  static boolean doneInit = init();
+  public static boolean doneInit = init();
   
   static boolean init() {
     boolean res = true;
     
-    deviceOps = new HashMap<>();
-    mediaOps = new HashMap<>();
-    for (int i = 0; i < DeviceOperations.length; i++)
-      deviceOps.put(DeviceOperations[i][0], DeviceOperations[i]);
+    // deviceOps = new HashMap<>();
+    // mediaOps = new HashMap<>();
+    // (int i = 0; i < DeviceOperations.length; i++)
+    //  deviceOps.put(DeviceOperations[i][0], DeviceOperations[i]);
     
-    for (int i = 0; i < MediaOperations.length; i++)
-      mediaOps.put(MediaOperations[i][0], MediaOperations[i]);
+    // for (int i = 0; i < MediaOperations.length; i++)
+    //  mediaOps.put(MediaOperations[i][0], MediaOperations[i]);
     
-    factories = new HashMap<>();
-    factories.put("org.onvif.ver10.device.wsdl", dof);
-    factories.put("org.onvif.ver10.media.wsdl", mof);
+    // factories = new HashMap<>();
+    // factories.put("org.onvif.ver10.device.wsdl", dof);
+    // factories.put("org.onvif.ver10.media.wsdl", mof);
     
+    // schema = OnvifSchema.createTop();
+    OnvifSchema stab = schema.addVersion("ver10");
+    stab.addOperations("device", DeviceType, dof, DeviceOperations);
+    stab.addOperations("media", MediaType, mof, MediaOperations);
     return res;
   }
   
-  public static Object[] getOperationPrototypes(String forReq) {
+  public static Object[] getOperationPrototypes(String forReq, String ver) {
 	Object[] res = null;
 	
-	String[] use = deviceOps.get(forReq);
-	if (use == null) {
-      use = mediaOps.get(forReq);
-	}
+	OnvifSchema use = schema.findOperation(forReq, ver);
+	
+	// String[] use = deviceOps.get(forReq);
+	// if (use == null) {
+    //   use = mediaOps.get(forReq);
+	// }
 	
 	if (use != null) {
-	  Object fact = factories.get(use[1]);
+	  Object fact = use.factory;
 	  
 	  try {
 	  

@@ -70,7 +70,7 @@ public class JsonRequestResponse {
   public static Object[] createRequest(String reqClass, String jsonStr) throws JsonMappingException, JsonProcessingException {
     Object[] res = null;
   
-    Object[] protos = OnvifOperations.getOperationPrototypes(reqClass);
+    Object[] protos = OnvifOperations.getOperationPrototypes(reqClass, null);
     Class<?> opClass = protos[0].getClass();
     
     if (opClass != null) {
@@ -127,7 +127,7 @@ public class JsonRequestResponse {
       reqjo = jo.get("request");
       respjo = jo.get("response");
       
-      Object[] protos = OnvifOperations.getOperationPrototypes(reqClass);
+      Object[] protos = OnvifOperations.getOperationPrototypes(reqClass, null);
       
       if (protos != null) {
     	  

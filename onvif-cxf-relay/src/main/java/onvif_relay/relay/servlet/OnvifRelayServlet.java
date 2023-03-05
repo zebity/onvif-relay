@@ -24,7 +24,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import onvif_relay.relay.converters.JsonRequestResponse;
-import onvif_relay.relay.converters.OnvifOperations;
 import onvif_relay.relay.invokers.InvokeOperation;
 
 public class OnvifRelayServlet extends HttpServlet {
@@ -62,28 +61,22 @@ public class OnvifRelayServlet extends HttpServlet {
   
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-		           throws IOException, ServletException {  
+		           throws IOException, ServletException {
+  // path: |/api/relay|/verXX/operation
 
 	String reqURI = req.getRequestURI();
 	String target = req.getParameter("uri");
-	String operation = req.getParameter("operation");
+	String pathi = req.getPathInfo();
+	String[] pbits = pathi.split("/");
+    String operation = null;;
 	JsonRequestResponse jrro = new JsonRequestResponse();
 	String res = "{}";
 	
 	try {
 	  
-	  if (target == null) {
-	    Object[] op = OnvifOperations.getOperationPrototypes(operation);
-	    
-	    if (op != null) {
-	      jrro.reqclass = op[0].getClass().getSimpleName();
-	      jrro.respclass = op[1].getClass().getSimpleName();
-	      jrro.request = op[0];
-	      jrro.response = op[1];
-		  
-		  res = jrro.ser();
-	    }
-	  } else {
+	  operation = pbits[2];
+	  
+	  if (target != null) {
         URL targetUri = new URL(target);
         String auth = targetUri.getUserInfo();
         String proto = targetUri.getProtocol();
@@ -115,11 +108,6 @@ public class OnvifRelayServlet extends HttpServlet {
 		  res = jrro.ser();
         }
 	  }
-	  /* if (null != this.customHeaders) {
-	    for (Map.Entry<String, String> header : this.customHeaders) {
-	      response.addHeader(header.getKey(), header.getValue());
-	    }
-	  } */
 	} catch (Exception ex) {
 	  throw new ServletException(ex);
 	}

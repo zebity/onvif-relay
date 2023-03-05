@@ -26,19 +26,24 @@ import org.eclipse.jetty.util.security.Credential;
 import fence.util.ConfigurationData;
 import jakarta.servlet.http.HttpServlet;
 import onvif_relay.relay.servlet.OnvifRelayServlet;
+import onvif_relay.relay.servlet.OnvifSchemaServlet;
 
 public class EmbeddedJettyJakRelay {
 	
   public static void main(String[] args) throws Exception {
 	System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
-    ConfigurationData confData = new ConfigurationData(args);
+    ConfigurationData conf = new ConfigurationData(args);
 
-    String srvPort = confData.getItem("onvif-relay", "port");
-	String level = confData.getItem("onvif-relay", "log-level");
-	String dump = confData.getItem("onvif-relay", "dump");
-	String security = confData.getItem("onvif-relay", "security");
-	String realm = confData.getItem("onvif-relay", "realm");
-	String auth = confData.getItem("onvif-relay", "auth");
+    String srvPort = conf.getItem("onvif-relay", "port");
+	String level = conf.getItem("onvif-relay", "log-level");
+	String dump = conf.getItem("onvif-relay", "dump");
+	String security = conf.getItem("onvif-relay", "security");
+	String realm = conf.getItem("onvif-relay", "realm");
+	String auth = conf.getItem("onvif-relay", "auth");
+	String relay = conf.getItem("onvif-relay", "relay");
+	String schema = conf.getItem("onvif-relay", "schema");
+	String relaypath = conf.getItem("onvif-relay", "path-relay");
+	String schemapath = conf.getItem("onvif-relay", "path-schema");
 	String[] cred = auth.split(":");
 	// ONVIF Roles: [ Administrator | Operator | User | Anonymous ]
 	String[] roles = {"Administrator"};
@@ -69,10 +74,18 @@ public class EmbeddedJettyJakRelay {
         cxtHandler.setSecurityHandler(csh);
       }
       
-      HttpServlet srvlet = new OnvifRelayServlet(confData);
-      ServletHolder holder = new ServletHolder(srvlet);
-      cxtHandler.addServlet(holder, "/api/v1");
-      
+      HttpServlet rsrvlet = null, ssrvlet = null;
+      ServletHolder rholder=null, sholder = null;
+      if (relay != null && relay.equals("true")) {
+        rsrvlet = new OnvifRelayServlet(conf);
+        rholder = new ServletHolder(rsrvlet);
+        cxtHandler.addServlet(rholder, relaypath);
+      }
+      if (schema != null && schema.equals("true")) {
+          ssrvlet = new OnvifSchemaServlet(conf);
+          sholder = new ServletHolder(ssrvlet);
+          cxtHandler.addServlet(sholder, schemapath);
+      }
       server.start();
       
       // consoleLoop(DevManager);
