@@ -3,10 +3,12 @@ An onvif device request relay.
 Accepts JSON'ed ONVIF request and forwards them as SOAP request to ONVIF compilient device.
 
 To
-- make request to onvif device: http/s://api/relay/{verXX}/{operation}?uri=http[s]://[user:password@]:ip:port/{onvif/device_service}
+- make request to onvif device: http/s://api/relay/{verXX}/{operation}?uri=http[s]://[user:password@]ip:port/{onvif/device_service}
 - get schema info (as JSON) (and avoid needing to read WSDL ;-) ): http[s]://api/schema/{verXX}/{operation}
 
-Also includes onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device
+NOTE: verXX refers to ONVIF WSDL version
+
+This repository also includes onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device (camera)
 
 
 See: https://tips.graphica.com.au/onvif-ws-client-consumption/
@@ -35,8 +37,8 @@ Run manually via:
 
 
 NOTE 2: You can generate code with javax or jakarta inclusions
-- To change between Java EE (import javax.PKG) or Jakarta EE (import jakarta.PKG) requires editing of Maven pom.xml properties
-- As WSDL patching is slightly differnt for jax / jak specify patch variant is via input into get-patch (as above): files.jax.txt | files.jak.txt
+- To change between Java EE (import javax.PKG) or Jakarta EE (import jakarta.PKG) requires editing of Maven pom.xml properties (now by selecting the jax or jak tree)
+- As WSDL patching is slightly differnt for jax / jak specifing the patch variant is via input into get-patch (as above): files.jax.txt | files.jak.txt
  
 
 NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
