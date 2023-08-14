@@ -28,6 +28,7 @@ Maven Targets:
 - mvn -X jaxws:wsimport : to generate java stubs and client
 - mvn -X initialize : to download and patch ONVIF wsdl for jaxws:wsimport (runs get-and-patch.sh)
 - mvn -X generate-sources : to run the CXF WSDL2Java Generator as alternate to wsimport (for testing)
+- mvn -X package: to install onvif-api into maven package repository
 
 NOTE 1: Currently automatic download and patch of ONVIF wsdls does not work via Maven.
 
@@ -66,6 +67,8 @@ After much testing I found the following was reqired to get running service:
 
 To Build:
 
+
+0. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
 1. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project)
 2. Do maven clean
 3. Run get and patch script to download & patch required WSDLs
