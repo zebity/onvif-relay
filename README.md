@@ -47,7 +47,7 @@ NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Ra
 
 NOTE 4: The better way to customise wsimport result (ie avoid NOTE 5 using "hacked" wsimport), added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport. Tested with xlstproc, which does not seem to allow use of the "document" method to get the name of input WSDL, so this is passed in explicity via -stringparam:
 - xsltproc -o - -stringparam p1 /META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > target/generated-sources/xsltproc/device/device-binding-01.xml
-
+- see: /src/main/sh/generate-bindings.sh which generates both device & media binding files
 
 NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
 - See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
@@ -68,16 +68,16 @@ After much testing I found the following was reqired to get running service:
 To Build:
 
 
-0. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
-1. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project)
-2. Do maven clean
-3. Run get and patch script to download & patch required WSDLs
-4. [Optionally: Generate XML Binding Customisation scripts]
-5. Either:
+1. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
+2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project)
+3. Do maven clean
+4. Run get and patch script to download & patch required WSDLs
+5. [Optionally: Generate XML Binding Customisation scripts]
+6. Either:
    - A. Run wsimport using -b customsiation.xml from [4.]
    - or
    - B. Run custom wsimport script to to create Upper case Java Method names
-
+7. To build onvif-relay, onvif-device and convif-client requires onvif-api to have successfully build "mvn install" target.
 
 # Author:
 
