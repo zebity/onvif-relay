@@ -1,7 +1,7 @@
 13c13,17
-< 		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="22.12">
+< 		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="23.06">
 ---
-> 		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" jaxb:version="3.0" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="22.12">
+> 		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" jaxb:version="3.0" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="23.06">
 >                         <xs:annotation><xs:appinfo><jaxb:globalBindings
 >                           enableJavaNamingConventions = "false"
 >                           underscoreBinding = "asCharInWord"/>

@@ -77,7 +77,7 @@ To Build:
    - A. Run wsimport using -b customsiation.xml from [4.]
    - or
    - B. Run custom wsimport script to to create Upper case Java Method names
-7. To build onvif-relay, onvif-device and convif-client requires onvif-api to have successfully build "mvn install" target.
+7. To build onvif-relay, onvif-device and onvif-client requires onvif-api to have successfully built "mvn install" target.
 
 # Author:
 
