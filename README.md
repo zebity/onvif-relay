@@ -5,6 +5,7 @@ Accepts JSON'ed ONVIF request and forwards them as SOAP request to ONVIF compili
 To
 - make request to onvif device: http/s://api/relay/{verXX}/{operation}?uri=http[s]://[user:password@]ip:port/{onvif/device_service}
 - get schema info (as JSON) (and avoid needing to read WSDL ;-) ): http[s]://api/schema/{verXX}/{operation}
+- see doco/onvif-relay-url-examples-01.txt for examples
 
 NOTE: verXX refers to ONVIF WSDL version
 
@@ -25,10 +26,11 @@ This project uses Apache Maven to generate client/server stubs using:
 - Developed and tested on Ubuntu 22.04
 
 Maven Targets:
-- mvn -X jaxws:wsimport : to generate java stubs and client
+- mvn -X jaxws:wsimport : to generate java stubs and client (for metro api)
 - mvn -X initialize : to download and patch ONVIF wsdl for jaxws:wsimport (runs get-and-patch.sh)
 - mvn -X generate-sources : to run the CXF WSDL2Java Generator as alternate to wsimport (for testing)
-- mvn -X package: to install onvif-api into maven package repository
+- mvn -X package: to create onvif-api jar
+- mvn -X install to install onvif-api jar into local maven package repository
 
 
 ## Build Process
@@ -42,14 +44,16 @@ To Build:
 
 
 1. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
-2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project)
+2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project - mstro hack))
 3. Do maven clean
-4. Run get and patch script to download & patch required WSDLs
-5. [Optionally: Generate XML Binding Customisation scripts]
+4. Run get and patch script to download & patch required WSDLs (see NOTE 1)
+5. [Optionally - metro: Generate XML Binding Customisation scripts] (see NOTE 4 - this is required for CXF & metro without wsimport hack)
 6. Either:
-   - A. Run wsimport using -b customsiation.xml from [4.]
+   - A. Run api-cxf-ap - build target package
+   -and/or
+   - B.i. Run wsimport using -b customsiation.xml from [5.]
    - or
-   - B. Run custom wsimport script to to create Upper case Java Method names
+   - B.ii. Run custom wsimport script to to create Upper case Java Method names
 7. To build onvif-relay, onvif-device and onvif-client requires onvif-api to have successfully built "mvn install" target.
 
 ## NOTES

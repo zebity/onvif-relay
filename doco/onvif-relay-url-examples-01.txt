@@ -1,0 +1,8 @@
+Relay:
+
+http://127.0.0.1:3080/api/relay/ver10/GetDeviceInformation?uri=http://admin:admin@127.0.0.1:9080/onvif/device_service
+
+Schema:
+
+http://127.0.0.1:3080/api/schema/ver10/SetSystemDateAndTime
+
