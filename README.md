@@ -44,12 +44,12 @@ To Build:
 
 
 1. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
-2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project - mstro hack))
+2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project/metro hack)
 3. Do maven clean
 4. Run get and patch script to download & patch required WSDLs (see NOTE 1)
 5. [Optionally - metro: Generate XML Binding Customisation scripts] (see NOTE 4 - this is required for CXF & metro without wsimport hack)
 6. Either:
-   - A. Run api-cxf-ap - build target package
+   - A. Run onvif-cxf-api - build target package
    -and/or
    - B.i. Run wsimport using -b customsiation.xml from [5.]
    - or
