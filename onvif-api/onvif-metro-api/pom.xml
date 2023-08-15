@@ -175,11 +175,19 @@
      </executions>
       <configuration>
        <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
+       <!-- wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/*</wsdlLocation -->
        <wsdlDirectory>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl</wsdlDirectory>
+       <!-- wsdlDirectory>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10</wsdlDirectory -->
        <wsdlFiles>
         <wsdlFile>onvif_device.wsdl</wsdlFile>
+        <!-- wsdlFile>device/wsdl/onvif_device.wsdl</wsdlFile -->
+        <!-- wsdlFile>media/wsdl/onvif_media.wsdl</wsdlFile -->
        </wsdlFiles>
-       <bindingDirectory>${project.basedir}/target/generated-sources/xsltproc/device</bindingDirectory>
+       <!-- bindingDirectory>${project.basedir}/target/generated-sources/xsltproc/device</bindingDirectory -->
+       <bindingFiles>
+        <bindingFile>${project.basedir}/target/generated-sources/xsltproc/device/device-binding-01.xml</bindingFile>
+        <!-- bindingFile>${project.basedir}/target/generated-sources/xsltproc/media/media-binding-01.xml</bindingFile -->
+       </bindingFiles>
        <!-- The extension property tells JAX-WS to support soap v1.2 bindings. -->
        <extension>true</extension>
       </configuration>
