@@ -78,7 +78,8 @@ NOTE 4: The better way to customise wsimport result (ie avoid NOTE 5 using "hack
 - xsltproc -o - -stringparam p1 /META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > target/generated-sources/xsltproc/device/device-binding-01.xml
 - see: onvif-api/src/main/sh/generate-bindings.sh which generates both device & media binding files
 - from: onvif-api
-- do: src/main/sh/generate-bindings.sh . ~/.m2 `pwd`
+- do (cxf): src/main/sh/generate-bindings.sh . ~/.m2 onvif-cxf-api/ 
+- do (metro): src/main/sh/generate-bindings.sh . ~/.m2 onvif-metro-api/ 
 - this will use /META-INF symlink to source the WSDL files, to override put full alternate dir
 
 
