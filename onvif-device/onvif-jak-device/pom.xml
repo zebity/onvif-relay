@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>onvif-relay</groupId>
     <artifactId>onvif-device</artifactId>
@@ -12,14 +12,14 @@
   <properties>
    <!-- use jetty 10 for javax and 11 for Jakarta -->
    <project.jetty.ver>11.0.12</project.jetty.ver>
-   <!-- project.jetty.ver>10.0.12</project.jetty.ver -->  
+   <!-- project.jetty.ver>10.0.12</project.jetty.ver -->
   </properties>
-  
+
   <artifactId>onvif-jak-device</artifactId>
   <name>onvif-jak-device</name>
 
   <dependencies>
-  
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <!-- artifactId>onvif-metro-api</artifactId -->
@@ -44,8 +44,8 @@
      <artifactId>saaj-impl</artifactId>
      <version>3.0.0</version>
      <scope>runtime</scope>
-    </dependency>	
-    
+    </dependency>
+
     <!-- Angus (Jakarta) Activations -->
     <dependency>
 	 <groupId>org.eclipse.angus</groupId>
@@ -57,7 +57,7 @@
     <dependency>
      <groupId>jakarta.annotation</groupId>
      <artifactId>jakarta.annotation-api</artifactId>
-     <version>2.1.1</version>	
+     <version>2.1.1</version>
     </dependency>
     <dependency>
      <groupId>jakarta.xml.bind</groupId>
@@ -109,12 +109,12 @@
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-core</artifactId>
      <version>4.0.0</version>
-    </dependency> 
+    </dependency>
     <!-- dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-core</artifactId>
      <version>2.7.18</version>
-    </dependency --> 
+    </dependency -->
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -168,7 +168,7 @@
     	<artifactId>jetty-server</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency>
-    
+
     <dependency>
      <groupId>org.apache.httpcomponents</groupId>
      <artifactId>httpclient</artifactId>
@@ -195,7 +195,7 @@
       <artifactId>junit</artifactId>
       <!-- scope>test</scope -->
     </dependency>
-    
+
     <!-- https://mvnrepository.com/artifact/org.json/json -->
 <dependency>
     <groupId>org.json</groupId>
@@ -209,39 +209,39 @@
   <build>
    <plugins>
 
-    <plugin>
-     <groupId>org.apache.maven.plugins</groupId>
-     <!-- artifactId>maven-assembly-plugin</artifactId -->
-     <artifactId>maven-shade-plugin</artifactId>
-     <version>3.4.1</version>
-     <executions>
-      <execution>
-       <phase>package</phase>
-       <goals>
-        <!-- goal>single</goal -->
-        <goal>shade</goal>
-       </goals>
-       <configuration>
-        <!-- archive>
-         <manifest>
-          <mainClass>onvif_relay.server.EmbeddedJettyJakDevice</mainClass>
-         </manifest>
-        </archive>
-         <descriptorRefs>
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-         </descriptorRefs -->
-         <shadedArtifactAttached>true</shadedArtifactAttached>
-         <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-         <transformers>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-           <mainClass>onvif_relay.server.EmbeddedJettyJakDevice</mainClass>
-          </transformer>
-         </transformers>
-        </configuration>
-       </execution>
-     </executions>
-    </plugin>
-
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-dependency-plugin</artifactId>
+           <executions>
+               <execution>
+                   <id>copy-dependencies</id>
+                   <phase>prepare-package</phase>
+                   <goals>
+                       <goal>copy-dependencies</goal>
+                   </goals>
+                   <configuration>
+                       <outputDirectory>
+                           ${project.build.directory}/libs
+                       </outputDirectory>
+                   </configuration>
+               </execution>
+           </executions>
+       </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-jar-plugin</artifactId>
+           <configuration>
+               <archive>
+                   <manifest>
+                       <addClasspath>true</addClasspath>
+                       <classpathPrefix>libs/</classpathPrefix>
+                       <mainClass>
+                           onvif_relay.server.EmbeddedJettyJakDevice
+                       </mainClass>
+                   </manifest>
+               </archive>
+           </configuration>
+       </plugin>
    </plugins>
   </build>
 </project>
