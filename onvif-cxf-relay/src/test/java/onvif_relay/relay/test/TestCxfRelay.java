@@ -25,7 +25,7 @@ public class TestCxfRelay {
 	Map<String, String> ctrl = new HashMap<>();
 	ctrl.put("security", "digest");
 	ctrl.put("debug", "false");
-	String peekc = null, peekt = null;
+	String peekc = null, peekt = null, peekcTest = null;
 	
 	InvokeOperation onvifop = new InvokeOperation();
 	
@@ -37,13 +37,21 @@ public class TestCxfRelay {
 
 	try {
 	  JsonRequestResponse callo = JsonRequestResponse.create(call);
-
-	  callo.response = onvifop.invoke(callo, true, ctrl);
-
-	  peekc = callo.ser();
-      System.out.println(peekc);
+	  System.out.println("This should equal the device json details: " + callo.respjo);
 	  
+	  callo.response = onvifop.invoke(callo, true, ctrl);
+	  
+	  System.out.println("read in first callo response: " + callo.response); //read first callo response
+	  //System.out.println("read in first callo class call: " + callo.response.getClass().getSimpleName());
+	  //System.out.println("read in first callo response: " + callo.response.getClass().getName());
+	  
+	  peekc = callo.ser();
+      System.out.println(peekc); //output of first response test.
+	  
+      peekcTest = callo.response.toString();
+      System.out.println("tested the response object" + peekcTest);
 	
+      
 	  JsonRequestResponse testo = JsonRequestResponse.create(test);
 	  
 	  Class savreq = null, savresp = null;
@@ -58,7 +66,7 @@ public class TestCxfRelay {
 	  }
 	
 	  peekt = jser.writeValueAsString(testo);
-	  System.out.println(peekt);
+	  System.out.println("Setter test: " + peekt);
 
 	  peekc = callo.ser();
 	  System.out.println(peekt);

@@ -5,10 +5,17 @@
 
 package onvif_relay.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.json.JSONObject;
+import org.json.*;
 
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceServiceCapabilities;
@@ -87,11 +94,44 @@ public class JakDeviceImpl implements Device {
 	@Override
 	public void GetDeviceInformation(Holder<String> manufacturer, Holder<String> model, Holder<String> firmwareVersion,
 			Holder<String> serialNumber, Holder<String> hardwareId) {
-	  manufacturer.value = new String("john");
-	  model.value = new String("onvif-test");
-	  firmwareVersion.value = new String("0.0.1");
-	  serialNumber.value = new String("001");
-	  hardwareId.value = new String("test#1");	
+		
+		String loc = new String("Test.json");
+		File file = new File(loc);
+		
+		try {
+            String content = new String(Files.readAllBytes(Paths.get(file.toURI())));
+            System.out.println("this is the json data:" + content);
+            
+            
+            //JSOn inexplicably doesn't work. I tried many things.
+            JSONObject jsonContent = new JSONObject(content);
+            
+            String man = jsonContent.getString("manufacturer");
+            String modelVal = jsonContent.getString("model");
+            String FWvVal = jsonContent.getString("firmwareVersion");
+            String SerialNumVal = jsonContent.getString("serialNumber");
+            String HdwrVal = jsonContent.getString("hardwareId");
+            
+            //Depending on how Camera data is represented
+            //JSONObject jsonCamera = jsonContent.getJSONObject("cameraInfo");
+            //JSONObject jsonMan = jsonContent.getJSONObject("manufacturer");
+            
+            
+            System.out.println("\n" + "This is the JSon Manufacturer field in the JSON:" +  man);
+
+      	  manufacturer.value = man; //new String(man);
+    	  model.value = modelVal; //new String("onvif-test-jakdevice-relay");
+    	  firmwareVersion.value = FWvVal;
+    	  serialNumber.value = SerialNumVal;
+    	  hardwareId.value = HdwrVal;	
+            
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+
+
+		
+
 	}
 
 	@Override
