@@ -50,7 +50,7 @@
     <dependency>
      <groupId>com.sun.xml.messaging.saaj</groupId>
      <artifactId>saaj-impl</artifactId>
-     <version>3.0.0</version>
+     <version>3.0.3</version>
      <scope>runtime</scope>
     </dependency>
     
@@ -58,7 +58,7 @@
     <dependency>
 	 <groupId>org.eclipse.angus</groupId>
 	 <artifactId>angus-activation</artifactId>
-	 <version>2.0.0</version>
+	 <version>2.0.1</version>
     </dependency>
 
     <!-- JAKARTA BUILD/RUN TIME DEPENDENCIES -->
@@ -70,7 +70,7 @@
     <!-- dependency>
      <groupId>jakarta.activation</groupId>
      <artifactId>jakarta.activation-api</artifactId>
-     <version>2.0.1</version>
+     <version>2.1.2</version>
     </dependency>
     <dependency>
      <groupId>com.sun.activation</groupId>
@@ -83,17 +83,17 @@
      <!-- metro -->
      <!-- version>4.0.0</version -->
      <!-- cxf -->
-     <version>3.0.1</version>
+     <version>4.0.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.soap</groupId>
       <artifactId>jakarta.xml.soap-api</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
      <groupId>jakarta.xml.ws</groupId>
      <artifactId>jakarta.xml.ws-api</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.1</version>
      <!-- scope>runtime</scope -->
     </dependency>
     <dependency>
@@ -113,20 +113,20 @@
     <!-- dependency>
      <groupId>com.sun.xml.ws</groupId>
      <artifactId>jaxws-rt</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.2</version>
      <scope>runtime</scope>
     </dependency>
     <dependency>
      <groupId>org.glassfish.jaxb</groupId>
      <artifactId>jaxb-core</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.4</version>
     </dependency -->
 
     <!-- cxf -->
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-core</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.3</version>
     </dependency> 
     <!-- dependency>
      <groupId>org.apache.cxf</groupId>
@@ -136,7 +136,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.3</version>
      <!-- exclusions>
       <exclusion>
   	<groupId>org.eclipse.angus</groupId>
@@ -147,17 +147,17 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.3</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-bindings-soap</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.3</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http-jetty</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.3</version>
     </dependency>
 
     <!-- Embedded Jetty -->
@@ -220,36 +220,39 @@
 
     <plugin>
      <groupId>org.apache.maven.plugins</groupId>
-     <!-- artifactId>maven-assembly-plugin</artifactId -->
-     <artifactId>maven-shade-plugin</artifactId>
-     <version>3.2.4</version>
+     <artifactId>maven-dependency-plugin</artifactId>
      <executions>
       <execution>
-       <phase>package</phase>
+       <id>copy-dependencies</id>
+       <phase>prepare-package</phase>
        <goals>
-        <!-- goal>single</goal -->
-        <goal>shade</goal>
+        <goal>copy-dependencies</goal>
        </goals>
        <configuration>
-        <!-- archive>
-         <manifest>
-          <mainClass>onvif_relay.relay.server.EmbeddedJettyJakRelay</mainClass>
-         </manifest>
-        </archive>
-         <descriptorRefs>
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-         </descriptorRefs -->
-         <shadedArtifactAttached>true</shadedArtifactAttached>
-         <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-         <transformers>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-           <mainClass>onvif_relay.relay.server.EmbeddedJettyJakRelay</mainClass>
-          </transformer>
-         </transformers>
-        </configuration>
-       </execution>
+        <outputDirectory>
+         ${project.build.directory}/libs
+        </outputDirectory>
+       </configuration>
+      </execution>
      </executions>
     </plugin>
+
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-jar-plugin</artifactId>
+     <configuration>
+      <archive>
+       <manifest>
+        <addClasspath>true</addClasspath>
+        <classpathPrefix>libs/</classpathPrefix>
+        <mainClass>
+         onvif_relay.relay.server.EmbeddedJettyJakRelay
+        </mainClass>
+       </manifest>
+      </archive>
+     </configuration>
+    </plugin>
+
    </plugins>
   </build>
 

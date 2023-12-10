@@ -83,6 +83,7 @@
     <module>onvif-cxf-relay</module>
     <module>onvif-device</module>
     <module>onvif-client</module>
+    <module>onvif-discovery-client</module>
   </modules>
 
 </project>
