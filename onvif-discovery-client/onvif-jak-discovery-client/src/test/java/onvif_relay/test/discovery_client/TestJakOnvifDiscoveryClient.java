@@ -11,12 +11,12 @@ import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
 public class TestJakOnvifDiscoveryClient {
 	
   public static void main(String [] args) {
-	ConfigurationData conf = new ConfigurationData(args);
+	// ConfigurationData conf = new ConfigurationData(args);
 	
     try {
       System.out.println("Running test ...");
       
-      String ipv4 = conf.getItem("onvif-device", "device");
+      // String ipv4 = conf.getItem("onvif-device", "device");
       
       JakOnvifDiscoveryClient onvdis = new JakOnvifDiscoveryClient();
       onvdis.probe();
