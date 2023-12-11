@@ -37,7 +37,7 @@ public class TestCxfRelay {
 
 	try {
 	  JsonRequestResponse callo = JsonRequestResponse.create(call);
-	  System.out.println("This should equal the device json details: " + callo.respjo);
+	  System.out.println("This should equal the device json details: " + callo.response);
 	  
 	  callo.response = onvifop.invoke(callo, true, ctrl);
 	  
