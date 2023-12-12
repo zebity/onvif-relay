@@ -41,7 +41,7 @@ public class TestCxfRelay {
 	  
 	  callo.response = onvifop.invoke(callo, true, ctrl);
 	  
-	  System.out.println("read in first callo response: " + callo.response); //read first callo response
+	  System.out.println("read in first callo response: '" + callo.response + "'."); //read first callo response
 	  //System.out.println("read in first callo class call: " + callo.response.getClass().getSimpleName());
 	  //System.out.println("read in first callo response: " + callo.response.getClass().getName());
 	  
@@ -49,7 +49,7 @@ public class TestCxfRelay {
       System.out.println(peekc); //output of first response test.
 	  
       peekcTest = callo.response.toString();
-      System.out.println("tested the response object" + peekcTest);
+      System.out.println("tested the response object: '" + peekcTest + "'.");
 	
       
 	  JsonRequestResponse testo = JsonRequestResponse.create(test);

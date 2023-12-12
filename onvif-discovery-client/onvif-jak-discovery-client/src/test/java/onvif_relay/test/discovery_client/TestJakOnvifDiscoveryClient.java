@@ -5,12 +5,20 @@
 
 package onvif_relay.test.discovery_client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+
 import jakarta.xml.ws.EndpointReference;
 import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
+import onvif_relay.relay.converters.JsonRequestResponse;
+import onvif_relay.relay.invokers.InvokeOperation;
 
 public class TestJakOnvifDiscoveryClient {
 	
@@ -26,13 +34,51 @@ public class TestJakOnvifDiscoveryClient {
       
       System.out.println("Probe, got: " + found.size());
       for (EndpointReference ref : found) {
-        // Greeter g = service.getPort(ref, Greeter.class);
-        // System.out.println(g.greetMe("World"));
+        String addr = onvdis.getWSAddress(ref);
+        
     	System.out.println("Found: '" + ref.toString() + "'.");
+    	System.out.println("Addr: '" + addr + "'.");
+    	getDeviceDetails(addr);
       }
 
 	} catch (Exception x) {
       x.printStackTrace();
 	}
+  }
+  
+  static void getDeviceDetails(String addr) {
+	String call = "{\"target\": \"" + addr + "\"," +
+                "\"user\": \"admin\", \"password\": \"admin\"," +
+		        "\"reqclass\": \"GetDeviceInformation\"," +
+                "\"request\": {}" +
+              "}";
+    Map<String, String> ctrl = new HashMap<>();
+    ctrl.put("security", "digest");
+    ctrl.put("debug", "false");
+    String peekc = null, peekt = null, peekcTest = null;
+
+    InvokeOperation onvifop = new InvokeOperation();
+
+    ObjectMapper jser = new ObjectMapper();
+    jser.enable(SerializationFeature.INDENT_OUTPUT);
+    jser.registerModule(new JakartaXmlBindAnnotationModule());
+
+    try {
+      JsonRequestResponse callo = JsonRequestResponse.create(call);
+      System.out.println("This should be device json details: " + callo.response);
+  
+      callo.response = onvifop.invoke(callo, true, ctrl);
+  
+      System.out.println("read in first callo response: '" + callo.response + "'."); //read first callo response
+  
+      peekc = callo.ser();
+      System.out.println(peekc); //output of first response test.
+  
+      peekcTest = callo.response.toString();
+      System.out.println("tested the response object: '" + peekcTest + "'.");
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 }
