@@ -11,6 +11,7 @@ package onvif_relay.relay.invokers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -207,7 +208,7 @@ public class InvokeOperation {
       Field[] outData = respo.getClass().getDeclaredFields();
       Class<?>[] setArg = new Class<?>[1];
       String nm = null, setMethod = null, getMethod = null;
-      Method setm = null, getm = null;
+      Method setm = null, getm = null, addm = null;
       
       switch (outData.length) {
         case 0: break;
@@ -218,19 +219,24 @@ public class InvokeOperation {
                   setm = respo.getClass().getMethod(setMethod, setArg);
                   setm.invoke(respo, got);
         	    } catch (Exception ex) {
-        	      System.out.println(ex);
-        	      System.out.println("INFO>> InvokeOperation::WrapResponse: no set, trying to recover using get+add.");
+        	      // System.out.println(ex);
+        	      System.out.println("INFO>> InvokeOperation::WrapResponse: no set, recovering using get+add.");
         	      getMethod = "get" + nm.substring(0,1).toUpperCase() + nm.substring(1);
         	      getm = respo.getClass().getMethod(getMethod, null);
         	      
         	      // This is work-around, need to change do it does not use static types
-        	      List<NetworkInterface> tlist = (List<NetworkInterface>)getm.invoke(respo, null);
+        	      List<?> tlist = (List<?>)getm.invoke(respo, null);
         	      List<?> slist = (List<?>)got;
         	      
-        	      
-        	      // tlist.addAll((Collection<? extends ?>)slist);
-        	      for (int i = 0; i < slist.size(); i++) {
-        	        tlist.add((NetworkInterface)slist.get(i));
+        	      if (slist.size() > 0) {
+        	    	// setArg[0] = slist.get(0).getClass();
+        	    	setArg[0] = Object.class;
+        	        addm = tlist.getClass().getMethod("add", setArg);
+        	        
+        	        // tlist.addAll((Collection<?>) slist);
+        	        for (int i = 0; i < slist.size(); i++) {
+        	          addm.invoke(tlist, slist.get(i));
+        	        }
         	      }
         	    }
                 break;
