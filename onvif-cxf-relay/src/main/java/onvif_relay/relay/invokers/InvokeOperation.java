@@ -205,16 +205,29 @@ public class InvokeOperation {
   	  
       Field[] outData = respo.getClass().getDeclaredFields();
       Class<?>[] setArg = new Class<?>[1];
-      String nm = null, setMethod = null;
-      Method setm = null;
+      String nm = null, setMethod = null, getMethod = null;
+      Method setm = null, getm = null;
       
       switch (outData.length) {
         case 0: break;
         case 1: nm = outData[0].getName();
         	    setMethod = "set" + nm.substring(0,1).toUpperCase() + nm.substring(1);
         	    setArg[0] = got.getClass();
-                setm = respo.getClass().getMethod(setMethod, setArg);
-                setm.invoke(respo, got);
+        	    try {
+                  setm = respo.getClass().getMethod(setMethod, setArg);
+                  setm.invoke(respo, got);
+        	    } catch (Exception ex) {
+        	      System.out.println(ex);
+        	      System.out.println("INFO>> InvokeOperation::WrapResponse: no set, trying to recover using get+add.");
+        	      getMethod = "get" + nm.substring(0,1).toUpperCase() + nm.substring(1);
+        	      getm = respo.getClass().getMethod(getMethod, null);
+        	      List<?> tlist = (List<?>)getm.invoke(respo, null);
+        	      List<?> slist = (List<?>)got;
+        	      // tlist.addAll((Collection<? extends ?>)slist);
+        	      //for (int i = 0; i < slist.size(); i++) {
+        	      //  tlist.add(slist.get(i));
+        	      // }
+        	    }
                 break;
         default: System.out.println("ERR>> InvokeOperation::wrapResponse - multiple fields: " + respo.getClass().getCanonicalName());
       }

@@ -38,7 +38,8 @@ public class TestJakOnvifDiscoveryClient {
         
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
-    	getDeviceDetails(addr);
+    	getDeviceDetails(addr, "GetDeviceInformation");
+    	getDeviceDetails(addr, "GetNetworkInterfaces");
       }
 
 	} catch (Exception x) {
@@ -46,10 +47,10 @@ public class TestJakOnvifDiscoveryClient {
 	}
   }
   
-  static void getDeviceDetails(String addr) {
+  static void getDeviceDetails(String addr, String getReq) {
 	String call = "{\"target\": \"" + addr + "\"," +
                 "\"user\": \"admin\", \"password\": \"admin\"," +
-		        "\"reqclass\": \"GetDeviceInformation\"," +
+		        "\"reqclass\": \"" + getReq + "\"," +
                 "\"request\": {}" +
               "}";
     Map<String, String> ctrl = new HashMap<>();
