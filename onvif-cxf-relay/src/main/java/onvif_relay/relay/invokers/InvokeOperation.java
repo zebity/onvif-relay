@@ -23,6 +23,7 @@ import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.MediaService;
+import org.onvif.ver10.schema.NetworkInterface;
 
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
@@ -221,12 +222,16 @@ public class InvokeOperation {
         	      System.out.println("INFO>> InvokeOperation::WrapResponse: no set, trying to recover using get+add.");
         	      getMethod = "get" + nm.substring(0,1).toUpperCase() + nm.substring(1);
         	      getm = respo.getClass().getMethod(getMethod, null);
-        	      List<?> tlist = (List<?>)getm.invoke(respo, null);
+        	      
+        	      // This is work-around, need to change do it does not use static types
+        	      List<NetworkInterface> tlist = (List<NetworkInterface>)getm.invoke(respo, null);
         	      List<?> slist = (List<?>)got;
+        	      
+        	      
         	      // tlist.addAll((Collection<? extends ?>)slist);
-        	      //for (int i = 0; i < slist.size(); i++) {
-        	      //  tlist.add(slist.get(i));
-        	      // }
+        	      for (int i = 0; i < slist.size(); i++) {
+        	        tlist.add((NetworkInterface)slist.get(i));
+        	      }
         	    }
                 break;
         default: System.out.println("ERR>> InvokeOperation::wrapResponse - multiple fields: " + respo.getClass().getCanonicalName());
