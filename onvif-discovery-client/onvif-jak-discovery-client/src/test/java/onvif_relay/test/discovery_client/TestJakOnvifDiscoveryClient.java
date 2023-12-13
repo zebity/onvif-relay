@@ -11,6 +11,9 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.onvif.ver10.device.wsdl.GetCapabilities;
+import org.onvif.ver10.schema.CapabilityCategory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
@@ -30,6 +33,16 @@ public class TestJakOnvifDiscoveryClient {
       JakOnvifDiscoveryClient onvdis = new JakOnvifDiscoveryClient();
       QName type = new QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter");
       
+      ObjectMapper jser = new ObjectMapper();
+      jser.enable(SerializationFeature.INDENT_OUTPUT);
+      jser.registerModule(new JakartaXmlBindAnnotationModule());
+      
+      // GetCapabilities getcap = new GetCapabilities();
+      // CapabilityCategory capcat = CapabilityCategory.fromValue("All");
+      // getcap.getCategory().add(capcat);
+      // String peek = jser.writeValueAsString(getcap);
+      // System.out.println(peek);
+      
       List<EndpointReference> found = onvdis.probe(type);
       
       System.out.println("Probe, got: " + found.size());
@@ -38,8 +51,10 @@ public class TestJakOnvifDiscoveryClient {
         
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
-    	getDeviceDetails(addr, "GetDeviceInformation");
-    	getDeviceDetails(addr, "GetNetworkInterfaces");
+    	getDeviceDetails(addr, "GetDeviceInformation", "{ }");
+    	getDeviceDetails(addr, "GetNetworkInterfaces", "{ }");
+    	getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
+    	// getDeviceDetails(addr, "GetSystemUris");
       }
 
 	} catch (Exception x) {
@@ -47,11 +62,11 @@ public class TestJakOnvifDiscoveryClient {
 	}
   }
   
-  static void getDeviceDetails(String addr, String getReq) {
+  static void getDeviceDetails(String addr, String getReq, String reqInput) {
 	String call = "{\"target\": \"" + addr + "\"," +
                 "\"user\": \"admin\", \"password\": \"admin\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
-                "\"request\": {}" +
+                "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", "digest");
@@ -59,10 +74,6 @@ public class TestJakOnvifDiscoveryClient {
     String peekc = null, peekt = null, peekcTest = null;
 
     InvokeOperation onvifop = new InvokeOperation();
-
-    ObjectMapper jser = new ObjectMapper();
-    jser.enable(SerializationFeature.INDENT_OUTPUT);
-    jser.registerModule(new JakartaXmlBindAnnotationModule());
 
     try {
       JsonRequestResponse callo = JsonRequestResponse.create(call);
