@@ -54,7 +54,8 @@ public class TestJakOnvifDiscoveryClient {
     	getDeviceDetails(addr, "GetDeviceInformation", "{ }");
     	getDeviceDetails(addr, "GetNetworkInterfaces", "{ }");
     	getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
-    	// getDeviceDetails(addr, "GetSystemUris");
+    	getDeviceDetails(addr, "GetServices", "{ }");
+    	getDeviceDetails(addr, "GetProfiles", "{ }");
       }
 
 	} catch (Exception x) {

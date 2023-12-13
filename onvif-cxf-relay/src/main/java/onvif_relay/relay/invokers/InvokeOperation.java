@@ -329,14 +329,23 @@ public class InvokeOperation {
     	Field fld = inputParam[i];
 
     	try {
-  	      getMethod = "get" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
-  	      getm = target.request.getClass().getMethod(getMethod, null);
-  	      
-	      List<?> tlist = (List<?>)getm.invoke(target.request, null);
-	      args[i] = tlist;
+      	  getMethod = "is" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
+      	  getm = target.request.getClass().getMethod(getMethod, null);
+      	      
+    	  Object val = (Object)getm.invoke(target.request, null);
+    	  args[i] = val;
     		
     	} catch (Exception ex) {
-    	  args[i] = fld.get(target.request);
+    	  try {
+      	    getMethod = "get" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
+      	    getm = target.request.getClass().getMethod(getMethod, null);
+      	      
+    	    List<?> tlist = (List<?>)getm.invoke(target.request, null);
+    	    args[i] = tlist;
+
+    	  } catch (Exception eex) {
+    	    args[i] = fld.get(target.request);
+    	  }
     	}
       }
       
