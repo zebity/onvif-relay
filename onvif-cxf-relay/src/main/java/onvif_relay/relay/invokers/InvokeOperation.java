@@ -10,6 +10,7 @@ package onvif_relay.relay.invokers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -224,7 +225,6 @@ public class InvokeOperation {
         	      getMethod = "get" + nm.substring(0,1).toUpperCase() + nm.substring(1);
         	      getm = respo.getClass().getMethod(getMethod, null);
         	      
-        	      // This is work-around, need to change do it does not use static types
         	      List<?> tlist = (List<?>)getm.invoke(respo, null);
         	      List<?> slist = (List<?>)got;
         	      
@@ -301,6 +301,8 @@ public class InvokeOperation {
     Object[] strategy = (Object[])useMethod[2];
     Method method = (Method)useMethod[0];
     Object[] args = new Object[plist.length];
+    Method getm = null;
+    String getMethod = null;
     
     if (strategy[0].equals("response")) {
     	
@@ -315,15 +317,27 @@ public class InvokeOperation {
     } else if (strategy[0].equals("request")) {
     	
       Field[] inputParam = target.request.getClass().getDeclaredFields();
+      
       /* Map<String, Field> reqData = new HashMap<>();
       for (Field f: inputParam)
-    	reqData.put(f.getName().toLowerCase(), f);
-      
+    	reqData.put(f.getName().toLowerCase(), f);     
       Parameter[] params = method.getParameters(); */
+      
       for (int i = 0; i < inputParam.length; i++) {
     	// String name = params[i].getName().toLowerCase();
     	// args[i] = reqData.get(name);
-    	args[i] = inputParam[i];
+    	Field fld = inputParam[i];
+
+    	try {
+  	      getMethod = "get" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
+  	      getm = target.request.getClass().getMethod(getMethod, null);
+  	      
+	      List<?> tlist = (List<?>)getm.invoke(target.request, null);
+	      args[i] = tlist;
+    		
+    	} catch (Exception ex) {
+    	  args[i] = fld.get(target.request);
+    	}
       }
       
       Object got = method.invoke(sei, args);
