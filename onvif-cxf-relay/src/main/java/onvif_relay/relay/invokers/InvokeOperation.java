@@ -10,9 +10,8 @@ package onvif_relay.relay.invokers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,11 +20,12 @@ import org.apache.cxf.configuration.security.AuthorizationPolicy;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.MediaService;
-import org.onvif.ver10.schema.NetworkInterface;
 
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
@@ -391,6 +391,16 @@ public class InvokeOperation {
 		authPolicy.setUserName(user);
 		authPolicy.setPassword(password);
 		httpo.setAuthorization(authPolicy);           
+	  } else if (security != null && security.equals("ws-security")) {
+		// Note this code is cxf specific
+		Client client = ClientProxy.getClient(sei);
+		Map<String, Object> outProps = new HashMap<>();
+		outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
+		outProps.put(WSHandlerConstants.PASSWORD_TYPE, "PasswordDigest");
+		outProps.put(WSHandlerConstants.USER, user);
+		UTPasswordCallback.setAliasPassword(user, password);
+		outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, "onvif_relay.relay.invokers.UTPasswordCallback");
+		client.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
 	  }
 	  
 	  if (debug.equals("true")) {

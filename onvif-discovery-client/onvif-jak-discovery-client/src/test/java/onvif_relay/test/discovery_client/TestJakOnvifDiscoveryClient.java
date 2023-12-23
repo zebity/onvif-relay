@@ -52,6 +52,7 @@ public class TestJakOnvifDiscoveryClient {
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
     	getDeviceDetails(addr, "GetDeviceInformation", "{ }");
+    	getDeviceDetails(addr, "GetSystemDateAndTime", "{ }");
     	getDeviceDetails(addr, "GetNetworkInterfaces", "{ }");
     	getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
     	getDeviceDetails(addr, "GetServices", "{ }");
@@ -70,7 +71,8 @@ public class TestJakOnvifDiscoveryClient {
                 "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
-    ctrl.put("security", "digest");
+    // ctrl.put("security", "digest");
+    ctrl.put("security", "ws-security");
     ctrl.put("debug", "false");
     String peekc = null, peekt = null, peekcTest = null;
 
