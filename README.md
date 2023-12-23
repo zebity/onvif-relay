@@ -115,4 +115,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Jan 2023 - See metro-jaxb-ri hack for WsImport that maintains ONVIF upper case
 - Feb 2023 - Get -b binding customisation working to avoid hacking wsimport (see blog for usage guide)
 - Feb 2023 - Change from metro to cxf v4 (Jakarta), which works and tested against devices and with relay
+- Dec 2023 - Add onvif discovery example based on CXF general [ws-discovery] framework
  
