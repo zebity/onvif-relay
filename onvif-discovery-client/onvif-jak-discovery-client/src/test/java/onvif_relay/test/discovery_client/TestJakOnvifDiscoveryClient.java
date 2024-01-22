@@ -14,8 +14,11 @@ import javax.xml.namespace.QName;
 import org.onvif.ver10.device.wsdl.GetCapabilities;
 import org.onvif.ver10.schema.CapabilityCategory;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 import jakarta.xml.ws.EndpointReference;
@@ -33,9 +36,9 @@ public class TestJakOnvifDiscoveryClient {
       JakOnvifDiscoveryClient onvdis = new JakOnvifDiscoveryClient();
       QName type = new QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter");
       
-      ObjectMapper jser = new ObjectMapper();
-      jser.enable(SerializationFeature.INDENT_OUTPUT);
-      jser.registerModule(new JakartaXmlBindAnnotationModule());
+      // ObjectMapper jser = new ObjectMapper();
+      // jser.enable(SerializationFeature.INDENT_OUTPUT);
+      // jser.registerModule(new JakartaXmlBindAnnotationModule());
       
       // GetCapabilities getcap = new GetCapabilities();
       // CapabilityCategory capcat = CapabilityCategory.fromValue("All");
@@ -48,6 +51,7 @@ public class TestJakOnvifDiscoveryClient {
       System.out.println("Probe, got: " + found.size());
       for (EndpointReference ref : found) {
         String addr = onvdis.getWSAddress(ref);
+        String profiles = null;
         
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
@@ -56,7 +60,28 @@ public class TestJakOnvifDiscoveryClient {
     	getDeviceDetails(addr, "GetNetworkInterfaces", "{ }");
     	getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
     	getDeviceDetails(addr, "GetServices", "{ }");
-    	getDeviceDetails(addr, "GetProfiles", "{ }");
+    	profiles = getDeviceDetails(addr, "GetProfiles", "{ }");
+    	
+    	if (profiles != null) {
+    	  ObjectMapper omapper = new ObjectMapper();
+    	  JsonNode jres = omapper.readTree(profiles);
+    	  JsonNode jprofs = jres.get("response");
+    	  ArrayNode jarray = (ArrayNode)jprofs.get("Profiles");
+    	  int i = 0;
+          while (true) {
+            JsonNode jprof = jarray.get(i);
+            
+            if (jprof == null) {
+              break;
+            } else {
+              String nm = jprof.get("Name").textValue();
+              System.out.println("Profile Name: '" + nm + "'.");
+              i++;
+            }
+          }
+    	}
+    	
+    	
       }
 
 	} catch (Exception x) {
@@ -64,7 +89,8 @@ public class TestJakOnvifDiscoveryClient {
 	}
   }
   
-  static void getDeviceDetails(String addr, String getReq, String reqInput) {
+  static String getDeviceDetails(String addr, String getReq, String reqInput) {
+	String res = null;
 	String call = "{\"target\": \"" + addr + "\"," +
                 "\"user\": \"admin\", \"password\": \"admin\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
@@ -86,8 +112,8 @@ public class TestJakOnvifDiscoveryClient {
   
       System.out.println("read in first callo response: '" + callo.response + "'."); //read first callo response
   
-      peekc = callo.ser();
-      System.out.println(peekc); //output of first response test.
+      res = callo.ser();
+      System.out.println(res); //output of first response test.
   
       peekcTest = callo.response.toString();
       System.out.println("tested the response object: '" + peekcTest + "'.");
@@ -95,5 +121,6 @@ public class TestJakOnvifDiscoveryClient {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+    return res;
   }
 }

@@ -51,6 +51,11 @@
      <version>2.9.1</version>
     </dependency -->
     <dependency>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+     <version>2.13.5</version>
+	</dependency>
+    <dependency>
      <groupId>com.fasterxml.jackson.module</groupId>
      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
      <version>2.13.1</version>
