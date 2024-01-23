@@ -301,8 +301,8 @@ public class InvokeOperation {
     Object[] strategy = (Object[])useMethod[2];
     Method method = (Method)useMethod[0];
     Object[] args = new Object[plist.length];
-    Method getm = null;
-    String getMethod = null;
+    Method getm = null, setm = null;
+    String getMethod = null, setMethod = null;
     
     if (strategy[0].equals("response")) {
     	
@@ -339,9 +339,21 @@ public class InvokeOperation {
     	  try {
       	    getMethod = "get" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
       	    getm = target.request.getClass().getMethod(getMethod, null);
-      	      
-    	    List<?> tlist = (List<?>)getm.invoke(target.request, null);
-    	    args[i] = tlist;
+      	    
+      	    Object gets = getm.invoke(target.request, null);
+      	    
+      	    if (gets instanceof List<?>) {
+      	    	List<?> tlist = (List<?>)gets;
+      	    	args[i] = tlist;
+      	    } else {
+      	    	
+      	    	setMethod = "set" + fld.getName().substring(0,1).toUpperCase() + fld.getName().substring(1);
+          	    setm = target.request.getClass().getMethod(setMethod, String.class);
+          	    
+          	    args[i] = gets;
+      	    }
+    	    // List<?> tlist = (List<?>)getm.invoke(target.request, null);
+    	    // args[i] = tlist;
 
     	  } catch (Exception eex) {
     	    args[i] = fld.get(target.request);

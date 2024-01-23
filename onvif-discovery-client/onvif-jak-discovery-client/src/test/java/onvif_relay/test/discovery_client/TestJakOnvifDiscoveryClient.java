@@ -76,6 +76,8 @@ public class TestJakOnvifDiscoveryClient {
             } else {
               String nm = jprof.get("Name").textValue();
               System.out.println("Profile Name: '" + nm + "'.");
+              String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
+              getDeviceDetails(addr, "GetProfile", req);
               i++;
             }
           }
@@ -106,7 +108,7 @@ public class TestJakOnvifDiscoveryClient {
 
     try {
       JsonRequestResponse callo = JsonRequestResponse.create(call);
-      System.out.println("This should be device json details: " + callo.response);
+      // System.out.println("This should be device json details: " + callo.response);
   
       callo.response = onvifop.invoke(callo, true, ctrl);
   
