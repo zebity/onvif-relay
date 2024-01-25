@@ -6,18 +6,23 @@
 package onvif_relay.test.discovery_client;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
+import org.onvif.ver10.media.wsdl.GetProfilesResponse;
+import org.onvif.ver10.media.wsdl.Media;
+import org.onvif.ver10.schema.Profile;
 import org.onvif.ver10.device.wsdl.Device;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.xml.ws.EndpointReference;
 import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
 import onvif_relay.relay.converters.JsonRequestResponse;
 import onvif_relay.relay.invokers.InvokeOperation;
@@ -47,6 +52,13 @@ public class TestJakOnvifDiscoveryClient {
     	
     	if (useSEI) {
     	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }");
+    	  res = getDeviceDetails(addr, "GetProfiles", "{ }");
+    	  if (res != null) {
+    		GetProfilesResponse presp = (GetProfilesResponse)res[1];
+    		for (Profile pr: presp.getProfiles()) {
+    		  String nm = pr.getName(); 
+    		}
+    	  }
     	} else {
     	  getDeviceDetails(addr, "GetDeviceInformation", "{ }");
     	  getDeviceDetails(addr, "GetSystemDateAndTime", "{ }");
@@ -94,8 +106,8 @@ public class TestJakOnvifDiscoveryClient {
                 "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
-    // ctrl.put("security", "digest");
-    ctrl.put("security", "ws-security");
+    ctrl.put("security", "digest");
+    // ctrl.put("security", "ws-security");
     ctrl.put("debug", "false");
     String peekcTest = null;
 
@@ -132,45 +144,77 @@ public class TestJakOnvifDiscoveryClient {
                 "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
-    // ctrl.put("security", "digest");
-    ctrl.put("security", "ws-security");
+    ctrl.put("security", "digest");
+    // ctrl.put("security", "ws-security");
     ctrl.put("debug", "false");
     String peekc = null, peekt = null, peekcTest = null;
+    boolean altAuth = false, authFault = false;
+
 
     InvokeOperation onvifop = new InvokeOperation();
-    
-    try {
 
-      JsonRequestResponse callo = JsonRequestResponse.create(call);
+    do {
+      try {
+
+    	authFault = false;
+    	
+        JsonRequestResponse callo = JsonRequestResponse.create(call);
       
-      Object[] proxy = onvifop.createSEI(callo, ctrl);
+        Object[] proxy = onvifop.createSEI(callo, ctrl);
       
-      switch (callo.reqclass) {
-        case "GetDeviceInformation":
-    	  GetDeviceInformationResponse resp = new GetDeviceInformationResponse();
-    	  Holder man = new Holder();
-    	  Holder mod = new Holder();
-    	  Holder firm = new Holder();
-    	  Holder serial = new Holder();
-    	  Holder hard = new Holder();
-    	  ((Device)proxy[2]).GetDeviceInformation(man, mod, firm, serial, hard);
-    	  resp.setManufacturer(man.value.toString());
-    	  resp.setModel(mod.value.toString());
-    	  resp.setFirmwareVersion(firm.value.toString());
-    	  resp.setSerialNumber(serial.value.toString());
-    	  resp.setHardwareId(hard.value.toString());
-    	  callo.response = resp;
-    	  res = new Object[2];
-    	  res[0] = callo.ser();
-    	  res[1] = resp;
-    	  break;
+        switch (callo.reqclass) {
+          case "GetDeviceInformation": {
+    	    GetDeviceInformationResponse resp = new GetDeviceInformationResponse();
+    	    Holder<String> man = new Holder<>();
+    	    Holder<String> mod = new Holder<>();
+    	    Holder<String> firm = new Holder<>();
+    	    Holder<String> serial = new Holder<>();
+    	    Holder<String> hard = new Holder<>();
+    	    ((Device)proxy[2]).GetDeviceInformation(man, mod, firm, serial, hard);
+    	    resp.setManufacturer(man.value.toString());
+    	    resp.setModel(mod.value.toString());
+    	    resp.setFirmwareVersion(firm.value.toString());
+    	    resp.setSerialNumber(serial.value.toString());
+    	    resp.setHardwareId(hard.value.toString());
+    	    callo.response = resp;
+    	    res = new Object[2];
+    	    res[0] = callo.ser();
+    	    res[1] = resp;
+            }
+    	    break;
+          case "GetProfiles": {
+      	    List<Profile> lp = ((Media)proxy[2]).GetProfiles();
+      	    GetProfilesResponse resp = new GetProfilesResponse();
+      	    resp.getProfiles().addAll(lp);
+      	    callo.response = resp;
+      	    res = new Object[2];
+      	    res[0] = callo.ser();
+      	    res[1] = resp;
+            }
+      	    break;
+        }
+  
+        System.out.println(res[0]); //output of first response test.
+  
+      } catch (SOAPFaultException sex) {
+        Iterator<QName> it = sex.getFault().getFaultSubcodes();
+        if (it.hasNext()) {
+          QName err = it.next();
+        }
+        if (sex.getMessage().contains("NotAuthorized")) {
+          authFault = true;
+          if (! altAuth) {
+            altAuth = true;
+            ctrl.put("security", "ws-security");
+          } else {
+            altAuth = false;
+          }
+        }
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
-  
-      System.out.println(res[0]); //output of first response test.
-  
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    } while (authFault && altAuth);
+    
     return res;
   }
 }
