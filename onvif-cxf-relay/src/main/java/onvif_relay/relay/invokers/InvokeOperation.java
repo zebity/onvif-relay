@@ -99,11 +99,42 @@ public class InvokeOperation {
     String reqType = targetRequest.request.getClass().getPackageName();
     switch (reqType) {
       case OnvifOperations.DeviceType: res = invokeDevice(targetRequest, doClassify, ctrl);
-                                       break;
+           break;
       case OnvifOperations.MediaType: res = invokeMedia(targetRequest, doClassify, ctrl);
+           break;
+    }
+    
+	return res;
+  }
+  
+  public Object[] createSEI(JsonRequestResponse targetRequest, Map<String, String> ctl) {
+  // return handle to "Service EndPoint Interface" based on the requet type
+    Object[] res = null;
+  
+    String reqType = targetRequest.request.getClass().getPackageName();
+    switch (reqType) {
+      case OnvifOperations.DeviceType: { DeviceService dserv = new DeviceService();
+                                         Device sei = dserv.getDevicePort();
+                                         res = new Object[3];
+                                         res[0] = reqType;
+                                         res[1] = dserv;
+                                         res[2] = sei;
+                                       }
+                                       break;
+      case OnvifOperations.MediaType: { MediaService dserv = new MediaService();
+                                        Media sei = dserv.getMediaPort();
+                                        res = new Object[3];
+                                        res[0] = reqType;
+                                        res[1] = dserv;
+                                        res[2] = sei;
+                                      }
                                       break;
     }
     
+    if (res != null) {
+      setupService(res[2], targetRequest.target, targetRequest.user, targetRequest.password, ctl);
+    }
+	
 	return res;
   }
  
