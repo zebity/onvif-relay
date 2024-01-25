@@ -1,0 +1,150 @@
+{
+  "target" : "http://192.168.73.13:80/onvif/device_service",
+  "user" : "admin",
+  "password" : "admin",
+  "reqclass" : "GetCapabilities",
+  "respclass" : "GetCapabilitiesResponse",
+  "operationType" : "get",
+  "voidOperation" : "false",
+  "request" : {
+    "Category" : [ "All" ]
+  },
+  "response" : {
+    "Capabilities" : {
+      "Analytics" : null,
+      "Device" : {
+        "XAddr" : "http://192.168.73.13/onvif/device_service",
+        "Network" : {
+          "IPFilter" : true,
+          "ZeroConfiguration" : true,
+          "IPVersion6" : true,
+          "DynDNS" : true,
+          "Extension" : {
+            "any" : null,
+            "Dot11Configuration" : false,
+            "Extension" : null
+          },
+          "otherAttributes" : { }
+        },
+        "System" : {
+          "DiscoveryResolve" : true,
+          "DiscoveryBye" : true,
+          "RemoteDiscovery" : false,
+          "SystemBackup" : false,
+          "SystemLogging" : true,
+          "FirmwareUpgrade" : false,
+          "SupportedVersions" : [ {
+            "Major" : 0,
+            "Minor" : 2
+          }, {
+            "Major" : 2,
+            "Minor" : 0
+          }, {
+            "Major" : 2,
+            "Minor" : 1
+          }, {
+            "Major" : 2,
+            "Minor" : 2
+          } ],
+          "Extension" : {
+            "any" : null,
+            "HttpFirmwareUpgrade" : false,
+            "HttpSystemBackup" : false,
+            "HttpSystemLogging" : false,
+            "HttpSupportInformation" : false,
+            "Extension" : null
+          },
+          "otherAttributes" : { }
+        },
+        "IO" : {
+          "InputConnectors" : 1,
+          "RelayOutputs" : 0,
+          "Extension" : null,
+          "otherAttributes" : { }
+        },
+        "Security" : {
+          "TLS1.1" : true,
+          "TLS1.2" : true,
+          "OnboardKeyGeneration" : true,
+          "AccessPolicyConfig" : false,
+          "X.509Token" : true,
+          "SAMLToken" : false,
+          "KerberosToken" : false,
+          "RELToken" : false,
+          "any" : null,
+          "Extension" : {
+            "TLS1.0" : true,
+            "Extension" : {
+              "Dot1X" : false,
+              "SupportedEAPMethod" : [ 0 ],
+              "RemoteUserHandling" : false,
+              "any" : null
+            }
+          },
+          "otherAttributes" : { }
+        },
+        "Extension" : null,
+        "otherAttributes" : { }
+      },
+      "Events" : {
+        "XAddr" : "http://192.168.73.13/onvif/event_service",
+        "WSSubscriptionPolicySupport" : true,
+        "WSPullPointSupport" : true,
+        "WSPausableSubscriptionManagerInterfaceSupport" : false,
+        "any" : null,
+        "otherAttributes" : { }
+      },
+      "Imaging" : {
+        "XAddr" : "http://192.168.73.13/onvif/device_service",
+        "otherAttributes" : { }
+      },
+      "Media" : {
+        "XAddr" : "http://192.168.73.13/onvif/device_service",
+        "StreamingCapabilities" : {
+          "RTPMulticast" : true,
+          "RTP_TCP" : true,
+          "RTP_RTSP_TCP" : true,
+          "Extension" : null,
+          "otherAttributes" : { }
+        },
+        "any" : null,
+        "Extension" : {
+          "ProfileCapabilities" : {
+            "MaximumNumberOfProfiles" : 16,
+            "any" : null,
+            "otherAttributes" : { }
+          },
+          "any" : null,
+          "otherAttributes" : { }
+        },
+        "otherAttributes" : { }
+      },
+      "PTZ" : {
+        "XAddr" : "http://192.168.73.13/onvif/device_service",
+        "any" : null,
+        "otherAttributes" : { }
+      },
+      "Extension" : {
+        "any" : null,
+        "DeviceIO" : {
+          "XAddr" : "http://192.168.73.13/onvif/deviceio_service",
+          "VideoSources" : 1,
+          "VideoOutputs" : 0,
+          "AudioSources" : 1,
+          "AudioOutputs" : 0,
+          "RelayOutputs" : 0,
+          "any" : null,
+          "otherAttributes" : { }
+        },
+        "Display" : null,
+        "Recording" : null,
+        "Search" : null,
+        "Replay" : null,
+        "Receiver" : null,
+        "AnalyticsDevice" : null,
+        "Extensions" : null
+      },
+      "otherAttributes" : { }
+    }
+  }
+}
