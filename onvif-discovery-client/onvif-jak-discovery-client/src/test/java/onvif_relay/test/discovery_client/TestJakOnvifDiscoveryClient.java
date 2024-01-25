@@ -31,7 +31,7 @@ import onvif_relay.relay.invokers.InvokeOperation;
 public class TestJakOnvifDiscoveryClient {
 	
   public static void main(String [] args) {
-	boolean useSEI = true;
+	boolean useSEI = false;
 	Object[] res = null;
 	
     try {
