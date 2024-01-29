@@ -25,6 +25,7 @@ import jakarta.xml.ws.Holder;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
 import onvif_relay.relay.converters.JsonRequestResponse;
+import onvif_relay.relay.invokers.CheckClockSyncAndAccess;
 import onvif_relay.relay.invokers.InvokeOperation;
 
 
@@ -32,7 +33,10 @@ public class TestJakOnvifDiscoveryClient {
 	
   public static void main(String [] args) {
 	boolean useSEI = false;
+	boolean clockAccessCheck = true;
 	Object[] res = null;
+	String user = "admin";
+	String passwd = "admin";
 	
     try {
       System.out.println("Running test ...");
@@ -50,7 +54,15 @@ public class TestJakOnvifDiscoveryClient {
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
     	
-    	if (useSEI) {
+    	if (clockAccessCheck) {
+    	  CheckClockSyncAndAccess check = new CheckClockSyncAndAccess();
+  		  Object[] chk = check.checkAccess(addr, user, passwd);
+  		  
+    	  // Object[] chk = check.checkClockSync(addr, user, passwd, "digest");
+    	  if (chk != null) {
+    		chk = check.checkClockSync(addr, user, passwd, (String)chk[0]); 
+    	  }
+    	} else if (useSEI) {
     	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }");
     	  res = getDeviceDetails(addr, "GetProfiles", "{ }");
     	  if (res != null) {
