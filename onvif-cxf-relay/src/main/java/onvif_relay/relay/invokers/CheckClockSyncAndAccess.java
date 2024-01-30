@@ -1,5 +1,8 @@
 package onvif_relay.relay.invokers;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +15,12 @@ import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import org.onvif.ver10.device.wsdl.GetSystemDateAndTimeResponse;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
 import org.onvif.ver10.media.wsdl.Media;
+import org.onvif.ver10.schema.DateTime;
 import org.onvif.ver10.schema.Profile;
 import org.onvif.ver10.schema.SystemDateTime;
 
 import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.WebServiceException;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import onvif_relay.relay.converters.JsonRequestResponse;
 
@@ -30,6 +35,7 @@ public class CheckClockSyncAndAccess {
 		        "\"reqclass\": \"GetDeviceInformation\"," +
               "\"request\": { }" +
             "}";
+	JsonRequestResponse callo = null;
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", "digest");
     ctrl.put("debug", "false");
@@ -43,7 +49,7 @@ public class CheckClockSyncAndAccess {
 
   	    authFault = false;
   	
-        JsonRequestResponse callo = JsonRequestResponse.create(call);
+        callo = JsonRequestResponse.create(call);
     
         Object[] proxy = onvifop.createSEI(callo, ctrl);
     
@@ -76,9 +82,19 @@ public class CheckClockSyncAndAccess {
             altAuth = true;
             ctrl.put("security", "ws-security");
           } else {
+        	res = new Object[3];
+          	res[0] = ctrl.get("security");
+          	res[1] = callo.ser();
+          	res[2] = sex.getMessage();
             altAuth = false;
           }
         }
+      } catch (WebServiceException wex) {
+        // Assume digest with wrong password
+      	res = new Object[3];
+      	res[0] = ctrl.get("security");
+      	res[1] = callo.ser();
+      	res[2] = "Authorization loop detected: Invalid user/password";
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -97,22 +113,30 @@ public class CheckClockSyncAndAccess {
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", sec);
     ctrl.put("debug", "false");
-    boolean authFault = false;
+    JsonRequestResponse callo = null;
 
 
     InvokeOperation onvifop = new InvokeOperation();
 
     try {
-
-  	  authFault = false;
   	
-      JsonRequestResponse callo = JsonRequestResponse.create(call);
+      callo = JsonRequestResponse.create(call);
     
       Object[] proxy = onvifop.createSEI(callo, ctrl);
     
   	  GetSystemDateAndTimeResponse resp = new GetSystemDateAndTimeResponse();
   	  SystemDateTime dt = ((Device)proxy[2]).GetSystemDateAndTime();
   	  resp.setSystemDateAndTime(dt);
+  	  Clock utcClock = Clock.systemUTC();
+  	  Instant tick = utcClock.instant();
+  	  String see = tick.toString();
+  	  DateTime utc =  dt.getUTCDateTime();
+  	  String devTime = Integer.toString(utc.getDate().getYear()) + "-" + Integer.toString(utc.getDate().getMonth())
+  	                   + "-" + Integer.toString(utc.getDate().getDay()) + " " + Integer.toString(utc.getTime().getHour())
+  	                   + ":" + Integer.toString(utc.getTime().getMinute()) + ":" + Integer.toString(utc.getTime().getSecond());
+  	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-m-d h:m:s");
+      // Instant tock = formatter.parse(devTime, Instant::from);
+      // int diff = XX
   	  callo.response = resp;
   	  res = new Object[3];
   	  res[0] = "synced";
@@ -125,9 +149,17 @@ public class CheckClockSyncAndAccess {
         QName err = it.next();
       }
       if (sex.getMessage().contains("NotAuthorized")) {
-        authFault = true;
-
+        res = new Object[3];
+        res[0] = null;
+        res[1] = callo.ser();
+        res[2] = sex.getMessage();
       }
+    } catch (WebServiceException wex) {
+        // Assume digest with wrong password
+      	res = new Object[3];
+      	res[0] = null;
+      	res[1] = callo.ser();
+      	res[2] = "Authorization loop detected: Invalid user/password";
     } catch (Exception ex) {
         ex.printStackTrace();
     }

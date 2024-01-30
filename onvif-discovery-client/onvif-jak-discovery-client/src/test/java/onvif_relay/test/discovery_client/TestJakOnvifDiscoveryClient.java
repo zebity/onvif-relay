@@ -37,6 +37,9 @@ public class TestJakOnvifDiscoveryClient {
 	Object[] res = null;
 	String user = "admin";
 	String passwd = "admin";
+	String testdev = "http://127.0.0.1:9060/onvif/device_service";
+	CheckClockSyncAndAccess check = null;
+	Object[] chk = null;
 	
     try {
       System.out.println("Running test ...");
@@ -47,6 +50,16 @@ public class TestJakOnvifDiscoveryClient {
       List<EndpointReference> found = onvdis.probe(type);
       
       System.out.println("Probe, got: " + found.size());
+      
+      if (clockAccessCheck) {
+	    check = new CheckClockSyncAndAccess();
+	    // Test known digest auth device
+	    System.out.println("Testing diget auth on: '" + testdev + "'");
+		chk = check.checkAccess(testdev, user, passwd);
+		if (chk != null) {
+		  System.out.println("Access check: '" + chk[0] + "'.");
+		}
+      }
       for (EndpointReference ref : found) {
         String addr = onvdis.getWSAddress(ref);
         String profiles = null;
@@ -54,12 +67,14 @@ public class TestJakOnvifDiscoveryClient {
     	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
     	
+    	
     	if (clockAccessCheck) {
-    	  CheckClockSyncAndAccess check = new CheckClockSyncAndAccess();
-  		  Object[] chk = check.checkAccess(addr, user, passwd);
+
+  		  chk = check.checkAccess(addr, user, passwd);
   		  
     	  // Object[] chk = check.checkClockSync(addr, user, passwd, "digest");
     	  if (chk != null) {
+    		System.out.println("Access Check: '" + chk[0] + "'.");
     		chk = check.checkClockSync(addr, user, passwd, (String)chk[0]); 
     	  }
     	} else if (useSEI) {
