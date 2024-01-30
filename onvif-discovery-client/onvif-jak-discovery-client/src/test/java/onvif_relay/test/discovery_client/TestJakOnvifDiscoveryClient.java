@@ -75,7 +75,12 @@ public class TestJakOnvifDiscoveryClient {
     	  // Object[] chk = check.checkClockSync(addr, user, passwd, "digest");
     	  if (chk != null) {
     		System.out.println("Access Check: '" + chk[0] + "'.");
-    		chk = check.checkClockSync(addr, user, passwd, (String)chk[0]); 
+    		chk = check.checkClockSync(addr, user, passwd, (String)chk[0]);
+    		if (chk != null && chk[0] != null) {
+    	      System.out.println("Clock Sync Check: " + Long.toString((long)chk[0]));	
+    		} else {
+    		  System.out.println("Clock Sync Check: failed.");
+    		}
     	  }
     	} else if (useSEI) {
     	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }");

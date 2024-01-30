@@ -2,6 +2,11 @@ package onvif_relay.relay.invokers;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -123,23 +128,25 @@ public class CheckClockSyncAndAccess {
       callo = JsonRequestResponse.create(call);
     
       Object[] proxy = onvifop.createSEI(callo, ctrl);
-    
-  	  GetSystemDateAndTimeResponse resp = new GetSystemDateAndTimeResponse();
-  	  SystemDateTime dt = ((Device)proxy[2]).GetSystemDateAndTime();
-  	  resp.setSystemDateAndTime(dt);
+
   	  Clock utcClock = Clock.systemUTC();
-  	  Instant tick = utcClock.instant();
+  	  GetSystemDateAndTimeResponse resp = new GetSystemDateAndTimeResponse();
+  	  SystemDateTime dvdt = ((Device)proxy[2]).GetSystemDateAndTime();
+  	  ZonedDateTime tick = ZonedDateTime.now(utcClock);
+  	  resp.setSystemDateAndTime(dvdt);
+
   	  String see = tick.toString();
-  	  DateTime utc =  dt.getUTCDateTime();
-  	  String devTime = Integer.toString(utc.getDate().getYear()) + "-" + Integer.toString(utc.getDate().getMonth())
-  	                   + "-" + Integer.toString(utc.getDate().getDay()) + " " + Integer.toString(utc.getTime().getHour())
-  	                   + ":" + Integer.toString(utc.getTime().getMinute()) + ":" + Integer.toString(utc.getTime().getSecond());
-  	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-m-d h:m:s");
-      // Instant tock = formatter.parse(devTime, Instant::from);
-      // int diff = XX
+  	  DateTime utc =  dvdt.getUTCDateTime();
+  	  ZonedDateTime zdt = ZonedDateTime.of(utc.getDate().getYear(), utc.getDate().getMonth(),
+  			                    utc.getDate().getDay(), utc.getTime().getHour(),
+  			                    utc.getTime().getMinute(), utc.getTime().getSecond(), 0,
+  			                    ZoneOffset.UTC);
+
   	  callo.response = resp;
   	  res = new Object[3];
-  	  res[0] = "synced";
+  	  // get time difference in seconds
+  	  long diff = (zdt.toInstant().toEpochMilli() - tick.toInstant().toEpochMilli()) / 1000;
+  	  res[0] = diff;
   	  res[1] = callo.ser();
   	  res[2] = resp;
 
