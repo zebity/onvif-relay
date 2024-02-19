@@ -33,7 +33,7 @@ public class TestJakOnvifDiscoveryClient {
 	
   public static void main(String [] args) {
 	boolean useSEI = false;
-	boolean clockAccessCheck = true;
+	boolean clockAccessCheck = false;
 	Object[] res = null;
 	String user = "admin";
 	String passwd = "admin";
