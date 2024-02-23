@@ -98,31 +98,35 @@ public class TestJakOnvifDiscoveryClient {
     	  getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
     	  getDeviceDetails(addr, "GetServices", "{ }");
     	  res = getDeviceDetails(addr, "GetProfiles", "{ }");
-    	  profiles = (String)res[0];
+    	  if (res != null) {
+    	    profiles = (String)res[0];
     	
-    	  if (profiles != null) {
-    	    ObjectMapper omapper = new ObjectMapper();
-    	    JsonNode jres = omapper.readTree(profiles);
-    	    JsonNode jprofs = jres.get("response");
-    	    ArrayNode jarray = (ArrayNode)jprofs.get("Profiles");
-    	    int i = 0;
-            while (true) {
-              JsonNode jprof = jarray.get(i);
+    	    if (profiles != null) {
+    	      ObjectMapper omapper = new ObjectMapper();
+    	      JsonNode jres = omapper.readTree(profiles);
+    	      JsonNode jprofs = jres.get("response");
+    	      if (jprofs != null) {
+    	        ArrayNode jarray = (ArrayNode)jprofs.get("Profiles");
+    	        int i = 0;
+    	        if (jarray != null) {
+                  while (true) {
+                    JsonNode jprof = jarray.get(i);
             
-              if (jprof == null) {
-                break;
-              } else {
-                String nm = jprof.get("Name").textValue();
-                System.out.println("Profile Name: '" + nm + "'.");
-                String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
-                getDeviceDetails(addr, "GetProfile", req);
-                i++;
+                    if (jprof == null) {
+                      break;
+                    } else {
+                      String nm = jprof.get("Name").textValue();
+                      System.out.println("Profile Name: '" + nm + "'.");
+                      String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
+                      getDeviceDetails(addr, "GetProfile", req);
+                      i++;
+                    }
+                  }
+                }
               }
             }
-          }
+    	  }
     	}
-    	
-    	
       }
 
 	} catch (Exception x) {
@@ -159,8 +163,10 @@ public class TestJakOnvifDiscoveryClient {
       
       System.out.println(res[0]); //output of first response test.
   
-      peekcTest = callo.response.toString();
-      // System.out.println("tested the response object: '" + peekcTest + "'.");
+      if (callo.response != null) {
+        peekcTest = callo.response.toString();
+        // System.out.println("tested the response object: '" + peekcTest + "'.");
+      }
 
     } catch (Exception ex) {
       ex.printStackTrace();
