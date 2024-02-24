@@ -5,10 +5,13 @@
 
 package onvif_relay.test.discovery_client;
 
+import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -30,16 +33,29 @@ import onvif_relay.relay.invokers.InvokeOperation;
 
 
 public class TestJakOnvifDiscoveryClient {
-	
+
+  static public class ControlDiscovery {
+    String user = "admin";
+    String passwd = "admin";
+    String auth = "digest";
+    boolean useSEI = false;
+    boolean checkClock = false;
+    boolean checkAccess = false;
+    boolean doProbe = true;
+    boolean filter = false;
+    Set<String> filterIP = new HashSet<>();
+    Map<String, String> services = new HashMap<>();
+  }
+  
   public static void main(String [] args) {
-	boolean useSEI = false;
-	boolean clockAccessCheck = false;
+	ControlDiscovery ctl = new ControlDiscovery();
 	Object[] res = null;
-	String user = "admin";
-	String passwd = "admin";
 	String testdev = "http://127.0.0.1:9060/onvif/device_service";
-	CheckClockSyncAndAccess check = null;
 	Object[] chk = null;
+	List<EndpointReference> found = null;
+	CheckClockSyncAndAccess check = null;
+	
+	ParseArgs(args, ctl);
 	
     try {
       System.out.println("Running test ...");
@@ -47,57 +63,84 @@ public class TestJakOnvifDiscoveryClient {
       JakOnvifDiscoveryClient onvdis = new JakOnvifDiscoveryClient();
       QName type = new QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter");
       
-      List<EndpointReference> found = onvdis.probe(type);
+      if (ctl.doProbe) {
+        found = onvdis.probe(type);
+        System.out.println("Probe, got: " + found.size());
+      }
       
-      System.out.println("Probe, got: " + found.size());
-      
-      if (clockAccessCheck) {
+      if (ctl.checkAccess) {
 	    check = new CheckClockSyncAndAccess();
 	    // Test known digest auth device
 	    System.out.println("Testing diget auth on: '" + testdev + "'");
-		chk = check.checkAccess(testdev, user, passwd);
+		chk = check.checkAccess(testdev, ctl.user, ctl.passwd);
 		if (chk != null) {
 		  System.out.println("Access check: '" + chk[0] + "'.");
 		}
       }
-      for (EndpointReference ref : found) {
-        String addr = onvdis.getWSAddress(ref);
+      
+      int i = 0;
+      boolean useAddr = true;
+      boolean haveAddr = ctl.filterIP.size() != 0 || found != null;
+      EndpointReference ref = null;
+      
+      // Object[] ips = ctl.filterIP.toArray();
+      Iterator<String> nextIp = ctl.filterIP.iterator();
+      
+      while (haveAddr) {
+    	
+    	String addr = null;
+    	if (ctl.doProbe) {
+    	  ref = found.get(i);
+          addr = onvdis.getWSAddress(ref);
+    	  URL uparse = new URL(addr);
+    	  if (ctl.filter) {
+    		useAddr = false;
+    		String host = uparse.getHost();
+    	    useAddr = ctl.filterIP.contains(host);
+    	  }
+    	  System.out.println("Found: '" + ref.toString() + "'.");
+    	  i++;
+    	  haveAddr = i < found.size();
+    	} else {
+    	  addr = "http://" + (String)nextIp.next() + "/onvif/device_service";
+    	  System.out.println("Using: '" + addr + "'.");
+    	  haveAddr = nextIp.hasNext();
+    	}
         String profiles = null;
         
-    	System.out.println("Found: '" + ref.toString() + "'.");
     	System.out.println("Addr: '" + addr + "'.");
     	
     	
-    	if (clockAccessCheck) {
+    	if (useAddr && ctl.checkClock) {
 
-  		  chk = check.checkAccess(addr, user, passwd);
+  		  chk = check.checkAccess(addr, ctl.user, ctl.passwd);
   		  
     	  // Object[] chk = check.checkClockSync(addr, user, passwd, "digest");
     	  if (chk != null) {
     		System.out.println("Access Check: '" + chk[0] + "'.");
-    		chk = check.checkClockSync(addr, user, passwd, (String)chk[0]);
+    		chk = check.checkClockSync(addr, ctl.user, ctl.passwd, (String)chk[0]);
     		if (chk != null && chk[0] != null) {
     	      System.out.println("Clock Sync Check: " + Long.toString((long)chk[0]));	
     		} else {
     		  System.out.println("Clock Sync Check: failed.");
     		}
     	  }
-    	} else if (useSEI) {
-    	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }");
-    	  res = getDeviceDetails(addr, "GetProfiles", "{ }");
+    	} else if (useAddr && ctl.useSEI) {
+    	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }", ctl);
+    	  res = getDeviceDetails(addr, "GetProfiles", "{ }", ctl);
     	  if (res != null) {
     		GetProfilesResponse presp = (GetProfilesResponse)res[1];
     		for (Profile pr: presp.getProfiles()) {
     		  String nm = pr.getName(); 
     		}
     	  }
-    	} else {
-    	  getDeviceDetails(addr, "GetDeviceInformation", "{ }");
-    	  getDeviceDetails(addr, "GetSystemDateAndTime", "{ }");
-    	  getDeviceDetails(addr, "GetNetworkInterfaces", "{ }");
-    	  getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }");
-    	  getDeviceDetails(addr, "GetServices", "{ }");
-    	  res = getDeviceDetails(addr, "GetProfiles", "{ }");
+    	} else if (useAddr) {
+    	  getDeviceDetails(addr, "GetDeviceInformation", "{ }", ctl);
+    	  getDeviceDetails(addr, "GetSystemDateAndTime", "{ }", ctl);
+    	  getDeviceDetails(addr, "GetNetworkInterfaces", "{ }", ctl);
+    	  getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl);
+    	  getDeviceDetails(addr, "GetServices", "{ }", ctl);
+    	  res = getDeviceDetails(addr, "GetProfiles", "{ }", ctl);
     	  if (res != null) {
     	    profiles = (String)res[0];
     	
@@ -107,10 +150,10 @@ public class TestJakOnvifDiscoveryClient {
     	      JsonNode jprofs = jres.get("response");
     	      if (jprofs != null) {
     	        ArrayNode jarray = (ArrayNode)jprofs.get("Profiles");
-    	        int i = 0;
+    	        int j = 0;
     	        if (jarray != null) {
                   while (true) {
-                    JsonNode jprof = jarray.get(i);
+                    JsonNode jprof = jarray.get(j);
             
                     if (jprof == null) {
                       break;
@@ -118,8 +161,8 @@ public class TestJakOnvifDiscoveryClient {
                       String nm = jprof.get("Name").textValue();
                       System.out.println("Profile Name: '" + nm + "'.");
                       String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
-                      getDeviceDetails(addr, "GetProfile", req);
-                      i++;
+                      getDeviceDetails(addr, "GetProfile", req, ctl);
+                      j++;
                     }
                   }
                 }
@@ -134,16 +177,60 @@ public class TestJakOnvifDiscoveryClient {
 	}
   }
   
-  static Object[] getDeviceDetails(String addr, String getReq, String reqInput) {
+  static void ParseArgs(String[] argv, ControlDiscovery ctl) {
+    int i = 0;
+    String usage = "[-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-s(ei)] [-c(lock check)] [-a(cess check)]";
+    
+    if (argv.length > 0) {
+    
+      while (i < argv.length) {
+    	  
+        switch(argv[i]) {
+          case "-u": i++;
+                     String[] up = argv[i].split(":");
+                     ctl.user = up[0];
+                     ctl.passwd = up[1];
+                     i++;
+                     break;
+          case "-f": i++;
+                     String[] ips = argv[i].split(",");
+                     for (String ip: ips) {
+                       ctl.filterIP.add(ip);
+                     }
+                     ctl.filter = true;
+                     i++;
+                     break;
+          case "-p": i++;
+                     if (argv[i].equals("n")) {
+                       ctl.doProbe = false;
+                     }
+                     i++;
+                     break;
+          case "-s": ctl.useSEI = true;
+                     i++;
+                     break;
+          case "-c": ctl.checkClock = true;
+                     i++;
+                     break;
+          case "-a": ctl.checkAccess = true;
+                     i++;
+                     break;
+          default: System.out.println("Usage: " + usage);
+                   System.exit(1);
+        }  
+      }
+    }
+  }
+  
+  static Object[] getDeviceDetails(String addr, String getReq, String reqInput, ControlDiscovery ctl) {
 	Object[] res = null;
 	String call = "{\"target\": \"" + addr + "\"," +
-                "\"user\": \"admin\", \"password\": \"admin\"," +
+                "\"user\": \"" + ctl.user + "\", \"password\": \"" + ctl.passwd + "\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
                 "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
-    ctrl.put("security", "digest");
-    // ctrl.put("security", "ws-security");
+    ctrl.put("security", ctl.auth);
     ctrl.put("debug", "false");
     String peekcTest = null;
 
@@ -174,16 +261,15 @@ public class TestJakOnvifDiscoveryClient {
     return res;
   }
   
-  static Object[] getDeviceDetailsDirect(String addr, String getReq, String reqInput) {
+  static Object[] getDeviceDetailsDirect(String addr, String getReq, String reqInput, ControlDiscovery ctl) {
 	Object[] res = null;
 	String call = "{\"target\": \"" + addr + "\"," +
-                "\"user\": \"admin\", \"password\": \"admin\"," +
+                "\"user\": \"" + ctl.user + "\", \"password\": \"" + ctl.passwd + "\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
                 "\"request\": " + reqInput +
               "}";
     Map<String, String> ctrl = new HashMap<>();
-    ctrl.put("security", "digest");
-    // ctrl.put("security", "ws-security");
+    ctrl.put("security", ctl.auth);
     ctrl.put("debug", "false");
     String peekc = null, peekt = null, peekcTest = null;
     boolean altAuth = false, authFault = false;
