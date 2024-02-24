@@ -16,6 +16,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
+import org.onvif.ver10.device.wsdl.GetServicesResponse;
+import org.onvif.ver10.device.wsdl.Service;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.schema.Profile;
@@ -28,8 +30,10 @@ import jakarta.xml.ws.Holder;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
 import onvif_relay.relay.converters.JsonRequestResponse;
+import onvif_relay.relay.converters.OnvifOperations;
 import onvif_relay.relay.invokers.CheckClockSyncAndAccess;
 import onvif_relay.relay.invokers.InvokeOperation;
+import onvif_relay.relay.invokers.ServiceAddresses;
 
 
 public class TestJakOnvifDiscoveryClient {
@@ -54,6 +58,7 @@ public class TestJakOnvifDiscoveryClient {
 	Object[] chk = null;
 	List<EndpointReference> found = null;
 	CheckClockSyncAndAccess check = null;
+	ServiceAddresses saddrs = null;
 	
 	ParseArgs(args, ctl);
 	
@@ -68,16 +73,6 @@ public class TestJakOnvifDiscoveryClient {
         System.out.println("Probe, got: " + found.size());
       }
       
-      if (ctl.checkAccess) {
-	    check = new CheckClockSyncAndAccess();
-	    // Test known digest auth device
-	    System.out.println("Testing diget auth on: '" + testdev + "'");
-		chk = check.checkAccess(testdev, ctl.user, ctl.passwd);
-		if (chk != null) {
-		  System.out.println("Access check: '" + chk[0] + "'.");
-		}
-      }
-      
       int i = 0;
       boolean useAddr = true;
       boolean haveAddr = ctl.filterIP.size() != 0 || found != null;
@@ -89,6 +84,7 @@ public class TestJakOnvifDiscoveryClient {
       while (haveAddr) {
     	
     	String addr = null;
+    	
     	if (ctl.doProbe) {
     	  ref = found.get(i);
           addr = onvdis.getWSAddress(ref);
@@ -106,6 +102,8 @@ public class TestJakOnvifDiscoveryClient {
     	  System.out.println("Using: '" + addr + "'.");
     	  haveAddr = nextIp.hasNext();
     	}
+    	
+        saddrs = new ServiceAddresses(addr);
         String profiles = null;
         
     	System.out.println("Addr: '" + addr + "'.");
@@ -125,9 +123,16 @@ public class TestJakOnvifDiscoveryClient {
     		  System.out.println("Clock Sync Check: failed.");
     		}
     	  }
-    	} else if (useAddr && ctl.useSEI) {
-    	  res = getDeviceDetailsDirect(addr, "GetDeviceInformation", "{ }", ctl);
-    	  res = getDeviceDetails(addr, "GetProfiles", "{ }", ctl);
+    	}
+    	
+    	if (useAddr && ctl.useSEI) {
+    	  res = getDeviceDetailsDirect(saddrs, "GetDeviceInformation", "{ }", ctl);
+    	  res = getDeviceDetailsDirect(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl);
+    	  if (res != null) {
+    	    saddrs.LoadServices((GetServicesResponse)res[1]);
+     	  }
+
+    	  res = getDeviceDetails(saddrs, "GetProfiles", "{ }", ctl);
     	  if (res != null) {
     		GetProfilesResponse presp = (GetProfilesResponse)res[1];
     		for (Profile pr: presp.getProfiles()) {
@@ -135,12 +140,16 @@ public class TestJakOnvifDiscoveryClient {
     		}
     	  }
     	} else if (useAddr) {
-    	  getDeviceDetails(addr, "GetDeviceInformation", "{ }", ctl);
-    	  getDeviceDetails(addr, "GetSystemDateAndTime", "{ }", ctl);
-    	  getDeviceDetails(addr, "GetNetworkInterfaces", "{ }", ctl);
-    	  getDeviceDetails(addr, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl);
-    	  getDeviceDetails(addr, "GetServices", "{ }", ctl);
-    	  res = getDeviceDetails(addr, "GetProfiles", "{ }", ctl);
+    	  res = getDeviceDetails(saddrs, "GetDeviceInformation", "{ }", ctl);
+    	  res = getDeviceDetails(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl);
+    	  if (res != null) {
+      	    saddrs.LoadServices((GetServicesResponse)res[1]);
+       	  }
+    	  
+    	  getDeviceDetails(saddrs, "GetSystemDateAndTime", "{ }", ctl);
+    	  getDeviceDetails(saddrs, "GetNetworkInterfaces", "{ }", ctl);
+    	  getDeviceDetails(saddrs, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl);
+    	  res = getDeviceDetails(saddrs, "GetProfiles", "{ }", ctl);
     	  if (res != null) {
     	    profiles = (String)res[0];
     	
@@ -161,7 +170,7 @@ public class TestJakOnvifDiscoveryClient {
                       String nm = jprof.get("Name").textValue();
                       System.out.println("Profile Name: '" + nm + "'.");
                       String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
-                      getDeviceDetails(addr, "GetProfile", req, ctl);
+                      getDeviceDetails(saddrs, "GetProfile", req, ctl);
                       j++;
                     }
                   }
@@ -222,8 +231,10 @@ public class TestJakOnvifDiscoveryClient {
     }
   }
   
-  static Object[] getDeviceDetails(String addr, String getReq, String reqInput, ControlDiscovery ctl) {
+  static Object[] getDeviceDetails(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl) {
 	Object[] res = null;
+	
+	String addr = saddr.getServiceAddress(getReq);
 	String call = "{\"target\": \"" + addr + "\"," +
                 "\"user\": \"" + ctl.user + "\", \"password\": \"" + ctl.passwd + "\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
@@ -261,8 +272,10 @@ public class TestJakOnvifDiscoveryClient {
     return res;
   }
   
-  static Object[] getDeviceDetailsDirect(String addr, String getReq, String reqInput, ControlDiscovery ctl) {
+  static Object[] getDeviceDetailsDirect(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl) {
 	Object[] res = null;
+	
+	String addr = saddr.getServiceAddress(getReq);
 	String call = "{\"target\": \"" + addr + "\"," +
                 "\"user\": \"" + ctl.user + "\", \"password\": \"" + ctl.passwd + "\"," +
 		        "\"reqclass\": \"" + getReq + "\"," +
@@ -316,6 +329,16 @@ public class TestJakOnvifDiscoveryClient {
       	    res[1] = resp;
             }
       	    break;
+          case "GetServices": {
+            List<Service> ls = ((Device)proxy[2]).GetServices(true);
+            GetServicesResponse resp = new GetServicesResponse();
+            resp.getService().addAll(ls);
+            callo.response = resp;
+            res = new Object[2];
+            res[0] = callo.ser();
+            res[1] = resp;
+            }
+            break;
         }
   
         System.out.println(res[0]); //output of first response test.

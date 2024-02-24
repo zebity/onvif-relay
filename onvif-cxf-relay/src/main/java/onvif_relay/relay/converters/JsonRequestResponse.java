@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 
@@ -19,6 +18,7 @@ public class JsonRequestResponse {
          password,
          reqclass,
          respclass,
+         nameSpace,
          operationType,
          voidOperation;
   public Object request,
@@ -90,7 +90,7 @@ public class JsonRequestResponse {
     JsonRequestResponse res = null;
     
     String target = null, user = null, password = null, reqClass = null, respClass= null,
-    	   operationType = null, voidOperation = null;
+    	   nameSpace = null, operationType = null, voidOperation = null;
     JsonNode reqjo = null, respjo = null;
     
     JsonNode jo = new ObjectMapper().readTree(jsonStr);
@@ -116,6 +116,10 @@ public class JsonRequestResponse {
       if (jp != null)
     	respClass = jp.textValue();
       
+      jp = jo.get("nameSpace");
+      if (jp != null)
+        nameSpace = jp.textValue();
+      
       jp = jo.get("operationType");
       if (jp != null)
         operationType = jp.textValue();
@@ -136,6 +140,7 @@ public class JsonRequestResponse {
         res.user = user;
         res.password = password;
         res.reqclass = reqClass;
+        res.nameSpace = nameSpace;
         res.operationType = operationType;
         res.voidOperation = voidOperation;
 
@@ -152,6 +157,10 @@ public class JsonRequestResponse {
           Object deserresp = new ObjectMapper().treeToValue(respjo, protos[1].getClass());
           res.response = deserresp;
           res.respclass = deserresp.getClass().getSimpleName();
+        }
+        
+        if (nameSpace == null) {
+          res.nameSpace = (String)protos[2];
         }
       }
     }
