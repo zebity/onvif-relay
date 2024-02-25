@@ -19,23 +19,32 @@ import javax.xml.namespace.QName;
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import org.onvif.ver10.device.wsdl.GetServicesResponse;
 import org.onvif.ver10.device.wsdl.Service;
+import org.onvif.ver10.media.wsdl.GetProfileResponse;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
+import org.onvif.ver10.media.wsdl.GetStreamUriResponse;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.schema.Capabilities;
 import org.onvif.ver10.schema.CapabilityCategory;
+import org.onvif.ver10.schema.MediaUri;
 import org.onvif.ver10.schema.Profile;
+import org.onvif.ver10.schema.StreamSetup;
+import org.onvif.ver10.schema.StreamType;
+import org.onvif.ver10.schema.Transport;
+import org.onvif.ver10.schema.TransportProtocol;
 import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.GetCapabilitiesResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+
 import jakarta.xml.ws.EndpointReference;
 import jakarta.xml.ws.Holder;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import onvif_relay.discovery_client.jak.JakOnvifDiscoveryClient;
 import onvif_relay.relay.converters.JsonRequestResponse;
-import onvif_relay.relay.converters.OnvifOperations;
 import onvif_relay.relay.invokers.CheckClockSyncAndAccess;
 import onvif_relay.relay.invokers.InvokeOperation;
 import onvif_relay.relay.invokers.ServiceAddresses;
@@ -53,6 +62,8 @@ public class TestJakOnvifDiscoveryClient {
     boolean doProbe = true;
     boolean filter = false;
     boolean dumpServices = false;
+    boolean loadServices = true;
+    boolean loadCapabilities = true;
     boolean ssl = false;
     boolean print = true;
     Set<String> filterIP = new HashSet<>();
@@ -138,11 +149,11 @@ public class TestJakOnvifDiscoveryClient {
     	if (useAddr) {
     	  res = getDetails(saddrs, "GetDeviceInformation", "{ }", ctl, false);
     	  res = getDetails(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl, false);
-    	  if (res != null) {
+    	  if (res != null && ctl.loadServices) {
       	    saddrs.LoadServices((GetServicesResponse)res[1]);
        	  }
     	  res = getDetails(saddrs, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl, false);
-    	  if (res != null) {
+    	  if (res != null && ctl.loadCapabilities) {
         	saddrs.LoadServices((GetCapabilitiesResponse)res[1]);
       	  }
     	  
@@ -172,8 +183,12 @@ public class TestJakOnvifDiscoveryClient {
                     } else {
                       String nm = jprof.get("Name").textValue();
                       System.out.println("Profile Name: '" + nm + "'.");
-                      String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
-                      res = getDetails(saddrs, "GetProfile", req, ctl, true);
+                      String req = "{ \"profileToken\": \"" + nm + "\" }";
+                      res = getDetails(saddrs, "GetProfile", req, ctl, false);
+                      String setup = "\"streamSetup\": { \"stream\": \"RTP___UNICAST\", \"transport\": { \"protocol\": \"RTSP\" } }";
+                      String strmreq = "{ " + setup + ", \"profileToken\": \"" + nm + "\" }";
+                      // testSer();
+                      res = getDetails(saddrs, "GetStreamUri", strmreq, ctl, false);
                       j++;
                     }
                   }
@@ -189,9 +204,26 @@ public class TestJakOnvifDiscoveryClient {
 	}
   }
   
+  static void testSer() {
+  	StreamSetup ss = new StreamSetup();
+  	Transport t = new Transport();
+  	t.setProtocol(TransportProtocol.RTSP);
+  	ss.setStream(StreamType.RTP___UNICAST);
+  	ss.setTransport(t);
+
+  	ObjectMapper ser = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).registerModule(new JakartaXmlBindAnnotationModule());
+    
+  	try {
+      String val = ser.writeValueAsString(ss);
+      System.out.println(val);
+  	} catch (Exception ex) {
+  	  ex.printStackTrace();
+  	}
+  }
+  
   static void ParseArgs(String[] argv, ControlDiscovery ctl) {
     int i = 0;
-    String usage = "[-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-t(ls/ssl)] [-s(ei)] [-c(lock check)] [-a(cess check)] [-d(dump) (s|c)]";
+    String usage = "[-l(oad disable) (s|c)] [-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-t(ls/ssl)] [-s(ei)] [-c(lock check)] [-a(cess check)] [-d(dump) (s|c)]";
     
     if (argv.length > 0) {
     
@@ -218,6 +250,14 @@ public class TestJakOnvifDiscoveryClient {
                      ctl.filter = true;
                      i++;
                      break;
+          case "-l": i++;
+                     if (argv[i].equals("s")) {
+                       ctl.loadServices = false;
+                     } else if (argv[i].equals("c")) {
+                       ctl.loadCapabilities = false;
+                     }
+                     i++;
+                     break;
           case "-p": i++;
                      if (argv[i].equals("n")) {
                        ctl.doProbe = false;
@@ -242,9 +282,18 @@ public class TestJakOnvifDiscoveryClient {
       }
     }
   }
+
+  static void printResult(Object[] res) {
+    System.out.println("Begin Result:");
+    if (res != null && res[0] != null) {
+      System.out.println(res[0]);
+    }
+    System.out.println("End Result.");
+  }
   
   static Object[] getDetails(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl, boolean override) {
 	Object[] res = null;
+	
 	if (ctl.useSEI && ! override) {
 	  res = getDeviceDetailsDirect(saddr, getReq, reqInput, ctl);
 	} else {
@@ -298,14 +347,6 @@ public class TestJakOnvifDiscoveryClient {
     return res;
   }
   
-  static void printResult(Object[] res) {
-    System.out.println("Begin Result:");
-    if (res != null && res[0] != null) {
-      System.out.println(res[0]);
-    }
-    System.out.println("End Result.");
-  }
-  
   static Object[] getDeviceDetailsDirect(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl) {
 	Object[] res = null;
 	
@@ -356,6 +397,37 @@ public class TestJakOnvifDiscoveryClient {
       	      List<Profile> lp = ((Media)proxy[2]).GetProfiles();
       	      GetProfilesResponse resp = new GetProfilesResponse();
       	      resp.getProfiles().addAll(lp);
+      	      callo.response = resp;
+      	      res = new Object[2];
+      	      res[0] = callo.ser();
+      	      res[1] = resp;
+            }
+      	    break;
+          case "GetProfile": {
+	      	  ObjectMapper omapper = new ObjectMapper();
+	      	  JsonNode jres = omapper.readTree(reqInput);
+	      	  String prof = jres.get("profileToken").textValue();
+      	      Profile p = ((Media)proxy[2]).GetProfile(prof);
+      	      GetProfileResponse resp = new GetProfileResponse();
+      	      resp.setProfile(p);
+      	      callo.response = resp;
+      	      res = new Object[2];
+      	      res[0] = callo.ser();
+      	      res[1] = resp;
+            }
+      	    break;
+          case "GetStreamUri": {
+	      	  ObjectMapper omapper = new ObjectMapper();
+	      	  JsonNode jres = omapper.readTree(reqInput);
+	      	  StreamSetup ss = new StreamSetup();
+	      	  Transport t = new Transport();
+	      	  t.setProtocol(TransportProtocol.RTSP);
+	      	  ss.setStream(StreamType.RTP___UNICAST);
+	      	  ss.setTransport(t);
+	      	  String prof = jres.get("profileToken").textValue();
+      	      MediaUri mu = ((Media)proxy[2]).GetStreamUri(ss, prof);
+      	      GetStreamUriResponse resp = new GetStreamUriResponse();
+      	      resp.setMediaUri(mu);
       	      callo.response = resp;
       	      res = new Object[2];
       	      res[0] = callo.ser();
