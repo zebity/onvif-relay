@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,8 +21,12 @@ import org.onvif.ver10.device.wsdl.GetServicesResponse;
 import org.onvif.ver10.device.wsdl.Service;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
 import org.onvif.ver10.media.wsdl.Media;
+import org.onvif.ver10.schema.Capabilities;
+import org.onvif.ver10.schema.CapabilityCategory;
 import org.onvif.ver10.schema.Profile;
 import org.onvif.ver10.device.wsdl.Device;
+import org.onvif.ver10.device.wsdl.GetCapabilitiesResponse;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -47,6 +52,9 @@ public class TestJakOnvifDiscoveryClient {
     boolean checkAccess = false;
     boolean doProbe = true;
     boolean filter = false;
+    boolean dumpServices = false;
+    boolean ssl = false;
+    boolean print = true;
     Set<String> filterIP = new HashSet<>();
     Map<String, String> services = new HashMap<>();
   }
@@ -54,7 +62,6 @@ public class TestJakOnvifDiscoveryClient {
   public static void main(String [] args) {
 	ControlDiscovery ctl = new ControlDiscovery();
 	Object[] res = null;
-	String testdev = "http://127.0.0.1:9060/onvif/device_service";
 	Object[] chk = null;
 	List<EndpointReference> found = null;
 	CheckClockSyncAndAccess check = null;
@@ -98,7 +105,10 @@ public class TestJakOnvifDiscoveryClient {
     	  i++;
     	  haveAddr = i < found.size();
     	} else {
-    	  addr = "http://" + (String)nextIp.next() + "/onvif/device_service";
+    	  if (ctl.ssl)
+    	    addr = "https://" + (String)nextIp.next() + "/onvif/device_service";
+    	  else
+      	    addr = "http://" + (String)nextIp.next() + "/onvif/device_service";
     	  System.out.println("Using: '" + addr + "'.");
     	  haveAddr = nextIp.hasNext();
     	}
@@ -125,31 +135,24 @@ public class TestJakOnvifDiscoveryClient {
     	  }
     	}
     	
-    	if (useAddr && ctl.useSEI) {
-    	  res = getDeviceDetailsDirect(saddrs, "GetDeviceInformation", "{ }", ctl);
-    	  res = getDeviceDetailsDirect(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl);
-    	  if (res != null) {
-    	    saddrs.LoadServices((GetServicesResponse)res[1]);
-     	  }
-
-    	  res = getDeviceDetails(saddrs, "GetProfiles", "{ }", ctl);
-    	  if (res != null) {
-    		GetProfilesResponse presp = (GetProfilesResponse)res[1];
-    		for (Profile pr: presp.getProfiles()) {
-    		  String nm = pr.getName(); 
-    		}
-    	  }
-    	} else if (useAddr) {
-    	  res = getDeviceDetails(saddrs, "GetDeviceInformation", "{ }", ctl);
-    	  res = getDeviceDetails(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl);
+    	if (useAddr) {
+    	  res = getDetails(saddrs, "GetDeviceInformation", "{ }", ctl, false);
+    	  res = getDetails(saddrs, "GetServices", "{ \"includeCapability\": \"true\" }", ctl, false);
     	  if (res != null) {
       	    saddrs.LoadServices((GetServicesResponse)res[1]);
        	  }
+    	  res = getDetails(saddrs, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl, false);
+    	  if (res != null) {
+        	saddrs.LoadServices((GetCapabilitiesResponse)res[1]);
+      	  }
     	  
-    	  getDeviceDetails(saddrs, "GetSystemDateAndTime", "{ }", ctl);
-    	  getDeviceDetails(saddrs, "GetNetworkInterfaces", "{ }", ctl);
-    	  getDeviceDetails(saddrs, "GetCapabilities", "{ \"category\": [\"ALL\"] }", ctl);
-    	  res = getDeviceDetails(saddrs, "GetProfiles", "{ }", ctl);
+    	  if (ctl.dumpServices) {
+    		saddrs.dump(System.out); 
+    	  }
+    	  
+    	  res = getDetails(saddrs, "GetSystemDateAndTime", "{ }", ctl, true);
+    	  res = getDetails(saddrs, "GetNetworkInterfaces", "{ }", ctl, true);
+    	  res = getDetails(saddrs, "GetProfiles", "{ }", ctl, false);
     	  if (res != null) {
     	    profiles = (String)res[0];
     	
@@ -170,7 +173,7 @@ public class TestJakOnvifDiscoveryClient {
                       String nm = jprof.get("Name").textValue();
                       System.out.println("Profile Name: '" + nm + "'.");
                       String req = "{ \"profileToken\": " + "\"" + nm + "\" }";
-                      getDeviceDetails(saddrs, "GetProfile", req, ctl);
+                      res = getDetails(saddrs, "GetProfile", req, ctl, true);
                       j++;
                     }
                   }
@@ -188,17 +191,23 @@ public class TestJakOnvifDiscoveryClient {
   
   static void ParseArgs(String[] argv, ControlDiscovery ctl) {
     int i = 0;
-    String usage = "[-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-s(ei)] [-c(lock check)] [-a(cess check)]";
+    String usage = "[-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-t(ls/ssl)] [-s(ei)] [-c(lock check)] [-a(cess check)] [-d(dump) (s|c)]";
     
     if (argv.length > 0) {
     
       while (i < argv.length) {
     	  
         switch(argv[i]) {
-          case "-u": i++;
-                     String[] up = argv[i].split(":");
-                     ctl.user = up[0];
-                     ctl.passwd = up[1];
+          case "-a": ctl.checkAccess = true;
+                     i++;
+                     break;
+          case "-c": ctl.checkClock = true;
+                     i++;
+                     break;
+          case "-d": i++;
+                     if (argv[i].equals("s")) {
+                       ctl.dumpServices = true;
+                     }
                      i++;
                      break;
           case "-f": i++;
@@ -218,10 +227,13 @@ public class TestJakOnvifDiscoveryClient {
           case "-s": ctl.useSEI = true;
                      i++;
                      break;
-          case "-c": ctl.checkClock = true;
+          case "-t": ctl.ssl = true;
                      i++;
                      break;
-          case "-a": ctl.checkAccess = true;
+          case "-u": i++;
+                     String[] up = argv[i].split(":");
+                     ctl.user = up[0];
+                     ctl.passwd = up[1];
                      i++;
                      break;
           default: System.out.println("Usage: " + usage);
@@ -229,6 +241,20 @@ public class TestJakOnvifDiscoveryClient {
         }  
       }
     }
+  }
+  
+  static Object[] getDetails(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl, boolean override) {
+	Object[] res = null;
+	if (ctl.useSEI && ! override) {
+	  res = getDeviceDetailsDirect(saddr, getReq, reqInput, ctl);
+	} else {
+	  res = getDeviceDetails(saddr, getReq, reqInput, ctl);
+	}
+	
+	if (ctl.print) {
+      printResult(res);
+	}
+	return res;
   }
   
   static Object[] getDeviceDetails(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl) {
@@ -253,13 +279,13 @@ public class TestJakOnvifDiscoveryClient {
   
       callo.response = onvifop.invoke(callo, true, ctrl);
   
-      System.out.println("read in first callo response: '" + callo.response + "'."); //read first callo response
+      // System.out.println("read in first callo response: '" + callo.response + "'."); //read first callo response
   
       res = new Object[2];
       res[1] = callo.response;
       res[0] = callo.ser();
       
-      System.out.println(res[0]); //output of first response test.
+      // System.out.println(res[0]); //output of first response test.
   
       if (callo.response != null) {
         peekcTest = callo.response.toString();
@@ -270,6 +296,14 @@ public class TestJakOnvifDiscoveryClient {
       ex.printStackTrace();
     }
     return res;
+  }
+  
+  static void printResult(Object[] res) {
+    System.out.println("Begin Result:");
+    if (res != null && res[0] != null) {
+      System.out.println(res[0]);
+    }
+    System.out.println("End Result.");
   }
   
   static Object[] getDeviceDetailsDirect(ServiceAddresses saddr, String getReq, String reqInput, ControlDiscovery ctl) {
@@ -287,7 +321,6 @@ public class TestJakOnvifDiscoveryClient {
     String peekc = null, peekt = null, peekcTest = null;
     boolean altAuth = false, authFault = false;
 
-
     InvokeOperation onvifop = new InvokeOperation();
 
     do {
@@ -301,47 +334,59 @@ public class TestJakOnvifDiscoveryClient {
       
         switch (callo.reqclass) {
           case "GetDeviceInformation": {
-    	    GetDeviceInformationResponse resp = new GetDeviceInformationResponse();
-    	    Holder<String> man = new Holder<>();
-    	    Holder<String> mod = new Holder<>();
-    	    Holder<String> firm = new Holder<>();
-    	    Holder<String> serial = new Holder<>();
-    	    Holder<String> hard = new Holder<>();
-    	    ((Device)proxy[2]).GetDeviceInformation(man, mod, firm, serial, hard);
-    	    resp.setManufacturer(man.value.toString());
-    	    resp.setModel(mod.value.toString());
-    	    resp.setFirmwareVersion(firm.value.toString());
-    	    resp.setSerialNumber(serial.value.toString());
-    	    resp.setHardwareId(hard.value.toString());
-    	    callo.response = resp;
-    	    res = new Object[2];
-    	    res[0] = callo.ser();
-    	    res[1] = resp;
+    	      GetDeviceInformationResponse resp = new GetDeviceInformationResponse();
+    	      Holder<String> man = new Holder<>();
+    	      Holder<String> mod = new Holder<>();
+    	      Holder<String> firm = new Holder<>();
+    	      Holder<String> serial = new Holder<>();
+    	      Holder<String> hard = new Holder<>();
+    	      ((Device)proxy[2]).GetDeviceInformation(man, mod, firm, serial, hard);
+    	      resp.setManufacturer(man.value.toString());
+    	      resp.setModel(mod.value.toString());
+    	      resp.setFirmwareVersion(firm.value.toString());
+    	      resp.setSerialNumber(serial.value.toString());
+    	      resp.setHardwareId(hard.value.toString());
+    	      callo.response = resp;
+    	      res = new Object[2];
+    	      res[0] = callo.ser();
+    	      res[1] = resp;
             }
     	    break;
           case "GetProfiles": {
-      	    List<Profile> lp = ((Media)proxy[2]).GetProfiles();
-      	    GetProfilesResponse resp = new GetProfilesResponse();
-      	    resp.getProfiles().addAll(lp);
-      	    callo.response = resp;
-      	    res = new Object[2];
-      	    res[0] = callo.ser();
-      	    res[1] = resp;
+      	      List<Profile> lp = ((Media)proxy[2]).GetProfiles();
+      	      GetProfilesResponse resp = new GetProfilesResponse();
+      	      resp.getProfiles().addAll(lp);
+      	      callo.response = resp;
+      	      res = new Object[2];
+      	      res[0] = callo.ser();
+      	      res[1] = resp;
             }
       	    break;
           case "GetServices": {
-            List<Service> ls = ((Device)proxy[2]).GetServices(true);
-            GetServicesResponse resp = new GetServicesResponse();
-            resp.getService().addAll(ls);
-            callo.response = resp;
-            res = new Object[2];
-            res[0] = callo.ser();
-            res[1] = resp;
+              List<Service> ls = ((Device)proxy[2]).GetServices(true);
+              GetServicesResponse resp = new GetServicesResponse();
+              resp.getService().addAll(ls);
+              callo.response = resp;
+              res = new Object[2];
+              res[0] = callo.ser();
+              res[1] = resp;
+            }
+            break;
+          case "GetCapabilities": {
+        	  List<CapabilityCategory> lc = new LinkedList<>();
+        	  lc.add(CapabilityCategory.ALL);
+              Capabilities c = ((Device)proxy[2]).GetCapabilities(lc);
+              GetCapabilitiesResponse resp = new GetCapabilitiesResponse();
+              resp.setCapabilities(c);
+              callo.response = resp;
+              res = new Object[2];
+              res[0] = callo.ser();
+              res[1] = resp;
             }
             break;
         }
   
-        System.out.println(res[0]); //output of first response test.
+        // System.out.println(res[0]); //output of first response test.
   
       } catch (SOAPFaultException sex) {
         Iterator<QName> it = sex.getFault().getFaultSubcodes();
