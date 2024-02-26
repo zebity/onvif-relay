@@ -124,34 +124,6 @@ public class TestJakOnvifDiscoveryClient {
     	} else {
     	  if (ctl.ssl)
     	    addr = "https://" + (String)nextIp.next() + "/onvif/device_service";
-    	    if (ctl.sslvalidate == false) {
-      	      // System.setProperty("com.sun.net.ssl.checkRevocation", "false");
-      	      // System.setProperty("jdk.internal.httpclient.disableHostnameVerification", "true");
-    	      /* TrustManager trm = new X509TrustManager() {
-  	            public X509Certificate[] getAcceptedIssuers() {
-  	              return null;
-  	            }
-				@Override
-				public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-					
-				}
-				@Override
-				public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-				}
-    	      };
-    	      SSLContext sc = SSLContext.getInstance("SSL");
-    	      sc.init(null, new TrustManager[] { trm }, null);
-    	      javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(
-    	        sc.getSocketFactory()); */
-
-    	      /* javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-    	        new javax.net.ssl.HostnameVerifier() {
-    	        	  public boolean verify(String hostname, javax.net.ssl.SSLSession ss) {
-    	        	    return true;
-    	        	  }
-    	        }); */
-    	      // System.setProperty(addr, "false")
-    	    }
     	  else
       	    addr = "http://" + (String)nextIp.next() + "/onvif/device_service";
     	  System.out.println("Using: '" + addr + "'.");
@@ -215,12 +187,12 @@ public class TestJakOnvifDiscoveryClient {
                     if (jprof == null) {
                       break;
                     } else {
-                      String nm = jprof.get("Name").textValue();
-                      System.out.println("Profile Name: '" + nm + "'.");
-                      String req = "{ \"profileToken\": \"" + nm + "\" }";
+                      String tk = jprof.get("token").textValue();
+                      System.out.println("Profile token: '" + tk + "'.");
+                      String req = "{ \"profileToken\": \"" + tk + "\" }";
                       res = getDetails(saddrs, "GetProfile", req, ctl, false);
                       String setup = "\"streamSetup\": { \"stream\": \"RTP___UNICAST\", \"transport\": { \"protocol\": \"RTSP\" } }";
-                      String strmreq = "{ " + setup + ", \"profileToken\": \"" + nm + "\" }";
+                      String strmreq = "{ " + setup + ", \"profileToken\": \"" + tk + "\" }";
                       // testSer();
                       res = getDetails(saddrs, "GetStreamUri", strmreq, ctl, false);
                       j++;
