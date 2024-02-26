@@ -6,6 +6,8 @@
 package onvif_relay.test.discovery_client;
 
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.namespace.QName;
 
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
@@ -65,6 +70,7 @@ public class TestJakOnvifDiscoveryClient {
     boolean loadServices = true;
     boolean loadCapabilities = true;
     boolean ssl = false;
+    boolean sslvalidate = true;
     boolean print = true;
     Set<String> filterIP = new HashSet<>();
     Map<String, String> services = new HashMap<>();
@@ -118,6 +124,34 @@ public class TestJakOnvifDiscoveryClient {
     	} else {
     	  if (ctl.ssl)
     	    addr = "https://" + (String)nextIp.next() + "/onvif/device_service";
+    	    if (ctl.sslvalidate == false) {
+      	      // System.setProperty("com.sun.net.ssl.checkRevocation", "false");
+      	      // System.setProperty("jdk.internal.httpclient.disableHostnameVerification", "true");
+    	      /* TrustManager trm = new X509TrustManager() {
+  	            public X509Certificate[] getAcceptedIssuers() {
+  	              return null;
+  	            }
+				@Override
+				public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+					
+				}
+				@Override
+				public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+				}
+    	      };
+    	      SSLContext sc = SSLContext.getInstance("SSL");
+    	      sc.init(null, new TrustManager[] { trm }, null);
+    	      javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(
+    	        sc.getSocketFactory()); */
+
+    	      /* javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+    	        new javax.net.ssl.HostnameVerifier() {
+    	        	  public boolean verify(String hostname, javax.net.ssl.SSLSession ss) {
+    	        	    return true;
+    	        	  }
+    	        }); */
+    	      // System.setProperty(addr, "false")
+    	    }
     	  else
       	    addr = "http://" + (String)nextIp.next() + "/onvif/device_service";
     	  System.out.println("Using: '" + addr + "'.");
@@ -223,7 +257,7 @@ public class TestJakOnvifDiscoveryClient {
   
   static void ParseArgs(String[] argv, ControlDiscovery ctl) {
     int i = 0;
-    String usage = "[-l(oad disable) (s|c)] [-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-t(ls/ssl)] [-s(ei)] [-c(lock check)] [-a(cess check)] [-d(dump) (s|c)]";
+    String usage = "[-l(oad disable) (s|c)] [-u user:passwd] [-f(ilter) ip,ip,ip] [-p(robe) (y|n)] [-t(ls/ssl) (v|d)] [-s(ei)] [-c(lock check)] [-a(cess check)] [-d(dump) (s|c)]";
     
     if (argv.length > 0) {
     
@@ -267,7 +301,13 @@ public class TestJakOnvifDiscoveryClient {
           case "-s": ctl.useSEI = true;
                      i++;
                      break;
-          case "-t": ctl.ssl = true;
+          case "-t": i++;
+        	         ctl.ssl = true;
+        	         if (argv[i].equals("v")) {
+        	           ctl.sslvalidate = true;
+        	         } else if (argv[i].equals("d")) {
+        	           ctl.sslvalidate = false;
+        	         }
                      i++;
                      break;
           case "-u": i++;
