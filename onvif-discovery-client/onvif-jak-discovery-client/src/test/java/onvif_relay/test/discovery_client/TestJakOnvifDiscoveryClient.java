@@ -357,6 +357,7 @@ public class TestJakOnvifDiscoveryClient {
               "}";
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", ctl.auth);
+    ctrl.put("sslvalidate", Boolean.toString(ctl.sslvalidate));
     ctrl.put("debug", "false");
     String peekcTest = null;
 
@@ -398,6 +399,7 @@ public class TestJakOnvifDiscoveryClient {
               "}";
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", ctl.auth);
+    ctrl.put("sslvalidate", Boolean.toString(ctl.sslvalidate));
     ctrl.put("debug", "false");
     String peekc = null, peekt = null, peekcTest = null;
     boolean altAuth = false, authFault = false;

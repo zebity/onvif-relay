@@ -10,12 +10,14 @@ package onvif_relay.relay.invokers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.configuration.security.AuthorizationPolicy;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -34,6 +36,10 @@ import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.soap.SOAPBinding;
 import onvif_relay.relay.converters.JsonRequestResponse;
 import onvif_relay.relay.converters.OnvifOperations;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 
 public class InvokeOperation {
@@ -409,6 +415,7 @@ public class InvokeOperation {
     
     String security = ctrl.get("security");
 	String debug = ctrl.get("debug");
+	String sslvalidate = ctrl.get("sslvalidate");
 	
 	if (sei instanceof BindingProvider) {
 	  BindingProvider bp = (BindingProvider)sei;
@@ -421,7 +428,11 @@ public class InvokeOperation {
 	  }
 	  
 	  bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, uri);
-			    
+
+	  if (sslvalidate != null && sslvalidate.equals("false")) {
+        ignoreSSLVerification(bp);
+	  }
+
 	  if (security == null || security.equals("basic")) {
 		bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, user);
 		bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, password);
@@ -433,7 +444,7 @@ public class InvokeOperation {
 		authPolicy.setAuthorizationType("Digest");
 		authPolicy.setUserName(user);
 		authPolicy.setPassword(password);
-		httpo.setAuthorization(authPolicy);           
+		httpo.setAuthorization(authPolicy);
 	  } else if (security != null && security.equals("ws-security")) {
 		// Note this code is cxf specific
 		Client client = ClientProxy.getClient(sei);
@@ -455,4 +466,37 @@ public class InvokeOperation {
 	}
 	return res;
   }
+
+    private void ignoreSSLVerification(BindingProvider bp) {
+        try {
+            // Get the HTTP conduit
+            Client client = ClientProxy.getClient(bp);
+            HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
+
+            // Configure TLS parameters to trust all certificates
+            TLSClientParameters tlsClientParameters = new TLSClientParameters();
+            tlsClientParameters.setDisableCNCheck(true); // Disable Common Name (CN) check
+
+            // Set the custom SSL socket factory
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[]{new TrustAllX509TrustManager()}, null);
+            tlsClientParameters.setSSLSocketFactory(sslContext.getSocketFactory());
+
+            httpConduit.setTlsClientParameters(tlsClientParameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static class TrustAllX509TrustManager implements X509TrustManager {
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+        }
+
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }
 }
