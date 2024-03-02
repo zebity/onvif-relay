@@ -10,7 +10,9 @@ To
 
 NOTE: verXX refers to ONVIF WSDL version
 
-This repository also includes onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device (camera)
+This repository also includes:
+- onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device (camera)
+- onvif discovery example based on cxf ws-discovery, this allow you to get camera info via command line utility
 
 
 See: https://tips.graphica.com.au/onvif-ws-client-consumption/
