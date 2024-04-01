@@ -142,13 +142,13 @@ public class TestJakOnvifDiscoveryClient {
     	
     	if (useAddr && ctl.checkClock) {
 
-  		  chk = check.checkAccess(addr, ctl.user, ctl.passwd);
+  		  chk = check.checkAccess(addr, ctl.user, ctl.passwd, ctl.sslvalidate);
   		  
     	  // Object[] chk = check.checkClockSync(addr, user, passwd, "digest");
     	  if (chk != null) {
     		ctl.auth = (String)chk[0];
     		System.out.println("Access Check: '" + chk[0] + "'.");
-    		chk = check.checkClockSync(addr, ctl.user, ctl.passwd, ctl.auth);
+    		chk = check.checkClockSync(addr, ctl.user, ctl.passwd, ctl.auth, ctl.sslvalidate);
     		if (chk != null && chk[0] != null) {
     	      System.out.println("Clock Sync Check: " + Long.toString((long)chk[0]));	
     		} else {

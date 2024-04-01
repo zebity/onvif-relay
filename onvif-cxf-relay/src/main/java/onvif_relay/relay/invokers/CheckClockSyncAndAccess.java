@@ -33,7 +33,7 @@ public class CheckClockSyncAndAccess {
   public CheckClockSyncAndAccess() {	  
   }
   
-  public Object[] checkAccess(String addr, String user, String password) {
+  public Object[] checkAccess(String addr, String user, String password, boolean SSLValidate) {
 	Object[] res = null;
 	String call = "{\"target\": \"" + addr + "\"," +
               "\"user\": \"" + user + "\", \"password\": \"" + password + "\"," +
@@ -44,6 +44,15 @@ public class CheckClockSyncAndAccess {
     Map<String, String> ctrl = new HashMap<>();
     ctrl.put("security", "digest");
     ctrl.put("debug", "false");
+    
+    if (addr != null) {
+      if (! SSLValidate && addr.substring(0,5).equals("https")) {
+        ctrl.put("sslvalidate", "false");
+      } else {
+    	ctrl.put("sslvalidate", "true");
+      }
+    }
+    
     boolean altAuth = false, authFault = false;
 
 
@@ -108,7 +117,7 @@ public class CheckClockSyncAndAccess {
     return res;
   }
 
-  public Object[] checkClockSync(String addr, String user, String password, String sec) {
+  public Object[] checkClockSync(String addr, String user, String password, String sec, boolean SSLValidate) {
 	Object[] res = null;
 	String call = "{\"target\": \"" + addr + "\"," +
               "\"user\": \"" + user + "\", \"password\": \"" + password + "\"," +
@@ -120,6 +129,13 @@ public class CheckClockSyncAndAccess {
     ctrl.put("debug", "false");
     JsonRequestResponse callo = null;
 
+    if (addr != null) {
+      if (! SSLValidate && addr.substring(0,5).equals("https")) {
+        ctrl.put("sslvalidate", "false");
+      } else {
+      	ctrl.put("sslvalidate", "true");
+      }
+    }
 
     InvokeOperation onvifop = new InvokeOperation();
 
