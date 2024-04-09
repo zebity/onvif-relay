@@ -129,7 +129,7 @@
        <configuration>
         <archive>
          <manifest>
-          <mainClass>onvif_relay.test.client.TestJakOnvifDiscoveryClient</mainClass>
+          <mainClass>onvif_relay.test.discovery_client.TestJakOnvifDiscoveryClient</mainClass>
          </manifest>
         </archive>
          <descriptorRefs>
