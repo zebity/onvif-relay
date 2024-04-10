@@ -36,7 +36,7 @@
     </dependency> 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>onvif-discovery-client</artifactId>
+      <artifactId>onvif-jak-discovery-client</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency> 
 
