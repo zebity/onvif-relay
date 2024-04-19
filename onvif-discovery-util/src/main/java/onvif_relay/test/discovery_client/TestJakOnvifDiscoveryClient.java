@@ -72,6 +72,7 @@ public class TestJakOnvifDiscoveryClient {
     boolean ssl = false;
     boolean sslvalidate = true;
     boolean print = true;
+    int timeout = 1000;
     Set<String> filterIP = new HashSet<>();
     Map<String, String> services = new HashMap<>();
   }
@@ -93,7 +94,7 @@ public class TestJakOnvifDiscoveryClient {
       QName type = new QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter");
       
       if (ctl.doProbe) {
-        found = onvdis.probe(type);
+        found = onvdis.probe(type, ctl.timeout);
         System.out.println("Probe, got: " + found.size());
       }
       
