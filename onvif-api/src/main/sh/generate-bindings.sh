@@ -5,7 +5,7 @@ MVNREPO="$2"/repository
 PROJDIR="$3"
 WSDL_PREFIX="$4"
 
-JAVA=/usr/lib/jvm/java-11-openjdk-amd64/bin/java
+JAVA=/usr/lib/jvm/java-17-openjdk-amd64/bin/java
 
 DEVICE_WSDL_LOC=/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl
 MEDIA_WSDL_LOC=/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl

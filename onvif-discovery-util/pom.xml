@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>onvif-relay</groupId>
-    <artifactId>onvif-discovery-client</artifactId>
+    <artifactId>onvif-relay</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>onvif-jak-discovery-client</artifactId>
-  <name>onvif-jak-discovery-client</name>
+  <artifactId>onvif-discovery-util</artifactId>
+  <name>onvif-discovery-util</name>
 
   <dependencies>
 
@@ -26,6 +26,10 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>onvif-cxf-relay</artifactId>
+    </dependency>  
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>onvif-jak-discovery-client</artifactId>
     </dependency>  
        
     <dependency>
@@ -110,43 +114,45 @@
      <groupId>com.google.code.gson</groupId>
      <artifactId>gson</artifactId>
     </dependency -->
-
-   <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <scope>test</scope>
-   </dependency>
     
   </dependencies>
 
-  <!-- build>
+  <build>
    <plugins>
 
     <plugin>
      <groupId>org.apache.maven.plugins</groupId>
-     <artifactId>maven-assembly-plugin</artifactId>
-     <version>3.4.2</version>
+     <artifactId>maven-dependency-plugin</artifactId>
+     <version>3.3.0</version>
      <executions>
       <execution>
-       <phase>test</phase>
+       <id>copy-dependencies</id>
+       <phase>prepare-package</phase>
        <goals>
-        <goal>single</goal>
+        <goal>copy-dependencies</goal>
        </goals>
        <configuration>
-        <archive>
-         <manifest>
-          <mainClass>onvif_relay.test.discovery_client.TestJakOnvifDiscoveryClient</mainClass>
-         </manifest>
-        </archive>
-         <descriptorRefs>
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-         </descriptorRefs>
-        </configuration>
-       </execution>
+        <outputDirectory>${project.build.directory}/libs</outputDirectory>
+       </configuration>
+      </execution>
      </executions>
     </plugin>
 
-   </plugins>
-  </build -->
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-jar-plugin</artifactId>
+     <version>3.3.0</version>
+     <configuration>
+      <archive>
+       <manifest>
+        <addClasspath>true</addClasspath>
+        <classpathPrefix>libs/</classpathPrefix>
+        <mainClass>onvif_relay.test.discovery_client.TestJakOnvifDiscoveryClient</mainClass>
+       </manifest>
+      </archive>
+     </configuration>
+    </plugin>
 
+   </plugins>
+  </build>
 </project>

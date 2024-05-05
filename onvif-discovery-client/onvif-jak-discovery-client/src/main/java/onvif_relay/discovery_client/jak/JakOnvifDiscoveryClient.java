@@ -21,12 +21,12 @@ public class JakOnvifDiscoveryClient {
   public JakOnvifDiscoveryClient() {
   }
 
-  public List<EndpointReference> probe(QName type) {
+  public List<EndpointReference> probe(QName type, int msec) {
     List<EndpointReference> res = null;
     
     try (WSDiscoveryClient client = new WSDiscoveryClient()) {
       client.setVersion10();
-      client.setDefaultProbeTimeout(1000);
+      client.setDefaultProbeTimeout(msec);
       
       // System.out.println("Probe on: '" + client.getAddress() + "'.");
       // or: new WSDiscoveryClient("soap.udp://proxyhost:3702");

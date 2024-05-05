@@ -10,7 +10,9 @@ To
 
 NOTE: verXX refers to ONVIF WSDL version
 
-This repository also includes onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device (camera)
+This repository also includes:
+- onvif device testing framework (skeleton) to allow debugging of ONVIF clients without need for an physical onvif device (camera)
+- onvif discovery example based on cxf ws-discovery, this allow you to get camera info via command line utility
 
 
 See: https://tips.graphica.com.au/onvif-ws-client-consumption/
@@ -18,7 +20,7 @@ See: https://tips.graphica.com.au/onvif-ws-client-consumption/
 ## Tools:
 
 This project uses Apache Maven to generate client/server stubs using:
-- Java (Open JDK 11)
+- Java (Open JDK 17 - to align with cxf)
 - Java EE JAVAX-WS/JAX-WS to parse WSDL and generate Java code or
 - Jakarta EE/JAX-WS to parse WSDL and generate Java code
 - Embedded Jetty (version 10 for javax.*)
@@ -45,14 +47,14 @@ To Build:
 
 
 1. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
-2. [Optionally: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project/metro hack)
+2. [Optionally / Avoid: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project/metro hack)
 3. Do maven clean
 4. Run get and patch script to download & patch required WSDLs (see NOTE 1)
-5. [Optionally - metro: Generate XML Binding Customisation scripts] (see NOTE 4 - this is required for CXF & metro without wsimport hack)
+5. [Optionally / Metro & CXF: Generate XML Binding Customisation scripts] (see NOTE 4 - this is required for CXF & metro without wsimport hack (see Avoid (2) above))
 6. Either:
    - A. Run onvif-cxf-api - build target package
    -and/or
-   - B.i. Run wsimport using -b customsiation.xml from [5.]
+   - B.i. Run wsimport using -b customsiation.xml from [5.] above
    - or
    - B.ii. Run custom wsimport script to to create Upper case Java Method names
 7. To build onvif-relay, onvif-device and onvif-client requires onvif-api to have successfully built "mvn install" target.

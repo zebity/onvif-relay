@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>onvif-metro-api</module>
+    <!-- module>onvif-metro-api</module -->
     <module>onvif-cxf-api</module>
   </modules>
 

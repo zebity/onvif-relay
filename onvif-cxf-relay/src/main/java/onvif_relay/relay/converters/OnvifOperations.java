@@ -231,6 +231,16 @@ public class OnvifOperations {
     return res;
   }
   
+  public static String getOperationNamespace(String forReq, String ver) {
+	String res = null;
+	OnvifSchema fnd = schema.findOperation(forReq, ver);
+	
+	if (fnd != null) {
+     res = fnd.namespace;
+	}
+	return res;
+  }
+  
   public static Object[] getOperationPrototypes(String forReq, String ver) {
 	Object[] res = null;
 	
@@ -253,9 +263,10 @@ public class OnvifOperations {
 	    Object respo = respCreate.invoke(fact, emptyParams);
 	    
 	    if (reqo != null || respo != null) {
-	      res = new Object[2];
+	      res = new Object[3];
 	      res[0] = reqo;
 	      res[1] = respo;
+	      res[2] = use.namespace;
 	    }
 	  } catch (Exception ex) {
 	    ex.printStackTrace();

@@ -1,0 +1,72 @@
+{
+  "target" : "http://192.168.73.12:80/onvif/device_service",
+  "user" : "admin",
+  "password" : "admin",
+  "reqclass" : "GetNetworkInterfaces",
+  "respclass" : "GetNetworkInterfacesResponse",
+  "operationType" : "get",
+  "voidOperation" : "false",
+  "request" : { },
+  "response" : {
+    "NetworkInterfaces" : [ {
+      "Enabled" : true,
+      "Info" : {
+        "Name" : "Network interface",
+        "HwAddress" : "00:02:D1:1C:A2:3D",
+        "MTU" : 1500
+      },
+      "Link" : {
+        "AdminSettings" : {
+          "AutoNegotiation" : true,
+          "Speed" : 100,
+          "Duplex" : "Full"
+        },
+        "OperSettings" : {
+          "AutoNegotiation" : true,
+          "Speed" : 100,
+          "Duplex" : "Full"
+        },
+        "InterfaceType" : 0
+      },
+      "IPv4" : {
+        "Enabled" : true,
+        "Config" : {
+          "Manual" : [ {
+            "Address" : "192.168.73.12",
+            "PrefixLength" : 24
+          } ],
+          "LinkLocal" : {
+            "Address" : "169.254.162.61",
+            "PrefixLength" : 16
+          },
+          "FromDHCP" : {
+            "Address" : "",
+            "PrefixLength" : 0
+          },
+          "DHCP" : false,
+          "any" : null,
+          "otherAttributes" : { }
+        }
+      },
+      "IPv6" : {
+        "Enabled" : false,
+        "Config" : {
+          "AcceptRouterAdvert" : true,
+          "DHCP" : "Auto",
+          "Manual" : null,
+          "LinkLocal" : [ {
+            "Address" : "",
+            "PrefixLength" : 0
+          } ],
+          "FromDHCP" : null,
+          "FromRA" : null,
+          "Extension" : null,
+          "otherAttributes" : { }
+        }
+      },
+      "Extension" : null,
+      "otherAttributes" : { },
+      "token" : "0"
+    } ]
+  }
+}
