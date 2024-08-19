@@ -4,8 +4,14 @@ XSLT_DIR="$1"
 MVNREPO="$2"/repository
 PROJDIR="$3"
 WSDL_PREFIX="$4"
+_JAVA_VER="java-17"
 
-JAVA=/usr/lib/jvm/java-17-openjdk-amd64/bin/java
+_JAVA=`update-alternatives --display java | grep -m 1 "${_JAVA_VER}.*priority" | cut  -d \  -f 1,1`
+
+# JAVA=/usr/lib/jvm/java-17-openjdk-amd64/bin/java
+JAVA=${_JAVA}
+# echo JAVA: "${JAVA}".
+# exit 0
 
 DEVICE_WSDL_LOC=/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl
 MEDIA_WSDL_LOC=/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl
