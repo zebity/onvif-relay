@@ -19,12 +19,12 @@
    <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-core</artifactId>
-    <version>4.0.3</version>
+    <version>4.1.9</version>
    </dependency>
    <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
      <!-- exclusions>
       <exclusion>
   	<groupId>org.eclipse.angus</groupId>
@@ -35,7 +35,7 @@
    <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-transports-http</artifactId>
-    <version>4.0.3</version>
+    <version>4.1.9</version>
    </dependency>
 
    <dependency>
@@ -61,37 +61,50 @@
     <plugin>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-codegen-plugin</artifactId>
-     <version>4.0.5</version>
+     <version>4.1.9</version>
      <executions>
       <execution>
        <id>generate-sources</id>
        <phase>generate-sources</phase>
        <configuration>
+        <fork>once</fork>
+        <additionalJvmArgs>-Djavax.xml.accessExternalSchema=all -Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
         <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
         <wsdlOptions>
          <wsdlOption>
+          <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+          <!-- wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation -->
+          <wsdlLocation>classpath:wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
+          <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl>
+          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl -->
           <extraargs>
            <!-- extraarg>-soap12</extraarg -->
            <extraarg>-verbose</extraarg>
+           <!-- extraarg>-catalog</extraarg -->
+           <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
+           <extraarg>-autoNameResolution</extraarg>
           </extraargs>
-          <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
           <bindingFiles>
-           <bindingFile>target/generated-sources/xsltproc/device/device-binding-01.xml</bindingFile>
+           <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
+           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/device-binding-01.xml</bindingFile>
           </bindingFiles>
-          <wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl>
-          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl -->
          </wsdlOption>
          <wsdlOption>
+          <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+          <wsdlLocation>classpath:/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
+          <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl>
+          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl -->
           <extraargs>
            <!-- extraarg>-soap12</extraarg -->
            <extraarg>-verbose</extraarg>
+           <!-- extraarg>-catalog</extraarg -->
+           <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
+           <extraarg>-autoNameResolution</extraarg>
           </extraargs>
-          <wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
           <bindingFiles>
-           <bindingFile>target/generated-sources/xsltproc/media/media-binding-01.xml</bindingFile>
+           <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
+           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/media-binding-01.xml</bindingFile>
           </bindingFiles>
-          <wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl>
-          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl -->
          </wsdlOption>
         </wsdlOptions>
        </configuration>

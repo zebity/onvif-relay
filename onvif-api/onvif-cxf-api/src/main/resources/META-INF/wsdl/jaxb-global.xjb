@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+    xmlns:jaxb="http//sun.com"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    version="3.0">
+    <jaxb:globalBindings enableJavaNamingConventions="false" underscoreBinding="asCharInWord"/>
+</jaxb:bindings>

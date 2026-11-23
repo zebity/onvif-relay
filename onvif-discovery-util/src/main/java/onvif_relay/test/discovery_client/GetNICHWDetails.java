@@ -9,7 +9,7 @@ public class GetNICHWDetails {
   public static void main(String[] args) {
       try {
           InetAddress localHost = InetAddress.getLocalHost();
-          InetAddress myip = InetAddress.getByName("192.168.73.140");
+          InetAddress myip = InetAddress.getByName("192.168.73.151");
           NetworkInterface ni = NetworkInterface.getByInetAddress(myip);
           Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
           

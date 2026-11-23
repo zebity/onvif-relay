@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>onvif-relay</groupId>
-    <artifactId>onvif-relay</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+ <modelVersion>4.0.0</modelVersion>
+ <parent>
+   <groupId>onvif-relay</groupId>
+   <artifactId>onvif-relay</artifactId>
+   <version>1.0-SNAPSHOT</version>
+ </parent>
 
-  <artifactId>onvif-cxf-relay</artifactId>
-  <name>onvif-cxf-relay</name>
+ <artifactId>onvif-cxf-relay</artifactId>
+ <name>onvif-cxf-relay</name>
 
-  <properties>
-   <!-- use jetty 10 for javax and 11 for Jakarta -->
-   <project.jetty.ver>11.0.12</project.jetty.ver>
-   <!-- project.jetty.ver>10.0.12</project.jetty.ver -->  
-  </properties>
+ <properties>
+  <!-- use jetty 10 for javax and 12 for Jakarta -->
+  <project.jetty.ver>12.1.15</project.jetty.ver>
+  <!-- project.jetty.ver>11.0.12</project.jetty.ver -->
+  <!-- project.jetty.ver>10.0.12</project.jetty.ver -->  
+ </properties>
   
   <dependencies>
   
@@ -50,7 +51,7 @@
     <dependency>
      <groupId>com.sun.xml.messaging.saaj</groupId>
      <artifactId>saaj-impl</artifactId>
-     <version>3.0.3</version>
+     <version>3.0.6</version>
      <scope>runtime</scope>
     </dependency>
     
@@ -58,7 +59,7 @@
     <dependency>
 	 <groupId>org.eclipse.angus</groupId>
 	 <artifactId>angus-activation</artifactId>
-	 <version>2.0.1</version>
+	 <version>2.0.3</version>
     </dependency>
 
     <!-- JAKARTA BUILD/RUN TIME DEPENDENCIES -->
@@ -83,17 +84,17 @@
      <!-- metro -->
      <!-- version>4.0.0</version -->
      <!-- cxf -->
-     <version>3.0.1</version>
+     <version>4.0.4</version>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.soap</groupId>
       <artifactId>jakarta.xml.soap-api</artifactId>
-      <version>3.0.1</version>
+      <version>3.0.2</version>
     </dependency>
     <dependency>
      <groupId>jakarta.xml.ws</groupId>
      <artifactId>jakarta.xml.ws-api</artifactId>
-     <version>3.0.1</version>
+     <version>4.0.2</version>
      <!-- scope>runtime</scope -->
     </dependency>
     <dependency>
@@ -126,7 +127,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-core</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
     </dependency> 
     <!-- dependency>
      <groupId>org.apache.cxf</groupId>
@@ -136,7 +137,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
      <!-- exclusions>
       <exclusion>
   	<groupId>org.eclipse.angus</groupId>
@@ -147,7 +148,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-ws-security</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
      <exclusions>
       <exclusion>
         <groupId>org.ehcache</groupId>
@@ -158,17 +159,17 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-bindings-soap</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http-jetty</artifactId>
-     <version>4.0.3</version>
+     <version>4.1.9</version>
     </dependency>
 
     <!-- Embedded Jetty -->
@@ -178,8 +179,8 @@
     	<version>${project.jetty.ver}</version>
     </dependency -->
     <dependency>
-    	<groupId>org.eclipse.jetty</groupId>
-    	<artifactId>jetty-servlet</artifactId>
+    	<groupId>org.eclipse.jetty.ee10</groupId>
+    	<artifactId>jetty-ee10-servlet</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency>
     <!-- dependency>

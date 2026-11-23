@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws">
+<xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws">
 <!-- JAX xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxws="http://java.sun.com/xml/ns/jaxws" -->
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 <xsl:template match="/">
@@ -7,12 +7,15 @@
 <!-- xsl:variable name="wsdlLoc" select="document-uri()" / -->
 <!-- xsl:variable name="wsdlLoc" select="concat(&quot;, $file, &quot;)" / -->
 <xsl:variable name="wsdlLoc" select="&quot;/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl&quot;" />
-<jaxws:bindings xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" >
+<!-- jaxws:bindings xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" version="3.0" jaxb:version="3.0" -->
+<jaxws:bindings xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" version="3.0" >
 <!-- JAX jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" -->
  <xsl:attribute name="wsdlLocation">
   <xsl:value-of select="$p1" />
  </xsl:attribute> 
-<jaxb:globalBindings enableJavaNamingConventions = "false" underscoreBinding = "asCharInWord"/>
+<!-- jaxws:bindings node="wsdl:definitions/wsdl:types/xs:schema" -->
+<!-- jaxb:globalBindings enableJavaNamingConventions = "false" underscoreBinding = "asCharInWord"/ -->
+<!-- /jaxws:bindings -->
   <xsl:for-each select="wsdl:definitions/wsdl:portType[@*]">
    <xsl:variable name="portType" select="@name" />
    <xsl:for-each select="wsdl:operation[@*]">

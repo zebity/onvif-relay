@@ -220,7 +220,7 @@ public class TestJakOnvifDiscoveryClient {
   	StreamSetup ss = new StreamSetup();
   	Transport t = new Transport();
   	t.setProtocol(TransportProtocol.RTSP);
-  	ss.setStream(StreamType.RTP___UNICAST);
+  	ss.setStream(StreamType.RTP_UNICAST);
   	ss.setTransport(t);
 
   	ObjectMapper ser = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).registerModule(new JakartaXmlBindAnnotationModule());
@@ -442,7 +442,7 @@ public class TestJakOnvifDiscoveryClient {
 	      	  StreamSetup ss = new StreamSetup();
 	      	  Transport t = new Transport();
 	      	  t.setProtocol(TransportProtocol.RTSP);
-	      	  ss.setStream(StreamType.RTP___UNICAST);
+	      	  ss.setStream(StreamType.RTP_UNICAST);
 	      	  ss.setTransport(t);
 	      	  String prof = jres.get("profileToken").textValue();
       	      MediaUri mu = ((Media)proxy[2]).GetStreamUri(ss, prof);

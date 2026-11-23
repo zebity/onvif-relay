@@ -94,7 +94,7 @@ NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for vers
 NOTE 6: see src/main/sh/run-wsimport.sh for shell script that runs the binding customisation generator and then wsimport (for both device & media WSDLs)
 
 
-NOTE 7: Now refacted to use Maven Modules. This lets you to build and test server/client independently. If yoou want to bulid with jax or cxf instead of metro then change chance onvif-api/pom.xml (this is shared across server and client) and then then rebuild part you want.
+NOTE 7: Now refacted to use Maven Modules. This lets you to build and test server/client independently. If you want to bulid with jax or cxf instead of metro then change chance onvif-api/pom.xml (this is shared across server and client) and then then rebuild part you want.
 
 
 # Author:
