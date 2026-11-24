@@ -20,13 +20,13 @@ See: https://tips.graphica.com.au/onvif-ws-client-consumption/
 ## Tools:
 
 This project uses Apache Maven to generate client/server stubs using:
-- Java (Open JDK 17 - to align with cxf)
+- Java (Open JDK 25 - to align with cxf)
 - Java EE JAVAX-WS/JAX-WS to parse WSDL and generate Java code or
 - Jakarta EE/JAX-WS to parse WSDL and generate Java code
 - Embedded Jetty (version 10 for javax.*)
-- Embedded Jetty (version 11 for jakarta.*)
+- Embedded Jetty (version 12 for jakarta.*)
 - Apache Maven build system
-- Developed and tested on Ubuntu 22.04
+- Developed and tested on Ubuntu 26.04
 
 Maven Targets:
 - mvn -X jaxws:wsimport : to generate java stubs and client (for metro api)
@@ -46,10 +46,11 @@ After much testing I found the following was reqired to get running service:
 To Build:
 
 
-1. Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
+1. [Avoid - No Longer Required with WSDL Catalog] Setup symlink from /META-INF -> patched WSDL location: /home/ME/onvif-relay/onvif-api/onvif-cxf-api/src/main/resources/META-INF (note this could vary based on selecting CXF vs Metro build and slso your dev environment location
 2. [Optionally / Avoid: Build & Deploy] wsimport tool that preserves upper case identifiers (wscomple project/metro hack)
 3. Do maven clean
-4. Run get and patch script to download & patch required WSDLs (see NOTE 1)
+4a. [Replaced with 4b] Run get and patch script to download & patch required WSDLs (see NOTE 1)
+4b. [Update] Run wsdl downloader & catalog builder (java) 
 5. [Optionally / Metro & CXF: Generate XML Binding Customisation scripts] (see NOTE 4 - this is required for CXF & metro without wsimport hack (see Avoid (2) above))
 6. Either:
    - A. Run onvif-cxf-api - build target package
@@ -63,36 +64,46 @@ To Build:
 
 NOTE 1: Currently automatic download and patch of ONVIF wsdls does not work via Maven.
 
+[OLD & OBSELETE]
 Run manually via:
 - $ get-and-patch.sh <filelist.[jax|jak].txt> <download.dir> <destination.dir> <patch.dir>
 - from: onvif-api
 - do: src/main/sh/get-and-patch.sh src/main/sh/files.jak.txt target/generated-sources/wget/ onvif-cxf-api/src/main/resources/META-INF/wsdl/ src/main/patch/
 
+[CURRENT]
+Run WSDL Fetcher and offline Catalog Builder & Binding generator via:
+- from: onvif-api/onvif-cxf-api
+- $ java ../../src/main/java/WsdlCatalogFetcher.java .  http://www.onvif.org/ver10/media/wsdl/media.wsdl,http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl
+- $ src/main/sh/generate-bindings.sh . ~/.m2 onvif-cxf-api/ ./onvif-cxf-api/src/main/resources 
 
-NOTE 2: You can generate code with javax or jakarta inclusions
+NOTE 2: You can generate code with javax or jakarta inclusion (javax is now obselete and not maintained)s
 - To change between Java EE (import javax.PKG) or Jakarta EE (import jakarta.PKG) requires editing of Maven pom.xml properties (now by selecting the jax or jak tree)
 - As WSDL patching is slightly differnt for jax / jak specifing the patch variant is via input into get-patch (as above): files.jax.txt | files.jak.txt
+- [Update] WSDL Patching is not required with use of offline catalog
  
 
 NOTE 3: There is no ONVIF WSDL/XSD or generated Java code in this repository. Rather this repository holds the tools to generate this as part of the build process. So if you want to "see" the code then run the generation process.
 
 
-NOTE 4: The better way to customise wsimport result (ie avoid NOTE 5 using "hacked" wsimport), added xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport. Tested with xlstproc, which does not seem to allow use of the "document" method to get the name of input WSDL, so this is passed in explicity via -stringparam:
-- xsltproc -o - -stringparam p1 /META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > target/generated-sources/xsltproc/device/device-binding-01.xml
+NOTE 4: The better way to customise wsimport/wsdl2java result (ie avoid NOTE 5 using "hacked" wsimport)
+- Uses xslt script (extract-operation-method.xlst) which will read wsdl and generate  external JAX-WS Binding Customerisation file. This can be included using -b flag with wsimport/ws;2java.
+-  Tested with xlstproc, which does not seem to allow use of the "document" method to get the name of input WSDL, so this is passed in explicity via -stringparam:
+- xsltproc -o - -stringparam p1 devicemgmt.wsdl src/main/xml/extract-operation-methods.xslt src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl > src/main/resources/META-INF/wsdl/www.onvif/ver10/device/wsdl/device/device-binding-01.xml
 - see: onvif-api/src/main/sh/generate-bindings.sh which generates both device & media binding files
 - from: onvif-api
 - do (cxf): src/main/sh/generate-bindings.sh . ~/.m2 onvif-cxf-api/ 
 - do (metro): src/main/sh/generate-bindings.sh . ~/.m2 onvif-metro-api/ 
-- this will use /META-INF symlink to source the WSDL files, to override put full alternate dir
+- [OBSELETE] this will use /META-INF symlink to source the WSDL files, to override put full alternate dir
+- [CURRENT] it is critical that the binding file and the base wsdl file are in the same directory to ensure that binding changes work. 
 
 
-NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for verson 2.3.5 and so unable to create "hacked" WsImport
+NOTE 5: Main branch is now Jakarta (JAK), as metro-jaxws-ri build fails for version 2.3.5 and so unable to create "hacked" WsImport
 - See here for wsimport "hack" : https://github.com/zebity/metro-jax-ws/tree/3.0.2-onvif-jak
-- See NOTE 4 as this uses wsimport binding file to provide custom naming (the official way) and it easier (once you know) than hacking wsimport
+- See NOTE 4 as this uses wsimport/wsdl2java binding file to provide custom naming (the official way) and it easier (once you know) than hacking wsimport
 
 
 NOTE 6: see src/main/sh/run-wsimport.sh for shell script that runs the binding customisation generator and then wsimport (for both device & media WSDLs)
-
+- [TO DO] Update and put various scripts into Maven
 
 NOTE 7: Now refacted to use Maven Modules. This lets you to build and test server/client independently. If you want to bulid with jax or cxf instead of metro then change chance onvif-api/pom.xml (this is shared across server and client) and then then rebuild part you want.
 
@@ -118,4 +129,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Feb 2023 - Get -b binding customisation working to avoid hacking wsimport (see blog for usage guide)
 - Feb 2023 - Change from metro to cxf v4 (Jakarta), which works and tested against devices and with relay
 - Dec 2023 - Add onvif discovery example based on CXF general [ws-discovery] framework
+- Nov 2026 - Update to use WSDL Downloader & Catalog Util so both build and runtime do not need to access any network based WSDL & XSD Schema files.
  
