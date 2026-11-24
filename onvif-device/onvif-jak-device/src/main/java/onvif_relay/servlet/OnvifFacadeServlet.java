@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.eclipse.jetty.proxy.ProxyServlet;
+import org.eclipse.jetty.ee10.proxy.ProxyServlet;
 
 import fence.util.ConfigurationData;
 import jakarta.servlet.ServletException;

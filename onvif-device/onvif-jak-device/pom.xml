@@ -11,7 +11,7 @@
 
   <properties>
    <!-- use jetty 10 for javax and 11 for Jakarta -->
-   <project.jetty.ver>11.0.12</project.jetty.ver>
+   <project.jetty.ver>${eclipse-jetty.version}</project.jetty.ver>
    <!-- project.jetty.ver>10.0.12</project.jetty.ver -->  
   </properties>
   
@@ -108,7 +108,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-core</artifactId>
-     <version>4.0.3</version>
+     <version>${apache-cxf.version}</version>
     </dependency> 
     <!-- dependency>
      <groupId>org.apache.cxf</groupId>
@@ -118,7 +118,7 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-     <version>4.0.3</version>
+     <version>${apache-cxf.version}</version>
      <!-- exclusions>
       <exclusion>
   	<groupId>org.eclipse.angus</groupId>
@@ -129,17 +129,17 @@
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http</artifactId>
-     <version>4.0.3</version>
+     <version>${apache-cxf.version}</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-bindings-soap</artifactId>
-     <version>4.0.3</version>
+     <version>${apache-cxf.version}</version>
     </dependency>
     <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-transports-http-jetty</artifactId>
-     <version>4.0.3</version>
+     <version>${apache-cxf.version}</version>
     </dependency>
 
     <!-- Embedded Jetty -->
@@ -148,9 +148,14 @@
     	<artifactId>jetty-webapp</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency -->
-    <dependency>
+    <!-- dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-servlet</artifactId>
+    	<version>${project.jetty.ver}</version>
+    </dependency -->
+    <dependency>
+    	<groupId>org.eclipse.jetty.ee10</groupId>
+    	<artifactId>jetty-ee10-servlet</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency>
     <!-- dependency>
@@ -159,8 +164,8 @@
     	<version>${project.jetty.ver}</version>
     </dependency -->
     <dependency>
-    	<groupId>org.eclipse.jetty</groupId>
-    	<artifactId>jetty-proxy</artifactId>
+    	<groupId>org.eclipse.jetty.ee10</groupId>
+    	<artifactId>jetty-ee10-proxy</artifactId>
     	<version>${project.jetty.ver}</version>
     </dependency>
     <dependency>

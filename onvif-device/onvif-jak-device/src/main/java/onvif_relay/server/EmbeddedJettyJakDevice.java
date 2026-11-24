@@ -11,16 +11,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.eclipse.jetty.proxy.ConnectHandler;
-import org.eclipse.jetty.security.ConstraintMapping;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.server.handler.ConnectHandler;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
 
 import fence.util.ConfigurationData;
@@ -113,10 +113,10 @@ public class EmbeddedJettyJakDevice {
       UserStore creds = new UserStore();
       creds.addUser(cred[0], Credential.getCredential(cred[1]), roles);
       loginSrv.setUserStore(creds);
-      Constraint secConstraint = new Constraint();
-      secConstraint.setName(Constraint.__DIGEST_AUTH);
-      secConstraint.setRoles(roles);
-      secConstraint.setAuthenticate(true);
+      Constraint secConstraint = Constraint.from(roles);
+      // secConstraint.setName(Constraint.__DIGEST_AUTH);
+      // secConstraint.setRoles(roles);
+      // secConstraint.setAuthenticate(true);
       
       ConstraintMapping cm = new ConstraintMapping();
       cm.setConstraint(secConstraint);
@@ -128,7 +128,8 @@ public class EmbeddedJettyJakDevice {
       csh.setLoginService(loginSrv);
       // ServletHandler srvHandler = new ServletHandler();
       
-      ServletContextHandler cxtHandler = new ServletContextHandler(proxy, "/", ServletContextHandler.SESSIONS);
+      ServletContextHandler cxtHandler = new ServletContextHandler("/", ServletContextHandler.SESSIONS);
+      proxy.setHandler(cxtHandler);
 
       if (security.equals("digest")) {
         cxtHandler.setSecurityHandler(csh);

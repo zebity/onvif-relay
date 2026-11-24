@@ -16,7 +16,7 @@
  <properties>
   <java.version>${maven.compiler.source}</java.version>
   <!-- lombok.version>1.18.40</lombok.version -->
-  <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+  <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
  </properties>
 
  <dependencies>
@@ -25,12 +25,12 @@
    <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-core</artifactId>
-    <version>4.1.9</version>
+    <version>${apache-cxf.version}</version>
    </dependency>
    <dependency>
      <groupId>org.apache.cxf</groupId>
      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-     <version>4.1.9</version>
+     <version>${apache-cxf.version}</version>
      <!-- exclusions>
       <exclusion>
   	<groupId>org.eclipse.angus</groupId>
@@ -41,7 +41,7 @@
    <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-transports-http</artifactId>
-    <version>4.1.9</version>
+    <version>${apache-cxf.version}</version>
    </dependency>
 
    <dependency>
@@ -113,7 +113,7 @@
    <plugin>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-codegen-plugin</artifactId>
-    <version>4.1.9</version>
+    <version>${apache-cxf.version}</version>
     <executions>
      <execution>
       <id>generate-sources</id>
