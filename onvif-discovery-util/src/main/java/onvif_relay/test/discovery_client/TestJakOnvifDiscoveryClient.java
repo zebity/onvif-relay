@@ -5,6 +5,7 @@
 
 package onvif_relay.test.discovery_client;
 
+import java.net.URI;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -117,7 +118,7 @@ public class TestJakOnvifDiscoveryClient {
     	if (ctl.doProbe) {
     	  ref = found.get(i);
           addr = onvdis.getWSAddress(ref);
-    	  URL uparse = new URL(addr);
+    	  URL uparse = URI.create(addr).toURL();
     	  if (ctl.filter) {
     		useAddr = false;
     		String host = uparse.getHost();
