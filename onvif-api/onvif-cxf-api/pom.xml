@@ -14,7 +14,7 @@
  <name>onvif-cxf-api</name>
 
  <properties>
-  <java.version>25</java.version>
+  <java.version>${maven.compiler.source}</java.version>
   <!-- lombok.version>1.18.40</lombok.version -->
   <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
  </properties>

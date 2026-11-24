@@ -68,6 +68,7 @@ import org.onvif.ver10.schema.SystemLogType;
 import org.onvif.ver10.schema.SystemLogUriList;
 import org.onvif.ver10.schema.TimeZone;
 import org.onvif.ver10.schema.User;
+import org.onvif.ver10.schema.UserRole;
 
 import jakarta.jws.WebService;
 import jakarta.xml.ws.Holder;
@@ -282,6 +283,12 @@ public class JakDeviceImpl implements Device {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void SetUserRole(UserRole userRole) {
+		// TODO Auto-generated method stub
+        }
+    
 
 	@Override
 	public void SetUser(List<User> user) {
@@ -723,6 +730,24 @@ public class JakDeviceImpl implements Device {
 	public void SetHashingAlgorithm(List<String> algorithm) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void GetUserRoles(String userRole, Holder<List<UserRole>> userRole1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void DeleteUserRole(String userRole) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Duration UpgradeFirmware(String version) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

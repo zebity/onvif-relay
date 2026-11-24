@@ -197,7 +197,7 @@ public class TestJakOnvifDiscoveryClient {
                       System.out.println("Profile token: '" + tk + "'.");
                       String req = "{ \"profileToken\": \"" + tk + "\" }";
                       res = getDetails(saddrs, "GetProfile", req, ctl, false);
-                      String setup = "\"streamSetup\": { \"stream\": \"RTP___UNICAST\", \"transport\": { \"protocol\": \"RTSP\" } }";
+                      String setup = "\"streamSetup\": { \"stream\": \"RTP_UNICAST\", \"transport\": { \"protocol\": \"RTSP\" } }";
                       String strmreq = "{ " + setup + ", \"profileToken\": \"" + tk + "\" }";
                       // testSer();
                       res = getDetails(saddrs, "GetStreamUri", strmreq, ctl, false);
