@@ -2,18 +2,24 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <modelVersion>4.0.0</modelVersion>
+ <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>onvif-relay</groupId>
-    <artifactId>onvif-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+ <parent>
+  <groupId>onvif-relay</groupId>
+  <artifactId>onvif-api</artifactId>
+  <version>1.0-SNAPSHOT</version>
+ </parent>
 
-  <artifactId>onvif-cxf-api</artifactId>
-  <name>onvif-cxf-api</name>
+ <artifactId>onvif-cxf-api</artifactId>
+ <name>onvif-cxf-api</name>
 
-  <dependencies>
+ <properties>
+  <java.version>25</java.version>
+  <!-- lombok.version>1.18.40</lombok.version -->
+  <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+ </properties>
+
+ <dependencies>
  
    <!-- cxf --> 
    <dependency>
@@ -43,76 +49,122 @@
     <artifactId>jakarta.annotation-api</artifactId>
     <version>2.1.1</version>
    </dependency>
-  </dependencies>
+ </dependencies>
 
-  <build>
-   <plugins>
-    <plugin>
-     <groupId>org.apache.thrift.tools</groupId>
-     <artifactId>maven-thrift-plugin</artifactId>
-     <version>0.1.11</version>
-    </plugin>
-    <plugin>
-  	<groupId>org.apache.maven.plugins</groupId>
-  	<artifactId>maven-compiler-plugin</artifactId>
-  	<version>3.10.1</version>
-    </plugin>
-    
-    <plugin>
-     <groupId>org.apache.cxf</groupId>
-     <artifactId>cxf-codegen-plugin</artifactId>
-     <version>4.1.9</version>
-     <executions>
-      <execution>
-       <id>generate-sources</id>
-       <phase>generate-sources</phase>
-       <configuration>
-        <fork>once</fork>
-        <additionalJvmArgs>-Djavax.xml.accessExternalSchema=all -Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
-        <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
-        <wsdlOptions>
-         <wsdlOption>
-          <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
-          <!-- wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation -->
-          <wsdlLocation>classpath:wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
-          <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl>
-          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl -->
-          <extraargs>
-           <!-- extraarg>-soap12</extraarg -->
-           <extraarg>-verbose</extraarg>
-           <!-- extraarg>-catalog</extraarg -->
-           <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
-           <extraarg>-autoNameResolution</extraarg>
-          </extraargs>
-          <bindingFiles>
-           <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
-           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/device-binding-01.xml</bindingFile>
-          </bindingFiles>
-         </wsdlOption>
-         <wsdlOption>
-          <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
-          <wsdlLocation>classpath:/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
-          <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl>
-          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl -->
-          <extraargs>
-           <!-- extraarg>-soap12</extraarg -->
-           <extraarg>-verbose</extraarg>
-           <!-- extraarg>-catalog</extraarg -->
-           <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
-           <extraarg>-autoNameResolution</extraarg>
-          </extraargs>
-          <bindingFiles>
-           <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
-           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/media-binding-01.xml</bindingFile>
-          </bindingFiles>
-         </wsdlOption>
-        </wsdlOptions>
-       </configuration>
-       <goals>
-        <goal>wsdl2java</goal>
-       </goals>
-      </execution>
-     </executions>
+ <build>
+  <plugins>
+
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>${maven-compiler-plugin.version}</version>
+    <configuration>
+     <source>${java.version}</source>
+     <target>${java.version}</target>
+     <!-- Modern JDKs require explicit annotation processor paths -->
+     <!-- annotationProcessorPaths>
+      <path>
+       <groupId>org.projectlombok</groupId>
+       <artifactId>lombok</artifactId>
+       <version>${lombok.version}</version>
+      </path>
+     </annotationProcessorPaths -->
+    </configuration>
+   </plugin>   
+   
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>3.5.0</version>
+    <executions>
+     <execution>
+      <id>download-wsld-sources</id>
+      <phase>initialize</phase>
+      <goals>
+       <goal>exec</goal>
+      </goals>
+      <configuration>
+       <executable>${project.basedir}/src/main/sh/run-wsdl-fetch.sh</executable>
+       <arguments>
+        <argument>${project.basedir}</argument>
+        <argument>http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl,http://www.onvif.org/ver10/media/wdel/media.wsdl</argument>
+       </arguments>
+      </configuration>
+     </execution>
+     <execution>
+      <id>genrate-bindings</id>
+      <phase>initialize</phase>
+      <goals>
+       <goal>exec</goal>
+      </goals>
+      <configuration>
+       <executable>${project.basedir}/src/main/sh/run-generate-bindings.sh</executable>
+       <arguments>
+        <argument>${project.basedir}/..</argument>
+        <argument>${project.basedir}/src/main/resources</argument>
+        <argument>devicemgmt.wsdl</argument>
+        <argument>media.wsdl</argument>
+       </arguments>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+ 
+   <plugin>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-codegen-plugin</artifactId>
+    <version>4.1.9</version>
+    <executions>
+     <execution>
+      <id>generate-sources</id>
+      <phase>generate-sources</phase>
+      <configuration>
+       <fork>once</fork>
+       <additionalJvmArgs>-Djavax.xml.accessExternalSchema=all -Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
+       <sourceRoot>${project.build.directory}/generated-sources/cxf/java</sourceRoot>
+       <wsdlOptions>
+        <wsdlOption>
+         <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+         <!-- wsdlLocation>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation -->
+         <wsdlLocation>classpath:wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdlLocation>
+         <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl>
+         <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/onvif_device.wsdl</wsdl -->
+         <extraargs>
+          <!-- extraarg>-soap12</extraarg -->
+          <extraarg>-verbose</extraarg>
+          <!-- extraarg>-catalog</extraarg -->
+          <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
+          <extraarg>-autoNameResolution</extraarg>
+         </extraargs>
+         <bindingFiles>
+          <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
+          <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/device/wsdl/device-binding-01.xml</bindingFile>
+         </bindingFiles>
+        </wsdlOption>
+        <wsdlOption>
+         <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+         <wsdlLocation>classpath:/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
+         <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl>
+         <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl -->
+         <extraargs>
+          <!-- extraarg>-soap12</extraarg -->
+          <extraarg>-verbose</extraarg>
+          <!-- extraarg>-catalog</extraarg -->
+          <!-- extraarg>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</extraarg -->
+          <extraarg>-autoNameResolution</extraarg>
+         </extraargs>
+         <bindingFiles>
+          <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
+          <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/media-binding-01.xml</bindingFile>
+         </bindingFiles>
+        </wsdlOption>
+       </wsdlOptions>
+      </configuration>
+      <goals>
+       <goal>wsdl2java</goal>
+      </goals>
+     </execution>
+    </executions>
     </plugin>
  
     <plugin>
