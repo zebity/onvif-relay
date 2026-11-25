@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws">
+<!-- xsl:stylesheet version="1.0"
+    xmlns:xsl="http://w3.org"
+    xmlns:wsdl="http://xmlsoap.org" -->
+
+    <xsl:output method="text" encoding="UTF-8"/>
+
+    <!-- Paths passed in via -stringparam from Maven/shell -->
+
+    <xsl:param name="deviceWsdl"/>
+    <xsl:param name="mediaWsdl"/>
+
+    <xsl:template match="/">
+        <xsl:text>package onvif_relay.relay.converters;
+
+/**
+ * Auto-generated from ONVIF WSDL definitions during build.
+ * Do not edit manually.
+ */
+public class GeneratedOnvifOperations {
+
+ public static final String[][] DeviceOperations = {
+</xsl:text>
+  <xsl:apply-templates select="document($deviceWsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='Device']/*[local-name()='operation']">
+   <xsl:with-param name="pkg" select="'org.onvif.ver10.device.wsdl'"/>
+  </xsl:apply-templates>
+  <xsl:text> };
+
+ public static final String[][] MediaOperations = {
+</xsl:text>
+  <xsl:apply-templates select="document($mediaWsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='Media']/*[local-name()='operation']">
+   <xsl:with-param name="pkg" select="'org.onvif.ver10.media.wsdl'"/>
+  </xsl:apply-templates>
+  <xsl:text> };
+}
+</xsl:text>
+ </xsl:template>
+
+ <xsl:template match="*[local-name()='operation']">
+  <xsl:param name="pkg"/>
+  <xsl:text>  {"</xsl:text>
+  <xsl:value-of select="@name"/>
+  <xsl:text>", "</xsl:text>
+  <xsl:value-of select="$pkg"/>
+  <xsl:text>"}</xsl:text>
+  <xsl:if test="position() != last()">
+   <xsl:text>,</xsl:text>
+  </xsl:if>
+  <xsl:text>&#10;</xsl:text>
+ </xsl:template>
+
+<!-- /xsl:stylesheet -->
+</xsl:transform>
+
