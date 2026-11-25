@@ -87,7 +87,7 @@
        <executable>${project.basedir}/src/main/sh/run-wsdl-fetch.sh</executable>
        <arguments>
         <argument>${project.basedir}</argument>
-        <argument>http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl,http://www.onvif.org/ver10/media/wdel/media.wsdl</argument>
+        <argument>http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl,http://www.onvif.org/ver10/media/wdel/media.wsdl,http://www.onvif.org/ver20/ptz/wsdl/ptz.wsdl</argument>
        </arguments>
       </configuration>
      </execution>
@@ -104,6 +104,7 @@
         <argument>${project.basedir}/src/main/resources</argument>
         <argument>devicemgmt.wsdl</argument>
         <argument>media.wsdl</argument>
+        <argument>ptz.wsdl</argument>
        </arguments>
       </configuration>
      </execution>
@@ -143,7 +144,7 @@
         </wsdlOption>
         <wsdlOption>
          <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
-         <wsdlLocation>classpath:META-INF//wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
+         <wsdlLocation>classpath:META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdlLocation>
          <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl>
          <!-- wsdl>/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/onvif_media.wsdl</wsdl -->
          <extraargs>
@@ -156,6 +157,18 @@
          <bindingFiles>
           <!-- bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/jaxb-global.xjb</bindingFile -->
           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver10/media/wsdl/media-binding-01.xml</bindingFile>
+         </bindingFiles>
+        </wsdlOption>
+        <wsdlOption>
+         <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+         <wsdlLocation>classpath:META-INF/wsdl/www.onvif.org/ver20/ptz/wsdl/onvif_ptz.wsdl</wsdlLocation>
+         <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver20/ptz/wsdl/onvif_ptz.wsdl</wsdl>
+         <extraargs>
+          <extraarg>-verbose</extraarg>
+          <extraarg>-autoNameResolution</extraarg>
+         </extraargs>
+         <bindingFiles>
+          <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver20/ptz/wsdl/ptz-binding-01.xml</bindingFile>
          </bindingFiles>
         </wsdlOption>
        </wsdlOptions>

@@ -28,6 +28,8 @@ import org.onvif.ver10.device.wsdl.Device;
 import org.onvif.ver10.device.wsdl.DeviceService;
 import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.MediaService;
+import org.onvif.ver20.ptz.wsdl.PTZ;
+import org.onvif.ver20.ptz.wsdl.PtzService;
 
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
@@ -98,6 +100,32 @@ public class InvokeOperation {
     
     return res;
   }
+ 
+  Object invokePtz(JsonRequestResponse target, boolean doClassify, Map<String, String> ctrl) {
+    Object res = null;
+    
+    PtzService pserv = new PtzService();
+    PTZ sei = pserv.getPtzPort();
+    
+    Object[] useMethod = discoverMethod(sei, target);
+    
+    if (useMethod != null) {
+      if (setupService(sei, target.target, target.user, target.password, ctrl)) {
+    	try {
+      	  res = invokeMethod(sei, useMethod, target);
+          if (doClassify) {
+            String[] cs = classify(target, useMethod);
+            target.operationType = cs[0];
+            target.voidOperation = cs[1];
+          }
+    	} catch (Exception ex) {
+    	  ex.printStackTrace();
+    	}
+      }    	
+    }
+    
+    return res;
+  }
   
   public Object invoke(JsonRequestResponse targetRequest, boolean doClassify, Map<String, String> ctrl) {
     Object res = null;
@@ -107,6 +135,8 @@ public class InvokeOperation {
       case OnvifOperations.DeviceType: res = invokeDevice(targetRequest, doClassify, ctrl);
            break;
       case OnvifOperations.MediaType: res = invokeMedia(targetRequest, doClassify, ctrl);
+           break;
+      case OnvifOperations.PtzType: res = invokePtz(targetRequest, doClassify, ctrl);
            break;
     }
     
@@ -127,14 +157,22 @@ public class InvokeOperation {
                                          res[2] = sei;
                                        }
                                        break;
-      case OnvifOperations.MediaType: { MediaService dserv = new MediaService();
-                                        Media sei = dserv.getMediaPort();
+      case OnvifOperations.MediaType: { MediaService mserv = new MediaService();
+                                        Media sei = mserv.getMediaPort();
                                         res = new Object[3];
                                         res[0] = reqType;
-                                        res[1] = dserv;
+                                        res[1] = mserv;
                                         res[2] = sei;
                                       }
                                       break;
+      case OnvifOperations.PtzType: { PtzService pserv = new PtzService();
+                                      PTZ sei = pserv.getPtzPort();
+                                      res = new Object[3];
+                                      res[0] = reqType;
+                                      res[1] = pserv;
+                                      res[2] = sei;
+                                    }
+                                    break;
     }
     
     if (res != null) {
