@@ -30,6 +30,8 @@ import org.onvif.ver10.media.wsdl.Media;
 import org.onvif.ver10.media.wsdl.MediaService;
 import org.onvif.ver20.ptz.wsdl.PTZ;
 import org.onvif.ver20.ptz.wsdl.PtzService;
+import org.onvif.ver20.media.wsdl.Media2Service;
+import org.onvif.ver20.media.wsdl.Media2;
 
 import jakarta.xml.ws.Binding;
 import jakarta.xml.ws.BindingProvider;
@@ -127,6 +129,32 @@ public class InvokeOperation {
     return res;
   }
   
+  Object invokeMedia2(JsonRequestResponse target, boolean doClassify, Map<String, String> ctrl) {
+    Object res = null;
+    
+    Media2Service m2serv = new Media2Service();
+    Media2 sei = m2serv.getMediaPort();
+    
+    Object[] useMethod = discoverMethod(sei, target);
+    
+    if (useMethod != null) {
+      if (setupService(sei, target.target, target.user, target.password, ctrl)) {
+    	try {
+      	  res = invokeMethod(sei, useMethod, target);
+          if (doClassify) {
+            String[] cs = classify(target, useMethod);
+            target.operationType = cs[0];
+            target.voidOperation = cs[1];
+          }
+    	} catch (Exception ex) {
+    	  ex.printStackTrace();
+    	}
+      }    	
+    }
+    
+    return res;
+  }
+  
   public Object invoke(JsonRequestResponse targetRequest, boolean doClassify, Map<String, String> ctrl) {
     Object res = null;
 
@@ -137,6 +165,8 @@ public class InvokeOperation {
       case OnvifOperations.MediaType: res = invokeMedia(targetRequest, doClassify, ctrl);
            break;
       case OnvifOperations.PtzType: res = invokePtz(targetRequest, doClassify, ctrl);
+           break;
+      case OnvifOperations.Media2Type: res = invokePtz(targetRequest, doClassify, ctrl);
            break;
     }
     
@@ -173,6 +203,14 @@ public class InvokeOperation {
                                       res[2] = sei;
                                     }
                                     break;
+      case OnvifOperations.Media2Type: { Media2Service m2serv = new Media2Service();
+                                         Media2 sei = m2serv.getMediaPort();
+                                         res = new Object[3];
+                                         res[0] = reqType;
+                                         res[1] = m2serv;
+                                         res[2] = sei;
+                                       }
+                                       break;
     }
     
     if (res != null) {

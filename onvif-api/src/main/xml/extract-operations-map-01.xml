@@ -11,6 +11,7 @@
     <xsl:param name="deviceWsdl"/>
     <xsl:param name="mediaWsdl"/>
     <xsl:param name="PtzWsdl"/>
+    <xsl:param name="media2Wsdl"/>
 
     <xsl:template match="/">
         <xsl:text>package onvif_relay.relay.converters;
@@ -39,6 +40,13 @@ public class GeneratedOnvifOperations {
 </xsl:text>
   <xsl:apply-templates select="document($ptzWsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='PTZ']/*[local-name()='operation']">
    <xsl:with-param name="pkg" select="'org.onvif.ver20.ptz.wsdl'"/>
+  </xsl:apply-templates>
+  <xsl:text> };
+
+ public static final String[][] Media2Operations = {
+</xsl:text>
+  <xsl:apply-templates select="document($media2Wsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='Media']/*[local-name()='operation']">
+   <xsl:with-param name="pkg" select="'org.onvif.ver20.media.wsdl'"/>
   </xsl:apply-templates>
   <xsl:text> };
 }

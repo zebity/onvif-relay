@@ -87,7 +87,7 @@
        <executable>${project.basedir}/src/main/sh/run-wsdl-fetch.sh</executable>
        <arguments>
         <argument>${project.basedir}</argument>
-        <argument>http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl,http://www.onvif.org/ver10/media/wdel/media.wsdl,http://www.onvif.org/ver20/ptz/wsdl/ptz.wsdl</argument>
+        <argument>http://www.onvif.org/ver10/device/wsdl/devicemgmt.wsdl,http://www.onvif.org/ver10/media/wdel/media.wsdl,http://www.onvif.org/ver20/ptz/wsdl/ptz.wsdl,http://www.onvif.org/ver20/media/wsdl/media.wsdl</argument>
        </arguments>
       </configuration>
      </execution>
@@ -105,6 +105,7 @@
         <argument>devicemgmt.wsdl</argument>
         <argument>media.wsdl</argument>
         <argument>ptz.wsdl</argument>
+        <argument>media.wsdl</argument>
        </arguments>
       </configuration>
      </execution>
@@ -169,6 +170,18 @@
          </extraargs>
          <bindingFiles>
           <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver20/ptz/wsdl/ptz-binding-01.xml</bindingFile>
+         </bindingFiles>
+        </wsdlOption>
+        <wsdlOption>
+         <catalog>${project.basedir}/src/main/resources/META-INF/jax-ws-catalog.xml</catalog>
+         <wsdlLocation>classpath:META-INF/wsdl/www.onvif.org/ver20/media/wsdl/onvif_media2.wsdl</wsdlLocation>
+         <wsdl>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver20/media/wsdl/onvif_media2.wsdl</wsdl>
+         <extraargs>
+          <extraarg>-verbose</extraarg>
+          <extraarg>-autoNameResolution</extraarg>
+         </extraargs>
+         <bindingFiles>
+          <bindingFile>${project.basedir}/src/main/resources/META-INF/wsdl/www.onvif.org/ver20/media/wsdl/media2-binding-01.xml</bindingFile>
          </bindingFiles>
         </wsdlOption>
        </wsdlOptions>
