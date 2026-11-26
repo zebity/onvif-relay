@@ -131,5 +131,5 @@ If you are looking to solve using Jakarta EE/wsimport to automatically generate 
 - Feb 2023 - Get -b binding customisation working to avoid hacking wsimport (see blog for usage guide)
 - Feb 2023 - Change from metro to cxf v4 (Jakarta), which works and tested against devices and with relay
 - Dec 2023 - Add onvif discovery example based on CXF general [ws-discovery] framework
-- Nov 2026 - Update to use WSDL Downloader & Catalog Util so both build and runtime do not need to access any network based WSDL & XSD Schema files.
+- Nov 2026 - Update to: use WSDL Downloader & Catalog Util so build and runtime do not network for WSDL/XSD acces and add ptz & ver 20 media support
  
