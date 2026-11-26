@@ -113,7 +113,7 @@ public class EmbeddedJettyJakRelay {
     Constraint secConstraint = new Constraint.Builder()
      .name(Authenticator.BASIC_AUTH)
      .roles(roles)
-     .authorization(Constraint.Authorization.ANY_USER)
+     .authorization(Constraint.Authorization.SPECIFIC_ROLE)
      .build();
       
     ConstraintMapping cm = new ConstraintMapping();

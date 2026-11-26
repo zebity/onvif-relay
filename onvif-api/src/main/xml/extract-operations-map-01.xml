@@ -45,7 +45,7 @@ public class GeneratedOnvifOperations {
 
  public static final String[][] Media2Operations = {
 </xsl:text>
-  <xsl:apply-templates select="document($media2Wsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='Media']/*[local-name()='operation']">
+  <xsl:apply-templates select="document($media2Wsdl)/*[local-name()='definitions']/*[local-name()='portType'][@name='Media2']/*[local-name()='operation']">
    <xsl:with-param name="pkg" select="'org.onvif.ver20.media.wsdl'"/>
   </xsl:apply-templates>
   <xsl:text> };

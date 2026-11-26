@@ -47,7 +47,7 @@ public class OnvifOperations extends GeneratedOnvifOperations {
 
     OnvifSchema stabTwoZero = schema.addVersion("ver20");
     stabTwoZero.addOperations("ptz", PtzType, pof, PtzOperations);
-    stabTwoZero.addOperations("media", Media2Type, m2of, PtzOperations);
+    stabTwoZero.addOperations("media", Media2Type, m2of, Media2Operations);
 
     return res;
   }
