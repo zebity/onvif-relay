@@ -3,9 +3,10 @@ package onvif_relay.relay.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 import onvif_relay.relay.converters.JsonRequestResponse;
 import onvif_relay.relay.invokers.InvokeOperation;
@@ -29,11 +30,10 @@ public class TestCxfRelay {
 	
 	InvokeOperation onvifop = new InvokeOperation();
 	
-	//Gson gser = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	
-	ObjectMapper jser = new ObjectMapper();
-	jser.enable(SerializationFeature.INDENT_OUTPUT);
-	jser.registerModule(new JakartaXmlBindAnnotationModule());
+	ObjectMapper jser = JsonMapper.builder()
+	                     .enable(SerializationFeature.INDENT_OUTPUT)
+	                     .addModule(new JakartaXmlBindAnnotationModule()).build();
 
 	try {
 	  JsonRequestResponse callo = JsonRequestResponse.create(call);

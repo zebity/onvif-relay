@@ -13,9 +13,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 
 import fence.util.ConfigurationData;
@@ -33,9 +34,9 @@ public class OnvifSchemaServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
   ConfigurationData conf = null;
   InvokeOperation onvifOp = new InvokeOperation();
-  ObjectMapper ser = new ObjectMapper()
-		              .enable(SerializationFeature.INDENT_OUTPUT)
-		              .registerModule(new JakartaXmlBindAnnotationModule());
+  ObjectMapper ser = JsonMapper.builder() 
+		       .enable(SerializationFeature.INDENT_OUTPUT)
+		       .addModule(new JakartaXmlBindAnnotationModule()).build();
   Map<String, String> ctrl = new HashMap<>();
   
   public OnvifSchemaServlet(ConfigurationData cd) {

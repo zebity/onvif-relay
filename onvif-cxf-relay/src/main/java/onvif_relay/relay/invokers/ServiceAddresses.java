@@ -10,9 +10,10 @@ import org.onvif.ver10.device.wsdl.Service;
 import org.onvif.ver10.schema.DeviceCapabilities;
 import org.onvif.ver10.schema.MediaCapabilities;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 import onvif_relay.relay.converters.OnvifOperations;
 
@@ -71,7 +72,8 @@ public class ServiceAddresses {
   public void dump(PrintStream out) {
 
 	try {
-	  ObjectMapper ser = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).registerModule(new JakartaXmlBindAnnotationModule());
+	  ObjectMapper ser = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT)
+            .addModule(new JakartaXmlBindAnnotationModule()).build();
       ser.writeValue(out, srvAddrs);
 	} catch (Exception ex) {
 	  ex.printStackTrace();
